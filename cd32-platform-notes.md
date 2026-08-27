@@ -185,6 +185,20 @@ pointer in section 2 legible as a pointer.
 **Do this on every CD32 and CDTV disc.** It costs a minute and it is the
 highest-yield first move on the format so far.
 
+**And it is not decoration — the disc does not boot without it.** The *Amiga
+CD32 Developer Notes* (Commodore, 19 May 1993), chapter 3:
+
+> In order to boot, your title must have the Commodore trademark file right
+> after the PVD sectors.
+
+Which names it (**the Commodore trademark *file***, confirming from
+Commodore's side what `/CD32.TM` on the Prey master showed), says it is
+**required**, and explains the position: right after the volume descriptors.
+Sectors 16–18 are the descriptors, 19–20 the path tables, and the block lands
+at **21** — the number this section used to be named after. It is a
+consequence, not a rule, which is why it moves the moment a volume starts
+anywhere but 19. Prey's volume starts at 6019 and its block is at 6021.
+
 **It is not always at sector 21, it is not always 2,048 bytes, and it is not
 always a trademark.** All three were true of the first two discs here, which
 is why earlier versions of this section were called "Sector 21". [Prey CD32]
@@ -694,9 +708,93 @@ Workbench screen differently.
 title ships it partly for the `cd.device` ones — `Drive Firmware Patch`,
 `CDPatch Interrupt`, `cd CD_SEEK`.
 
-**`freeanim.library` — seen on every disc, and still undocumented.**
-**[3 of 3]** It is not on either disc, so it is resident in Kickstart or the
-CD32 extended ROM.
+### The five CD32 modules, named by Commodore
+
+Everything the console adds to a stock Amiga is five things, and the *Amiga
+CD32 Developer Notes* (19 May 1993) list them:
+
+> Five special system modules were created for the AmigaCD32 console:
+> `lowlevel.library`, `nonvolatile.library`, `freeanim.library`, `cd.device`,
+> CD-ROM file system
+
+with the distribution rule that explains what you find on a disc:
+
+> The `lowlevel.library`, `nonvolatile.library` and the CD-ROM file system
+> will be part of Workbench 3.1 […] The `freeanim.library` will **not** be
+> included with the normal Workbench distribution.
+
+So:
+
+| Module | Expect to find it |
+|---|---|
+| `lowlevel.library` | **in `libs/` on the disc** — pre-3.1 machines have no copy |
+| `nonvolatile.library` | **in `libs/` on the disc**, same reason |
+| `freeanim.library` | **never on a disc** — ROM only, and no Workbench copy exists |
+| `cd.device` | never on a disc — ROM |
+| CD-ROM file system | never on a disc |
+
+[Speris] ships exactly two libraries and they are exactly the first two. That
+is not a choice about this game; it is the documented shape of a CD32 title,
+and **a `libs/` holding anything else is worth a second look** — [Marvin]'s
+ships eight and opens five.
+
+**Which also means the CD32-specific surface of any title is small and
+enumerable.** Grep for those five names, and whatever else the disc opens is
+a stock Amiga library. It is the fastest way to separate "this is a CD32
+game" from "this is an Amiga game on a CD32", and on [Speris] it takes one
+grep: `lowlevel`, `nonvolatile` and `freeanim` present, `cd.device` used once
+by a 384-byte boot command, Akiko untouched.
+
+**`freeanim.library` — ANSWERED by Commodore's own documentation, and every
+observation below turns out to be the documented idiom.** **[4 of 4]** It is
+on no disc, because it is resident in the CD32 ROM.
+
+The *Amiga CD32 Developer Notes* (Commodore, 19 May 1993, confidential at the
+time), chapter 3, "Startup Environment":
+
+> While the system is loading a title into memory, there is a small animation
+> playing on the screen. […] Your application can control this animation with
+> a special AmigaCD32 library, the `freeanim.library`.
+>
+> `FreeAnimBase = OpenLibrary("freeanim.library", 0);`
+>
+> This will tell the startup animation to begin shutting down, which involves
+> removing itself from the display and freeing the resources it uses. This may
+> take a while, up to about a second. While the startup animation is shutting
+> down, your application can prepare data to display and generally initialize
+> itself.
+>
+> `CloseLibrary(FreeAnimBase);`
+>
+> This will wait for the animation to complete its shutdown.
+
+So the reading this document arrived at from six sightings is right, and
+sharper than it guessed: **the open starts the shutdown and the close waits
+for it**, and the gap between them is deliberate parallelism. That is why the
+call never appears — there is no call. Opening and closing *is* the whole
+interface.
+
+Two more things the notes explain outright:
+
+**Why nobody error-checks it.** The notes tell developers not to:
+
+> users may try to run your code on a regular Amiga computer equipped with
+> CD-ROM […] there will not be a `freeanim.library` around, so your code
+> should not fail when `freeanim.library` cannot be opened. This is easy to
+> do, just don't put any error checking in […] `CloseLibrary()` accepts a
+> NULL pointer and ignores it.
+
+and they print the one-liner `CloseLibrary(OpenLibrary("freeanim.library",
+0));` for programs with nothing to do in between. **[Speris]** `c/FreeAnim` is
+92 bytes and is exactly that, with a `tst.l d0` the notes say you can omit.
+
+**Why it is always opened first.** The notes require the title not to take
+over the display until the animation has gone, and warn that the animation
+may start using `audio.device` in a future ROM. Opening it first, before
+`dos.library`, is the documented order of operations — which is what
+[Marvin] and [Prey] do.
+
+The empirical sightings, kept because they are what the disc shows:
 
 * [Dragonstone] `c/FreeAnim`, a SAS/C 6 program that opens `dos.library`,
   `intuition.library` and `freeanim.library`, run after Workbench is
@@ -709,8 +807,12 @@ CD32 extended ROM.
   `dos.library`. `c/freeanim` is on the disc as well and the boot script does
   **not** run it. `MORENO/cdgsxl` 1.48 opens it too.
 
-Six sightings across three discs, no function call in any of them, always at
-the moment the program claims the machine.
+* [Speris] `c/FreeAnim`, 92 bytes, run by the boot script immediately before
+  the game. `libs/` holds only `lowlevel.library` and `nonvolatile.library`.
+
+Seven sightings across four discs, **no function call in any of them**, always
+at the moment the program claims the machine — and now we know that is the
+API, not an oddity.
 
 **New, and the first independent support the reading has had: the CDTV
 generation has a command whose name says it.** [Prey CDTV] the boot script is
@@ -737,13 +839,14 @@ but it is the first thing outside the CD32 discs that points the same way.
 /auto/close/wait
 ```
 
-and the same three-word string sits in `cdgsxl` 1.48's own data hunk. So the
-library's interface has at least the notions **AUTO**, **CLOSE** and **WAIT**,
-and the CDXL player does whatever the tool does. Everything else is unchanged:
-the library is on no disc, so it is in Kickstart or the CD32 extended ROM, and
-the reading that fits is that its *open* releases the memory held by the
-console's boot animation — opening it *is* the operation. Not confirmed, and
-worth a grep on every disc: `grep -c freeanim` over `c/` and the first stage.
+and the same three-word string sits in `cdgsxl` 1.48's own data hunk. Against
+the documented semantics those three words now read straight: **WAIT** is the
+`CloseLibrary` half done separately, **CLOSE** the open-and-close pair, and
+**AUTO** presumably the one-liner. `c/freeanim` is somebody's command-line
+wrapper around a two-line C idiom.
+
+Still worth a grep on every disc — `grep -c freeanim` over `c/` and the first
+stage — because *where* a title opens it says how the title is structured.
 
 **Grep the whole disc for library names anyway, then check which are
 actually opened.** [Marvin] `libs/` ships eight libraries and the game opens
@@ -1725,8 +1828,25 @@ the disc that gave it.
    The preparer field is 128 spaces. Identifying it, or finding a second disc
    with the same habits, is the next useful thing. (Section 1.)
 
-3. **Still open, and sharper again — what is `freeanim.library`?** Seven
-   sightings across four discs and it is on none of them, so it is resident
+3. **ANSWERED by Commodore's own documentation — what is
+   `freeanim.library`?** The *Amiga CD32 Developer Notes* (19 May 1993) put
+   it in chapter 3: it is the CD32 ROM library that controls the **boot
+   animation**. `OpenLibrary` tells the animation to begin shutting down and
+   returns immediately; `CloseLibrary` waits for it to finish; the gap between
+   them is where the title is supposed to initialise. **There is no function
+   call because there is no function** — the pair *is* the interface, which is
+   why four discs show six opens and zero calls. The notes also tell
+   developers not to error-check it (so it works on a plain Amiga with a
+   CD-ROM, where the library is absent) and to open it before touching the
+   display, which is why it is always opened first. Recorded in full in
+   section 4.
+
+   **What replaces it:** `c/rmtm` on CDTV — same job, same position in the
+   boot script, still not disassembled — and whether `freeanim.library` ever
+   grew the `audio.device` behaviour the notes warned it might.
+
+   *(Superseded: the entry below is what this looked like from the discs
+   alone.)* Seven sightings across four discs and it is on none of them, so it is resident
    in Kickstart or the CD32 extended ROM. It is opened and never called, every
    time, always at the moment the program claims the machine. New from Prey:
    its `ReadArgs` template is **`/auto/close/wait`**, in `c/freeanim` and in
