@@ -21,11 +21,11 @@ measured versus what is inferred.
 |---|---|
 | 1 | Identifying the disc, why the system identifier says `CDTV`, and the three ISOCD habits — now with a **non-ISOCD disc** to check them against |
 | 2 | **The `.TM` block** — outside the file system, *not* always at sector 21, not always 2,048 bytes, and **not determined by the console either** |
-| 3 | Timestamps: **four** epochs to recognise, and why the outliers are the finding |
+| 3 | Timestamps: **five** epochs to recognise, why the outliers are the finding, and checking the descriptor's date against the files it indexes |
 | 4 | The boot chain, the `$VER:` strings, `freeanim.library`, and the two greps and one histogram that decide how you read the executable |
-| 5 | Compression — starting with whether there is any, then **RNC and the Imploder**, and getting the decruncher out of the loader |
+| 5 | Compression — starting with whether there is any, then **RNC, the Imploder and Bytekiller**, why **a magic scan that finds nothing proves nothing**, and getting the decruncher out of the loader |
 | 6 | Hunk files, toolchain fingerprints, symbol tables that survived, and data wrapped in hunk format |
-| 7 | Planar geometry without a copper list, interleaved versus separated, autocorrelation, HAM6 in a CDXL, and the **corrected** palette test |
+| 7 | Planar geometry without a copper list, interleaved versus separated, autocorrelation, HAM6 in a CDXL, the **corrected** palette test, and a disc that answers the AGA question **twice** |
 | 8 | Red Book, raw Paula samples, tracker modules, in-house players, and getting a headerless stream's sample rate out of the executable |
 | 9 | Text encodings, password systems, placeholders, and reading the file *names* |
 | 10 | Baselines, disc by disc, side by side |
@@ -40,15 +40,19 @@ assume.
 
 | Disc | Master | What it is |
 |---|---|---|
-| [Prey: An Alien Encounter, CD32](https://github.com/vs-sr-dev/cd32-prey-doc) | **1993** | KirkMoreno Multimedia / Almathera, UK+DK — one track and **no audio track at all**, 1,439 files, nothing compressed, 18 % of the disc used, an hour of speech streamed as 1,225 identical 60 KB files, and the only disc so far that genuinely uses AGA |
+| [Prey: An Alien Encounter, CD32](https://github.com/vs-sr-dev/cd32-prey-doc) | **1993** | KirkMoreno Multimedia / Almathera, UK+DK — one track and **no audio track at all**, 1,439 files, nothing compressed, 18 % of the disc used, an hour of speech streamed as 1,225 identical 60 KB files, and the first disc here that genuinely uses AGA |
 | [Prey: An Alien Encounter, **CDTV**](https://github.com/vs-sr-dev/cd32-prey-doc/blob/main/docs/09-cdtv-1992.md) | **1992** | The same game a year earlier. **The first disc here not mastered with ISOCD**, the first CDTV title, the oldest master, and the control that corrected two claims about the others. 1,453 files, **1,201 of them byte-identical to the CD32 release** |
-| [The Speris Legacy](https://github.com/vs-sr-dev/cd32-thesperislegacy-doc) | **1996** | Binary Emotions / Team 17, UK — the newest master here and the smallest disc: one track, **0.74 % of a CD**, 47 files, 35 of them Imploder-crunched, 24-bit AGA palettes in every level. **The disc that showed the `.TM` rule was wrong** |
+| [The Speris Legacy](https://github.com/vs-sr-dev/cd32-thesperislegacy-doc) | **1996** | Binary Emotions / Team 17, UK — the newest dated master here and the smallest disc: one track, **0.74 % of a CD**, 47 files, 35 of them Imploder-crunched, 24-bit AGA palettes in every level. **The disc that showed the `.TM` rule was wrong** |
 | [Dragonstone](https://github.com/vs-sr-dev/cd32-dragonstone-doc) | 1994/1995 | Core Design, UK — an Amiga floppy game ported to CD32: two tracks, 91 files, 84 RNC-crunched, 3 % of the disc used, no OS involvement after the first stage |
 | [Marvin's Marvellous Adventure](https://github.com/vs-sr-dev/cd32-marvinsmarvellousadventure-doc) | 1994/1995 | Infernal Byte Systems / 21st Century, DE+UK — twelve tracks, 212 files, **nothing compressed**, 61 % of the disc used, ten libraries opened and AmigaDOS alive throughout |
+| [Legends](https://github.com/vs-sr-dev/cd32-legends-doc) | **1996** | Krisalis Software / Guildhall, UK — one data track and **twenty-eight audio tracks**, 111 files, **89.4 % of the disc used and only 0.72 % of it by the game**, a six-floppy A1200 release copied onto a CD with its hard-disk installer still on it, and 79 files packed by a cruncher with **no magic number at all** |
 
 These are about as unlike each other as Amiga CD titles can be — 1992 to 1996,
-0.74 % of a disc to 61 % of one, 47 files to 1,453 — which makes the handful
-of things they agree on worth more than the count suggests.
+0.74 % of a disc to 89.4 % of one, 47 files to 1,453 — which makes the handful
+of things they agree on worth more than the count suggests. And the two 1996
+discs are the sharpest pair: Speris and Legends have games of almost exactly
+the same size, and one of them fills the rest of the CD with music while the
+other leaves 99 % of it empty.
 
 **And the discs that corrected this document are the ones worth having.** The
 CDTV Prey master is not an independent sample at all: it is the *same game* on
@@ -58,8 +62,11 @@ clock battery turned out to be a real build date inherited from that master,
 and a palette test that looked for only one way of writing a 4-bit value into
 a byte scored every ECS palette on it as 24-bit colour.
 
-**Then Speris corrected the correction.** Three of these things are marked as
-corrections in place, and they are more useful than the claims they replaced.
+**Then Speris corrected the correction, and Legends corrected section 5.** A
+scan for every compression magic this document knew returned nothing on a disc
+where 79 of 111 files are packed, because the container has no magic number at
+all. Four of these things are marked as corrections in place, and they are more
+useful than the claims they replaced.
 
 ## The question this repository was split out to answer, and its answers
 
@@ -75,9 +82,9 @@ compilation unit `exec`, 268 bytes of 68000 code defining `AddPort`, `GetMsg`,
 local labels (`REMHEAD.033`, `ENABLE.031/032/034`) that are Commodore's own
 Exec assembler macros expanded by line number.
 
-**All three CD32-era discs have the identical 2,048 bytes** — whole sector,
-banner and object file, all three SHA-1s — across three studios, three
-publishers, three engines and fourteen months.
+**Four of the five CD32-era discs have the identical 2,048 bytes** — whole
+sector, banner and object file, all three SHA-1s — across four studios, four
+publishers, four engines and thirty-eight months.
 
 And the third of them says where they came from. **Prey's CD32 master ships
 `/CD32.TM`**: an ordinary file in the root directory, 2,048 bytes, dated
@@ -129,16 +136,24 @@ reads the block.
 > block is whatever the person cutting the master fed to the tool** — not a
 > property of the console, and not a property of the format.
 
-Which downgrades the three identical CD32 hashes from evidence about the
-format to evidence about **how widely one particular file circulated**. That
-is still worth recording, and section 2 keeps all four hashes, because a
-mismatch is still the interesting result — **this was the first, and it took
-four discs to find it.**
+Which downgrades the identical CD32 hashes from evidence about the format to
+evidence about **how widely one particular file circulated**. That is still
+worth recording, and section 2 keeps all the hashes, because a mismatch is
+still the interesting result — **this was the first, and it took four discs to
+find it.**
 
 The question that replaces it: **how often does this happen?** One CD32 disc
-with the CDTV block makes it possible; a second would make it a habit. And
-still open from before: **which tool mastered the CDTV disc?** It signs
-nothing.
+with the CDTV block makes it possible; a second would make it a habit. Legends
+is not it — it carries the Commodore banner, so the score stands at **four to
+one**. And still open from before: **which tool mastered the CDTV disc?** It
+signs nothing.
+
+**The same mechanism turns out to cover more than the `.TM` block.** Legends'
+`c/SetPatch` is byte for byte Marvin's — SHA-1
+`4d4aae988310b07726329e436b2250c0f769ddff`, 7,364 bytes, two studios, two
+publishers, two years. Commodore's system files circulated as single copies
+and studios passed them around, so **hash the binaries in `c/`, not only their
+`$VER:` strings**.
 
 ## Contributing from a pipeline
 

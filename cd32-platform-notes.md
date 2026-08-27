@@ -30,6 +30,7 @@ suggests.
 | [Marvin's Marvellous Adventure](https://github.com/vs-sr-dev/cd32-marvinsmarvellousadventure-doc) | 1994/1995 | Infernal Byte Systems / 21st Century, DE/UK — twelve tracks, 212 files, **nothing compressed**, 61 % of the disc used, ten libraries opened and AmigaDOS alive throughout |
 | [Prey: An Alien Encounter, CD32](https://github.com/vs-sr-dev/cd32-prey-doc) | **1993** | KirkMoreno Multimedia / Almathera, UK+DK — **one track and no audio track at all**, 1,439 files, nothing compressed, 18 % of the disc used, an hour of speech streamed as 1,225 identical 60 KB files, and the only disc so far that genuinely uses AGA |
 | [The Speris Legacy](https://github.com/vs-sr-dev/cd32-thesperislegacy-doc) | **1996** | Binary Emotions / Team 17, UK — one track, **no audio track**, 47 files, **0.74 % of the disc used**, Imploder-crunched at 2:1, genuine 24-bit AGA palettes in every level, and the disc that **broke this document's rule about what the `.TM` block contains** |
+| [Legends](https://github.com/vs-sr-dev/cd32-legends-doc) | **1996** | Krisalis Software / Guildhall, UK — **28 audio tracks**, 111 files, **0.72 % of the disc used for the game and 88.6 % for the music**, a six-floppy A1200 game copied onto a CD with its hard-disk installer still on it, 79 files packed by a cruncher with **no magic number at all**, and a front end that re-implements `LoadSeg` |
 | [Prey: An Alien Encounter, **CDTV**](https://github.com/vs-sr-dev/cd32-prey-doc/blob/main/docs/09-cdtv-1992.md) | **1992** | The same game a year earlier, published by KirkMoreno alone. **The first disc here not mastered with ISOCD**, the first CDTV disc, the oldest master by fourteen months, and the control that corrected two claims about the other three. 1,453 files, of which **1,201 are byte-identical to the CD32 release** |
 
 ---
@@ -96,7 +97,17 @@ Dragonstone   Sajjad Majid - ISOCD 1.04 by Pantaray, Inc. USA -
 Marvin        Stewart.. - ISOCD 1.04 by Pantaray, Inc. USA -
 Prey          Almathera - ISOCD 1.04 by Pantaray, Inc. USA -
 Speris                  - ISOCD 1.04 by Pantaray, Inc. USA -
+Legends       Richard Teather (Programmer) - ISOCD 1.04 by Pantaray, Inc. USA -
 ```
+
+**And check the name against the game's own credits, because sometimes it is
+there.** [Legends] `Richard Teather` is on the disc twice: in this field, and
+in a 320 x 200 digitised **photograph** captioned `RICHARD TEATHER (AMIGA)`
+under the heading `THE PROGRAMMERS`. The person who ran the mastering tool is
+the person the credits screen calls the Amiga programmer, and the two halves
+of the disc agree without either knowing about the other. Four discs of six
+name a person here; it is the cheapest attribution on the format and it is
+worth cross-checking against whatever credit screen the game has.
 
 (Marvin's `Stewart..` is Stewart Gilray, one of the game's two producers,
 who is also sixth in the game's own hall of fame. Whoever typed the field
@@ -108,8 +119,9 @@ nothing in front of it.)
 
 **The application identifier is a fourth field of the same kind, and it is
 not one to lean on.** Dragonstone puts the title there (`DragonStone`),
-Marvin's the genre (`Platformer`), Prey the medium (`Game`), the CDTV master
-nothing, Speris nothing. Five discs, four conventions.
+Legends likewise (`Legends`), Marvin's the genre (`Platformer`), Prey the
+medium (`Game`), the CDTV master nothing, Speris nothing. Six discs, four
+conventions.
 
 Pantaray wrote more than the mastering tool. [Prey] `MORENO/XLPlay`, dated
 1992-03-02 and run by nothing, is *"XLPlay ... by Pantaray, Inc. Ukiah CA"* —
@@ -129,6 +141,16 @@ three sightings of one tool into an actual attribution.
 | File names | mixed case | **strict upper-case 8.3** |
 | Path tables | before the files | **after them, at the end of the volume** |
 | PVD written twice at 16 and 17 | yes | **yes** |
+
+**A fourth habit, worth a line because the number repeats.** ISOCD leaves the
+image longer than the volume it declares, and the overrun is **152 sectors of
+zeros on three of the five ISOCD discs** — Marvin (6,833 in the image, 6,681
+declared), Speris (2,455 / 2,303) and Legends (2,404 / 2,252). Dragonstone
+overruns by 106 and Prey CD32 not at all, so it is not invariant; but a
+declared-versus-image difference of exactly 152 has now turned up three times
+and is worth recording rather than rounding off. **Always build the sector map
+against the declared size**, or the trailing zeros read as unclaimed space
+that means something.
 
 **Only the duplicated descriptor survives the change of tool.** Two
 unrelated mastering systems both write the primary volume descriptor twice
@@ -286,9 +308,10 @@ are Commodore's Exec assembler macros expanded by line number. This is a
 fragment of the Amiga operating system's own source, compiled, pressed onto a
 game disc in 1994, in a sector nothing reads.
 
-### On CD32-era discs: three discs, the same bytes
+### On CD32-era discs: four discs, the same bytes
 
-**All three SHA-1s match, byte for byte, on all three discs:**
+**All three SHA-1s match, byte for byte, on four of the five CD32-era discs**
+— Dragonstone, Marvin, Prey CD32 and **[Legends]**:
 
 ```
 SHA-1  c5ffcef2a5e33d2df606185823cd95d1c174d65f   the whole sector, 2048 bytes
@@ -296,13 +319,15 @@ SHA-1  8d84115154d70360b3469acc99cdad3db0ed2c92   banner only, bytes 0x000..0x44
 SHA-1  690aae24a96b69659066e691d0b07db301260572   object file, bytes 0x44C..0x7B8
 ```
 
-Three studios, three publishers, three engines with nothing in common, and
-**fourteen months** between Prey's CD32 master (1993-11-29) and the other two.
+Four studios, four publishers, four engines with nothing in common, and
+**thirty-eight months** between Prey's CD32 master (1993-11-29) and Legends'.
 Same 2,048 bytes, in a sector nothing on any of them reads.
 
-**And a fourth CD32-era disc has none of it.** See the correction below
-before treating those three hashes as anything more than three sightings of
-one widely-copied file.
+**And a fifth CD32-era disc has none of it.** See the correction below before
+treating those three hashes as anything more than four sightings of one
+widely-copied file. The score is now **four discs with the Commodore banner
+and one with the CDTV driver** — which is worth keeping in that form, because
+it is the ratio, not the identity, that this section is actually measuring.
 
 ### CORRECTION — a CD32 disc carrying `CDTV.TM`
 
@@ -457,6 +482,15 @@ ISO 9660 directory records store the year as an offset from 1900. There are
 | 1980-01-01 or a few weeks after | **MS-DOS `FAT` day zero** — the file came through a PC filesystem |
 | a plausible date **one to two years before the master** | **check before you call this a dead clock battery.** It is at least as often an earlier build of the same material, carried forward with its dates intact — see the correction below |
 | a plausible real date | a machine whose clock was set; note *which* machine |
+| a **specific, self-consistent, impossible** date | [Legends] a clock that was set, and set wrong. Every one of its 118 records reads **1992-03-06**, on a CD32 disc — a console announced in July 1993 — published in 1996. This is neither day zero nor an inherited build: the times inside it are a coherent afternoon in four sittings. **A wrong date is not the same as an unset one, and the times can still be the finding** |
+
+**Then check the PVD's own date against the files it indexes.** [Legends] the
+descriptor is stamped `1992-03-06 18:12:02` and **nine files it indexes are
+stamped 20:31–20:32 the same day**. ISOCD writes the descriptor from the clock
+at mastering time and the file dates from the source file system, and an image
+cannot be cut before its contents exist — so on that disc the two fields did
+not come from the same clock reading. It costs one comparison and it tells you
+whether the two halves of the timestamp evidence can be trusted together.
 
 **CORRECTION — "a machine stuck in 1992" was wrong on one of the two discs it
 was claimed for.** This document used to say that Marvin and Prey both had a
@@ -692,10 +726,27 @@ $VER: iconx    38.8  (13.2.92)     Commodore, Workbench 2.x               [Marvi
 $VER: prod_prep 39.1 (22.12.92)  Commodore's factory HD formatter         [Prey]
 $VER: cdgsxl   1.48  (24.9.93)   Wayne D. Lutz    third-party CDXL player [Prey]
 $VER: cdgsxl   1.51  (16.12.93)  Wayne D. Lutz    third-party CDXL player [Marvin]
+$VER: setpatch 39.6  (8.9.92)      Commodore 3.0 — the identical binary    [Legends]
+$VER: assign   37.4  (25.4.91)     Commodore, Workbench 2.04               [Legends]
 ```
 
 The SetPatch version is not the machine's: Marvin ships a 3.0-era SetPatch
-and runs it on a CD32's 3.1 ROM. Three discs, three versions, no agreement.
+and runs it on a CD32's 3.1 ROM. Five discs, four versions, no agreement.
+
+**And hash the binary, not only the version string.** [Legends] `c/SetPatch`
+is **byte for byte Marvin's** — SHA-1
+`4d4aae988310b07726329e436b2250c0f769ddff`, 7,364 bytes — across two studios,
+two publishers and two years. Like the `.TM` block, Commodore's system files
+circulated as single copies and studios passed them around; a matching hash
+tells you which copy a studio had, and a *mismatching* one at the same version
+would be the interesting result.
+
+**Read `c/` for age, not just for content.** [Legends] ships `assign` 37.4
+from **April 1991** next to a `setpatch` from September 1992 on a disc
+mastered in 1996, and its `c/` timestamps say the two were copied off a
+Workbench disk four seconds apart. Whoever assembled `c/` used whatever was to
+hand, and the spread between the oldest and newest command in it is a rough
+lower bound on how long the studio had been reusing the same build machine.
 
 **When the same third-party tool turns up twice, diff the versions.**
 `cdgsxl` is on two of three discs and the difference between 1.48 and 1.51 is
@@ -810,9 +861,33 @@ The empirical sightings, kept because they are what the disc shows:
 * [Speris] `c/FreeAnim`, 92 bytes, run by the boot script immediately before
   the game. `libs/` holds only `lowlevel.library` and `nonvolatile.library`.
 
-Seven sightings across four discs, **no function call in any of them**, always
-at the moment the program claims the machine — and now we know that is the
-API, not an oddity.
+* **[Legends] `c/ShutDown`, 100 bytes, and it does not close the library — it
+  *removes* it.** One code hunk of 44 bytes and one relocation:
+
+  ```
+      lea     name(pc),a1
+      movea.l 4.w,a6
+      jsr     -552(a6)        ; OldOpenLibrary
+      movea.l d0,a1
+      movea.l 4.w,a6
+      jsr     -414(a6)        ; RemLibrary        <-- not CloseLibrary (-414, not -378)
+      rts
+  name: dc.b 'freeanim.library',0
+  ```
+
+  `RemLibrary` unlinks the library from Exec's list and expunges it, where
+  `CloseLibrary` only drops a reference. It is the **first** program in this
+  series to do more than open-and-close, it is the **first line** of the boot
+  script, and it runs before `SetPatch`. Whether it is a stronger reading of
+  the same documented requirement or a misuse that happens to work is not
+  something the disc settles — but if you find a 100-byte program in `c/` with
+  one relocation, check which LVO it calls before assuming it is the
+  documented one-liner.
+
+Eight sightings across five discs, **no function call to the library in any of
+them**, always at the moment the program claims the machine — and now we know
+that is the API, not an oddity. Seven of the eight open and close; one removes
+it outright.
 
 **New, and the first independent support the reading has had: the CDTV
 generation has a command whose name says it.** [Prey CDTV] the boot script is
@@ -941,20 +1016,65 @@ the disc, and no other compression either: 212 files, 13.6 MB, all raw.
 [Prey] the same, on a much larger disc: 1,439 files, 122 MB, **zero** hits for
 `RNC`, `PP20`, `IMP!` or `XPKF` over the whole image. A CD32 disc has 650 MB
 and a 2× drive; a studio that decided the read time was cheaper than the
-decompression time was making a reasonable call, and **two discs out of four
-made it**. The two that packed were both floppy games moved onto CD with
-their floppy-era loaders intact — which is the pattern: **compression on this
-format tracks the floppy origin, not the disc.** Scan first, assume second —
-one pass for the four magics over the whole image answers it.
+decompression time was making a reasonable call, and **two discs out of five
+made it**. The three that packed were all floppy games moved onto CD with
+their floppy-era loaders intact — which is the pattern, now **[3 of 3]**:
+**compression on this format tracks the floppy origin, not the disc.**
 
 **And do not stop at `RNC`.** [Speris] returns nothing for `RNC` and 35 files
 for `IMP!`, which is 6.8 MB of the disc's 8.5 MB. Running the first grep,
 finding no hits and concluding "nothing is compressed" would have left the
 whole game shut.
 
-**Two crunchers so far, one per disc that packs at all.** RNC ProPack on
-Dragonstone, the Imploder on Speris. Neither is a safe default; the four-magic
-scan is.
+### CORRECTION — a magic scan that finds nothing proves nothing
+
+This section used to end "one pass for the four magics over the whole image
+answers it." **It does not.** [Legends] scans clean for `RNC`, `RNC`,
+`IMP!`, `ATN!`, `PP20`, `PP11`, `XPKF`, `CrM!`, `LZX` and `SQSH` — every magic
+this document knew — and **79 of its 111 files are packed**, 4.17 MB down from
+11.84 MB. There is no magic number anywhere on the disc because the container
+does not have one:
+
+```
+ULONG  offset to the trailer   (always filesize - 4, so it points at the last longword)
+BYTE[] packed data
+ULONG  checksum                (present in all 79 files; read by nothing)
+ULONG  unpacked size
+```
+
+A four-byte length-looking field and then entropy. Nothing to grep for.
+
+**So the scan is the second step, not the first. The first is the census.**
+Sizes, entropy, and the last non-zero byte, over every file (section 9's
+census, moved up):
+
+- **entropy 7.0–7.8 across a whole file set** is packed data or encrypted
+  data, whatever the first four bytes say. Raw planar artwork does not score
+  that; on Legends the `.Pal` files score 2.4–5.8 and every `.Pak` scores
+  above 6.7.
+- **a first longword equal to `filesize` or `filesize - 4`** is a container
+  header. On Legends it is `filesize - 4` on all 79, which is what made the
+  family obvious before any of it was decoded.
+- then **find the decruncher in the loader**, exactly as before. It was 201
+  bytes at hunk offset `0x703E`, it is reachable from the one routine in the
+  program that calls `Read`, and transcribing it took one pass.
+
+**Three crunchers so far.** RNC ProPack on Dragonstone, the Imploder on
+Speris, and on Legends the **Bytekiller** token set — a backwards longword
+bitstream with a sentinel bit, literal runs of 1–8 and 9–264 bytes, and
+matches of 2, 3, 4 and 1–256 bytes at 8-, 9-, 10- and 12-bit offsets, output
+written backwards in place. It is the cruncher *Another World* used in 1991,
+shipping in a 1996 CD32 title, **with the checksum verification removed**: the
+routine steps over the checksum longword with a bare `subq.w #4,a0`.
+
+Which is the other lesson. Two of the three crunchers on this format put a
+**self-check in every file that the shipped loader does not run** — the
+Imploder's pair of pointers on Speris, Bytekiller's checksum on Legends.
+Where the check is one you can reproduce, run it: a file that fails is a file
+that was already broken when it was pressed. Where it is not — Legends' is a
+32-bit value that no code on the disc verifies, so there is nothing to
+recover the algorithm from — **record the values and move on**, because the
+next disc from the same studio may be what identifies the cruncher.
 
 ### The Imploder — `IMP!` and `ATN!`
 
@@ -1178,6 +1298,30 @@ PictureTexte = 0x1F6C            Manual = 0x3279
 and that is the whole format: an identifier, a table of four offsets relative
 to `Language`, and four sections of NUL-separated strings.
 
+**And a hunk file may be a crunched hunk file, which the OS cannot load.**
+[Legends] Each of the five level overlays is a well-formed hunk file — header,
+one `HUNK_CODE`, `HUNK_RELOC32`, `HUNK_END` — whose CODE *body* is a packed
+stream, and whose declared hunk size is the **unpacked** size. The tells are
+free:
+
+* the header's allocation is far larger than the body in the file (572,984
+  bytes of "code" declared as a 1,531,604-byte chip hunk), and it matches the
+  unpacked size **to the byte**;
+* the relocation offsets run past the end of the body — up to 940,974 in a
+  572,984-byte hunk;
+* the body's first longword is the packer's container header, not an
+  instruction.
+
+Which means `LoadSeg` cannot load it: AmigaDOS relocates immediately after
+reading, and the bytes to relocate do not exist yet. So look for the game's
+**own** hunk loader. On that disc it is 400 bytes at hunk `0x6E02` of the
+front end, dispatching on `hunk_id - 0x3E7` through a 15-entry table, with the
+decruncher called from inside the `CODE` handler between "read the body" and
+"apply the relocations". **A program that loads hunk files and never calls
+`LoadSeg` (`jsr -150(a6)`) has written its own, and it wrote its own for a
+reason** — grep the LVO histogram for `-150` before you assume AmigaDOS is
+doing the loading.
+
 **Game overlays are usually not hunk files.** Look for a short custom header
 instead. [Dragonstone] uses a sixteen-byte one:
 
@@ -1192,6 +1336,15 @@ which is what a loader that has already killed AmigaDOS needs and no more.
 
 ### The loader's file table is worth finding early
 
+**[3 of 3]** [Legends] the same shape again: 57 NUL-terminated names in one
+run at hunk `0x19CC` of the front end — six floppy volume names, then every
+file it can open, in index order. All 51 filenames exist on the disc and three
+are spelled with capitals the disc does not use. And the *level* executables
+carry the complementary trick: a filename **template** with a literal `x` in
+it (`LEVEL4/SPRITESx.PAK`) and a separate compiled string naming the contents
+of each bank. **Grep for `/` and for the disc's own directory names**, and
+grep for uppercase forms of them too.
+
 [Dragonstone] The resident loader carries a run of fixed-width NUL-terminated
 filenames followed by a table of 16-bit indices into them, dimensioned by
 level. Finding it gave up, in one read: the complete list of data files, the
@@ -1204,13 +1357,18 @@ same-length names before you disassemble the loader.
 
 ## 7. Graphics
 
-**Assume planar until proved otherwise** — **[3 of 3]**, and on all three
-discs reading the same bytes as chunky gives noise. **But test interleaved
-*and* separated.** Dragonstone and Marvin are interleaved; [Prey] every
-animation file on the disc and every frame of its CDXL stream is
-**plane-separated** — all of plane 0, then all of plane 1, and so on. The
-tell is free: render the file as a single-bit-deep strip at the candidate
-width and look. A separated image shows up as *N* stacked copies of the same
+**Assume planar until proved otherwise** — **[4 of 4]**, and on all four
+discs reading the same bytes as chunky gives noise. That holds even when the
+size makes chunky look plausible: [Legends] every screen is **64,000 bytes**,
+which is 320 x 200 at eight planes *and* 320 x 200 at one byte per pixel, so
+the size decides nothing and the render decides everything.
+
+**But test interleaved *and* separated.** Dragonstone, Marvin and Speris are
+interleaved; [Prey] every animation file on the disc and every frame of its
+CDXL stream is **plane-separated** — all of plane 0, then all of plane 1 —
+and so is [Legends], down to the individual 16 x 16 font glyph. The tell is
+free: render the file as a single-bit-deep strip at the candidate width and
+look. A separated image shows up as *N* stacked copies of the same
 picture at *N* levels of detail; an interleaved one shows up as one picture
 with horizontal banding. The CD32's Akiko
 chunky-to-planar hardware is not a reason to expect chunky data: [Marvin]
@@ -1240,6 +1398,14 @@ sixteen base colours and 4,096 displayable, which is how you got photographic
 colour out of an ECS Amiga. Decoded as plain planar it is noise; decoded as
 HAM6 it is a flight over forested mountains. **The palette-to-plane mismatch
 is the tell**, and it is in the header, so you never have to guess.
+
+**And separated is what a game with no scrolling background chooses.** The
+split so far is not random: the two discs that store screens plane-separated
+(Prey, Legends) both point the bitplane registers at a whole loaded screen,
+and the three that interleave (Dragonstone, Marvin, Speris) all blit a window
+out of a larger bitmap. Interleaving costs nothing when the blitter walks the
+bitmap and saves nothing when the display hardware does. **Guess from what the
+game does with the screen, then confirm by rendering.**
 
 **Interleaved and separated can coexist in one file family.** [Marvin] Eight
 of nine `blockNN.fbb64` files are 320 x 400 six-plane *interleaved* tile
@@ -1288,9 +1454,31 @@ their raw palette files. [Speris] **1,648 of 3,072 bytes, 53.6 %**, and — the
 part that matters — **every one of its sixteen levels scores between 82 and
 116 of its 192 palette bytes**. Not a few deepened screens: the whole game.
 
-So AGA colour depth is used on **two** discs of five, and the second one uses
-it everywhere. But **the plane count is still the claim that needs no
+[Legends] **all twenty of its 768-byte palettes fail the 4-bit test heavily**
+— 464 to 585 bytes of 768 carry a non-zero low nibble, and only 5–16 % have
+matching nibbles on the screens with photographic content, which is roughly
+what chance gives. 256 entries of three bytes, eight planes per screen: this
+is the deepest disc on the format so far.
+
+So AGA colour depth is used on **three** discs of six, and two of the three
+use it everywhere. But **the plane count is still the claim that needs no
 interpretation**, and it should carry the weight.
+
+**And ask the question separately for the front end and for the game.**
+[Legends] the front end is eight planes with 256-entry 24-bit palettes; the
+*levels* are four and five planes with sixteen 32-entry `$0RGB` tables, which
+is an ECS-class game. **One disc, two answers.** The tell was free and it did
+not come from a palette file at all: every sprite in the level banks is stored
+as an image plus a one-plane mask, and **the ratio of their lengths is the
+plane count** — 5 on 552 pairs, 4 on 48, out of 607. If a format pairs each
+object with a mask, divide.
+
+**A palette table may also be *named*.** [Legends] each level executable
+carries fifteen or sixteen `0xFF`-terminated ASCII names (`MAIN PAL`,
+`MINECART PAL`, `DUNGEON PAL`, `EMPTY PAL`) immediately in front of the colour
+data. Grep for `PAL` and for other short all-caps words before you go looking
+for the table by offset — and count the `EMPTY` entries, because they are cut
+content in the cheapest possible form.
 
 **And corroborate it in the code, which is cheap and unambiguous.** [Speris]
 writes its palettes like this:
@@ -1443,11 +1631,39 @@ four:
   `8CHN` at offset 1080 of a candidate. The 20-byte title and the 22-byte
   sample names frequently carry the musician's own filenames verbatim;
   [Dragonstone]'s ending module has a sample slot reading
-  `mod.heim(2)xtratune1`.
+  `mod.heim(2)xtratune1`. **Ignore the extension.** [Legends] `Title.Mod` is
+  a plain 31-sample `M.K.` module, and it is the only file on that disc the
+  extension would have got right.
+* **IFF `8SVX` linked into an executable** — scan every file, unpacked, for
+  `FORM` followed by `8SVX`. [Legends] eight complete `FORM ... 8SVX` samples
+  are sitting inside three of the five level executables **with their wrappers
+  intact**, so each one still carries the filename it had on the artist's
+  machine (`bullet.ss`, `RAYgun.ss`, `COPTER.SS`) in its `NAME` chunk and the
+  name of the tool that saved it in its `ANNO` chunk (`Protracker 3.10`). The
+  assembler included the file exactly as the tracker wrote it. **This is the
+  cheapest tool fingerprint on the format** — one `find` for four bytes — and
+  a disc that has it in some executables and not others is telling you about
+  its own build process: on that disc the two largest levels have no `FORM` at
+  all.
 
 If a scan for all of those turns up nothing and the game clearly has music,
 it is an in-house player with no magic word — look in the resident loader
 first, and then at the data files themselves.
+
+**And when there *is* a Red Book soundtrack, read how the game addresses it.**
+[Legends] 28 tracks, 65 minutes 36 seconds, **88.6 % of the disc**, driven by
+about 120 bytes of code: `OpenDevice("cd.device", 0)`, one `DoIO` with
+`IO_COMMAND = 35` to read the table of contents into a 100-byte buffer, and
+then `IO_COMMAND = 39` with `IO_OFFSET`/`IO_LENGTH` taken from a TOC entry,
+issued with **`SendIO`** so the game never blocks on the drive. Stopping is
+`AbortIO` + `WaitIO`.
+
+The consequence for reading the disc: **a game that plays out of the TOC has
+no track table to find**. There is no list of track numbers in the executable
+because the numbers come off the disc at runtime. Histogram the `4E AE`
+offsets for `-444` (`OpenDevice`), `-462` (`SendIO`) and `-480` (`AbortIO`)
+and read the `IO_COMMAND` immediates instead; the two that matter are 35
+(`CD_TOCLSN`) and 39.
 
 ### Telling raw PCM from everything else, and finding its rate
 
@@ -1552,8 +1768,19 @@ are informative; the third has almost no text at all.
   performance ratings and three death messages. A disc can have almost no text
   at all; do not go looking for a localisation model that is not there.
 
+* [Legends] **7-bit ASCII in all three languages, with the accents *dropped*
+  rather than encoded**: `AuBerirdische` for *Außerirdische*, `Sudpol` for
+  *Südpol*, `Agypten` for *Ägypten*, `zerstoren` for *zerstören*, `apres JC`
+  for *après JC*. Not CP437, not Latin-1, not a transliteration convention —
+  every mark simply removed, `ß` becoming `B` by shape. **A localised disc
+  with no high bytes anywhere is a third answer**, and the reason is usually
+  in the font: that one has 77 glyphs and none is accented.
+
 Check three or four accented characters against both tables; it takes a
-minute and it places the authoring machine.
+minute and it places the authoring machine. **And check whether there are any
+bytes above 0x7F at all before reaching for a table** — if there are none in a
+German file, the question is not "which code page" but "what did the font
+have".
 
 **Watch for all-upper-case text and ask why.** [Marvin] every string in all
 four languages is capitals, accents included (`É`, `Ü`, `Ö`, `À`), because the
@@ -1581,6 +1808,19 @@ text block starts at the *same offset* with the *same string count* in all
 three. What differs is the run of 16-bit string pointers inside the shared
 script. That tells you the localisation model — build once, emit three pointer
 tables — and it tells you where the string table is without finding it.
+
+**Two alphabets in one executable means one of them is not text.** [Legends]
+the level code carries `ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789:.` and, right
+after it, `abcdefgh/ijklmnopqrstuvw`. The second is a **box-drawing set**
+mapped onto lower-case letters, which is why the shipped dialogue contains
+records reading `ioj` / `p/m` / `knl` — the three rows of a frame. Text that
+looks like nonsense in a dump may be the UI drawing itself with the text
+renderer, and the alphabet string tells you which is which.
+
+**And the alphabet string may be the font's only index.** [Legends] the
+77-glyph font has no character map, no header and no width table; the
+77-character string in the executable *is* the index, in order. Count the
+glyphs, count the string, and if they match you have the mapping for free.
 
 **A 64-character alphabet is a password alphabet.** `A-Za-z0-9+-` is six bits
 per symbol; where you find it, the save system is a bit field printed six bits
@@ -1630,46 +1870,47 @@ cut.
 
 ## 10. Baselines
 
-Five discs, and they bracket the format rather than agreeing on it. Prey CD32
+Six discs, and they bracket the format rather than agreeing on it. Prey CD32
 and Prey CDTV are the same game on the two consoles, so that pair is a control
-rather than two independent samples. Speris is the newest master here by two
-years and the smallest disc by a factor of four.
+rather than two independent samples. Speris and Legends are both 1996 releases
+and they sit at opposite ends of the disc-occupancy column: 0.74 % and 89.4 %.
+Their *games* are the same size.
 
-| | Dragonstone (1995) | Marvin's Marvellous Adventure (1995) | **Prey CD32 (1993)** | **Prey CDTV (1992)** | **The Speris Legacy (1996)** |
-|---|---|---|---|---|---|
-| Publisher / studio | Core Design, UK | 21st Century / Infernal Byte, UK+DE | Almathera / KirkMoreno, UK+DK | **KirkMoreno alone** | Binary Emotions / Team 17, UK |
-| Master cut | 1994/1995 | 1994/1995 | **1993-11-29 21:15:11** | **1992-09-02 15:05:26** | **1996-01-10 20:47:52** |
-| Tracks | 1 data (`MODE1/2048`) + 1 audio | 1 data (`MODE1/2048`) + **11** audio | 1 data (`MODE1/2048`), **no audio track** | 1 data, **no audio track** | 1 data (`MODE1/2048`), **no audio track** |
-| Data track sectors | 1,741 (1,635 declared) | 6,833 (6,681 declared) | **59,787 (59,787 declared — equal)** | 48,637 declared **in a 119,988-sector dump** | 2,455 in the image, **2,303 declared** |
-| Audio | 118.08 s, 8,856 sectors | **2,600.9 s**, 195,068 sectors | 0 s Red Book; **3,820 s of PCM in files** | 0 s Red Book; **3,922 s of PCM in files** | 0 s Red Book; **12 ProTracker modules** |
-| Share of a 333,000-sector CD | ~3.2 % | **60.7 %** | 18.0 % | 14.6 % | **0.74 %** |
-| Files / directories | 91 / 2 | 212 / 9 | **1,439 / 24** | **1,453 / 20** | **47 / 10** |
-| Bytes on disc / unpacked | 2,721,914 / 10,284,352 | 13,251,697 / — | 109,786,031 / — | 99,327,202 / — | 4,514,540 / **8,543,154** |
-| Compression | RNC ProPack 1, 84 of 91 files, 25.7 % | **none at all** | **none at all** | **none at all** | **Imploder `IMP!`, 35 of 47 files, 52.8 %** |
-| PVD system id | `CDTV` | `CDTV` | `CDTV` | `CDTV` (correctly, this time) | `CDTV` |
-| PVD application id | `DragonStone` (the title) | `Platformer` (the genre) | `Game` (the medium) | **empty** | **empty** |
-| Cue `CATALOG` | absent | `5012635300344` | `5024913000068` | — (no cue) | **`0000000000000`** — thirteen zeros |
-| Mastering tool | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) | **not ISOCD — unidentified** | ISOCD 1.04 (Pantaray) |
-| Preparer field | `Sajjad Majid - ...` | `Stewart.. - ...` | `Almathera - ...` | **empty** | **empty name**, tool signature only |
-| Duplicate PVD | yes, sectors 16 and 17 | yes, sectors 16 and 17 | yes, sectors 16 and 17 | **yes** — the one habit that crosses tools | yes, sectors 16 and 17 |
-| Volume starts at LBA | 20 | 20 | **6019 — 6,000 zero sectors first** | 19; **path tables at 48,633, after the files** | 19 |
-| `.TM` block at | sector 21, 2,048 B | sector 21, 2,048 B | **6021**, 2,048 B, and again as `/CD32.TM` | **48,621, 22,152 B**, and it *is* `/CDTV.TM` | **21, 22,152 B** — eleven sectors |
-| `.TM` contents | trademark banner + 876 B `exec` object | identical | identical | **`cdtv.device` 35.2, Carl Sassenrath — no banner anywhere** | **`cdtv.device` 35.2 — the CDTV driver, on a CD32 disc** |
-| Unclaimed sectors in the volume | — | 32, all zero | **32, all zero** | none | **32, all zero** |
-| Timestamps | AmigaDOS 1978 epoch, except 3 files | real 1994 dates; dirs 1992; **2 files at the MS-DOS 1980 epoch** | four epochs: 131 at 1978, **1,213 inherited from the CDTV build**, 84 Commodore stamps, 43 real | one 4½-minute session, all real | **all real**; four sittings, Dec 1995 and Jan 1996 |
-| SetPatch | 40.14 (7.10.93) | 39.6 (8.9.92) | 40.12 (16.9.93) | none — `bookit` + `rmtm` instead | **40.16 (14.2.94) — ships, never run** |
-| First stage | 1 hunk, 3 relocations, **0 library calls**, Akiko direct | 6 hunks all chip, 4,278 relocations, **169 library calls**, no Akiko | 1 hunk any-mem, 245 relocations, 64 library calls, **0 hardware registers** | **324 bytes**: open dos, load the game | none — a **7-line** script, 4 of them `assign` |
-| Game executable | (same file) | (same file) | 1 hunk, **5,323 relocations**, 120 library calls, **448 register writes** | 71,316 B, and a **324-byte** first stage | 1 hunk, **1,647,128 B in chip**, 3,404 relocations, 72 library calls |
-| Libraries opened | none | 10, via `OldOpenLibrary` | 6, via `OldOpenLibrary` | `cdtv.device`, `bookmark.device` | 5: graphics, dos, intuition, lowlevel, nonvolatile |
-| `freeanim.library` | opened by `c/FreeAnim` | opened **first** by the game, never called | opened by the first stage; `c/freeanim` ships unused | **not present — `c/rmtm` instead, and it is run** | opened by `c/FreeAnim`; **not on the disc** — it is in CD32 ROM |
-| Akiko | driven directly | untouched | untouched | n/a (CDTV) | untouched |
-| Colour | `FMODE = 0`, ECS path on AGA silicon | **all palettes 12-bit** | **6 of 14 screens exceed 12-bit** | all 12-bit, as ECS requires | **24-bit palettes in all 16 levels**, 6 planes |
-| Graphics | interleaved planar, 3 and 4 planes | interleaved planar, 6 planes (one file separated) | **separated planar**, 4 planes; ILBM at **8 planes** | same frames, 4 planes; ILBM at **5 planes** | interleaved planar, 6 planes; 16×16 tiles + **3 property planes** each |
-| Text encoding | CP437, with two files in a third encoding | ISO 8859-1, all four languages | 7-bit ASCII, and there is almost none | 7-bit ASCII, and even less of it | 7-bit ASCII, 30-char fixed lines, **no apostrophe in the font** |
-| Languages | 3 (EN/FR/DE) | 4 (EN/DE/FR/IT) | 1 (EN), with Danish filenames | 1 (EN), same Danish filenames | 1 (EN) |
-| Music | 1 CD track + 1 ProTracker module | 11 CD tracks + 12 in-house `.pc` modules | **1,225 raw PCM files at 19,705 Hz** | **1,258 of the same files**, 178 scenes | **12 ProTracker modules** — 8 files, 4 embedded |
-| Save system | password, 64-char alphabet, bit field | password table + CD32 `nonvolatile.library` | **none** | **none** | CD32 `nonvolatile.library` **and** floppy save-disk code |
-| Cut content | level 4, `0xFFFF` row in the loader table | 3 unlisted working levels, 1 unused music file | 7 sprite banks, 1 door animation, 2 files the code still names, **scene 0 dropped** | the same 7 sprite banks and door are already missing here | template level name in all 16; a **corrupt `BGFX` tag that shipped**; a crunched level in a stale buffer |
+| | Dragonstone (1995) | Marvin's Marvellous Adventure (1995) | **Prey CD32 (1993)** | **Prey CDTV (1992)** | **The Speris Legacy (1996)** | **Legends (1996)** |
+|---|---|---|---|---|---|---|
+| Publisher / studio | Core Design, UK | 21st Century / Infernal Byte, UK+DE | Almathera / KirkMoreno, UK+DK | **KirkMoreno alone** | Binary Emotions / Team 17, UK | **Krisalis Software / Guildhall, UK** |
+| Master cut | 1994/1995 | 1994/1995 | **1993-11-29 21:15:11** | **1992-09-02 15:05:26** | **1996-01-10 20:47:52** | **stamped 1992-03-06 18:12:02 — impossible** |
+| Tracks | 1 data (`MODE1/2048`) + 1 audio | 1 data (`MODE1/2048`) + **11** audio | 1 data (`MODE1/2048`), **no audio track** | 1 data, **no audio track** | 1 data (`MODE1/2048`), **no audio track** | 1 data (`MODE1/2048`) + **28** audio |
+| Data track sectors | 1,741 (1,635 declared) | 6,833 (6,681 declared) | **59,787 (59,787 declared — equal)** | 48,637 declared **in a 119,988-sector dump** | 2,455 in the image, **2,303 declared** | 2,404 in the image, **2,252 declared** |
+| Audio | 118.08 s, 8,856 sectors | **2,600.9 s**, 195,068 sectors | 0 s Red Book; **3,820 s of PCM in files** | 0 s Red Book; **3,922 s of PCM in files** | 0 s Red Book; **12 ProTracker modules** | **3,936.1 s**, 295,209 sectors |
+| Share of a 333,000-sector CD | ~3.2 % | **60.7 %** | 18.0 % | 14.6 % | **0.74 %** | **89.4 %** — game 0.72 %, music 88.6 % |
+| Files / directories | 91 / 2 | 212 / 9 | **1,439 / 24** | **1,453 / 20** | **47 / 10** | 111 / 7 |
+| Bytes on disc / unpacked | 2,721,914 / 10,284,352 | 13,251,697 / — | 109,786,031 / — | 99,327,202 / — | 4,514,540 / **8,543,154** | 4,351,859 / **11,836,224** |
+| Compression | RNC ProPack 1, 84 of 91 files, 25.7 % | **none at all** | **none at all** | **none at all** | **Imploder `IMP!`, 35 of 47 files, 52.8 %** | **Bytekiller, no magic number**, 79 of 111 files, 35.2 % |
+| PVD system id | `CDTV` | `CDTV` | `CDTV` | `CDTV` (correctly, this time) | `CDTV` | `CDTV` |
+| PVD application id | `DragonStone` (the title) | `Platformer` (the genre) | `Game` (the medium) | **empty** | **empty** | `Legends` (the title) |
+| Cue `CATALOG` | absent | `5012635300344` | `5024913000068` | — (no cue) | **`0000000000000`** — thirteen zeros | `5012323060062` |
+| Mastering tool | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) | **not ISOCD — unidentified** | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) |
+| Preparer field | `Sajjad Majid - ...` | `Stewart.. - ...` | `Almathera - ...` | **empty** | **empty name**, tool signature only | `Richard Teather (Programmer) - ...` — **and he is in the credits screen** |
+| Duplicate PVD | yes, sectors 16 and 17 | yes, sectors 16 and 17 | yes, sectors 16 and 17 | **yes** — the one habit that crosses tools | yes, sectors 16 and 17 | yes, sectors 16 and 17 |
+| Volume starts at LBA | 20 | 20 | **6019 — 6,000 zero sectors first** | 19; **path tables at 48,633, after the files** | 19 | 19 |
+| `.TM` block at | sector 21, 2,048 B | sector 21, 2,048 B | **6021**, 2,048 B, and again as `/CD32.TM` | **48,621, 22,152 B**, and it *is* `/CDTV.TM` | **21, 22,152 B** — eleven sectors | 21, 2,048 B |
+| `.TM` contents | trademark banner + 876 B `exec` object | identical | identical | **`cdtv.device` 35.2, Carl Sassenrath — no banner anywhere** | **`cdtv.device` 35.2 — the CDTV driver, on a CD32 disc** | trademark banner + 876 B `exec` object — **the fourth identical copy** |
+| Unclaimed sectors in the volume | — | 32, all zero | **32, all zero** | none | **32, all zero** | **32, all zero** |
+| Timestamps | AmigaDOS 1978 epoch, except 3 files | real 1994 dates; dirs 1992; **2 files at the MS-DOS 1980 epoch** | four epochs: 131 at 1978, **1,213 inherited from the CDTV build**, 84 Commodore stamps, 43 real | one 4½-minute session, all real | **all real**; four sittings, Dec 1995 and Jan 1996 | **all 118 read 1992-03-06**; four sittings, and the PVD is stamped before nine of its files |
+| SetPatch | 40.14 (7.10.93) | 39.6 (8.9.92) | 40.12 (16.9.93) | none — `bookit` + `rmtm` instead | **40.16 (14.2.94) — ships, never run** | **39.6 (8.9.92) — byte-identical to Marvin’s** |
+| First stage | 1 hunk, 3 relocations, **0 library calls**, Akiko direct | 6 hunks all chip, 4,278 relocations, **169 library calls**, no Akiko | 1 hunk any-mem, 245 relocations, 64 library calls, **0 hardware registers** | **324 bytes**: open dos, load the game | none — a **7-line** script, 4 of them `assign` | none — a **9-line** script; `ShutDown`, `SetPatch`, 6 `assign` |
+| Game executable | (same file) | (same file) | 1 hunk, **5,323 relocations**, 120 library calls, **448 register writes** | 71,316 B, and a **324-byte** first stage | 1 hunk, **1,647,128 B in chip**, 3,404 relocations, 72 library calls | 1 hunk, 37,848 B **in chip**, 1,020 relocations, 60 library calls |
+| Libraries opened | none | 10, via `OldOpenLibrary` | 6, via `OldOpenLibrary` | `cdtv.device`, `bookmark.device` | 5: graphics, dos, intuition, lowlevel, nonvolatile | 3: dos, intuition, graphics (+ `cd.device`, `ciaa`/`ciab.resource`) |
+| `freeanim.library` | opened by `c/FreeAnim` | opened **first** by the game, never called | opened by the first stage; `c/freeanim` ships unused | **not present — `c/rmtm` instead, and it is run** | opened by `c/FreeAnim`; **not on the disc** — it is in CD32 ROM | **opened by `c/ShutDown` in order to `RemLibrary` it** |
+| Akiko | driven directly | untouched | untouched | n/a (CDTV) | untouched | untouched |
+| Colour | `FMODE = 0`, ECS path on AGA silicon | **all palettes 12-bit** | **6 of 14 screens exceed 12-bit** | all 12-bit, as ECS requires | **24-bit palettes in all 16 levels**, 6 planes | **front end 8 planes / 256 colours / 24-bit; levels 4-5 planes / 32 colours / 12-bit** |
+| Graphics | interleaved planar, 3 and 4 planes | interleaved planar, 6 planes (one file separated) | **separated planar**, 4 planes; ILBM at **8 planes** | same frames, 4 planes; ILBM at **5 planes** | interleaved planar, 6 planes; 16×16 tiles + **3 property planes** each | **separated planar**, 8 planes; 16x16 font glyphs also separated |
+| Text encoding | CP437, with two files in a third encoding | ISO 8859-1, all four languages | 7-bit ASCII, and there is almost none | 7-bit ASCII, and even less of it | 7-bit ASCII, 30-char fixed lines, **no apostrophe in the font** | 7-bit ASCII; **accents and eszett dropped**, not transliterated |
+| Languages | 3 (EN/FR/DE) | 4 (EN/DE/FR/IT) | 1 (EN), with Danish filenames | 1 (EN), same Danish filenames | 1 (EN) | 3 (EN/DE/FR) |
+| Music | 1 CD track + 1 ProTracker module | 11 CD tracks + 12 in-house `.pc` modules | **1,225 raw PCM files at 19,705 Hz** | **1,258 of the same files**, 178 scenes | **12 ProTracker modules** — 8 files, 4 embedded | **28 CD tracks** + 1 ProTracker module + 8 IFF 8SVX in the level code |
+| Save system | password, 64-char alphabet, bit field | password table + CD32 `nonvolatile.library` | **none** | **none** | CD32 `nonvolatile.library` **and** floppy save-disk code | password, 8 characters; **no `nonvolatile.library`** |
+| Cut content | level 4, `0xFFFF` row in the loader table | 3 unlisted working levels, 1 unused music file | 7 sprite banks, 1 door animation, 2 files the code still names, **scene 0 dropped** | the same 7 sprite banks and door are already missing here | template level name in all 16; a **corrupt `BGFX` tag that shipped**; a crunched level in a stale buffer | `Legends_Disk4:` named by nothing, 18 `SIGN MESSAGE n` placeholders, 15 `XXXX` records, `EMPTY PAL` slots |
 
 ---
 
@@ -1705,7 +1946,13 @@ years and the smallest disc by a factor of four.
    will miss a program that writes every register absolutely. **And check
    whether there are two executables**: Prey's front end and its game are
    separate programs that talk over message ports.
-8. **Scan every file for `RNC`, `IMP!`, `ATN!`, `PP20` and `XPKF` — all of
+8. **Census the file set for packing before you scan for magic, because a
+   magic scan can return nothing on a disc that is 65 % packed.** [Legends]
+   scans clean for every magic in section 5 and has 79 of 111 files packed.
+   The two free tells are entropy (every packed file above 6.7, every raw
+   palette below 5.8) and a **first longword equal to `filesize` or
+   `filesize - 4`**, which is a container header with no name. Then scan for
+   `RNC`, `IMP!`, `ATN!`, `PP20` and `XPKF` — all of
    them, in one pass.** `RNC` alone would have reported Speris as
    uncompressed while 6.8 of its 8.5 MB sat behind `IMP!`. If there is
    nothing, say so and move on. If there is, **find the decruncher in the
@@ -1756,7 +2003,12 @@ years and the smallest disc by a factor of four.
     code still believes in, and the files on the disc that no string names are
     leftovers. On Prey this found two absent files and four unused tools in
     about a minute.
-17. **If there are headerless files that look like waveforms, get the rate out
+17. **Grep every unpacked file for `FORM` + `8SVX` and for `M.K.`** — not
+    only the files that look like audio. [Legends] eight IFF samples are
+    sitting inside three of its five level executables with their `NAME` and
+    `ANNO` chunks intact, which names both the artist's filenames and the tool
+    (`Protracker 3.10`). It costs one `find` for four bytes.
+18. **If there are headerless files that look like waveforms, get the rate out
     of the executable** — the `AUDxPER` immediates — and check the `AUDxLEN`
     immediates against the file sizes. On a disc with no audio track this is
     the whole soundtrack.
@@ -1884,26 +2136,40 @@ the disc that gave it.
    disc yet uses Akiko in the game** — that is the open question worth chasing.
    (Section 7.)
 
-6. **New, with a third answer — what fraction of a CD32 disc does a CD32 game
-   actually use, and on what?** Dragonstone: 3.2 % of a 74-minute disc, no CD
-   audio worth the name. Marvin: 60.7 %, of which 458 MB is Red Book audio and
-   **38.8 % of the data track is the publisher's logo animation**. Prey:
-   18.0 %, **no Red Book at all**, of which 68.6 % is speech stored as data
-   files and 11.5 % is the intro animation. Three discs, three answers, and
-   the pattern to watch for is whether "CD32 game" mostly means "floppy game
-   plus a soundtrack" — Prey is the one so far that is not that.
+6. **ANSWERED, and the answer is "floppy game plus a soundtrack" — what
+   fraction of a CD32 disc does a CD32 game actually use, and on what?**
+   Dragonstone: 3.2 % of a 74-minute disc, no CD audio worth the name.
+   Marvin: 60.7 %, of which 458 MB is Red Book audio and **38.8 % of the data
+   track is the publisher's logo animation**. Prey: 18.0 %, **no Red Book at
+   all**, of which 68.6 % is speech stored as data files and 11.5 % is the
+   intro animation. Speris: 0.74 %, no audio track. **Legends: 89.4 %, of
+   which the game is 0.72 % and the music is 88.6 %.**
 
-7. **New — is `MODE1/2048` universal?** All four discs so far, including a
-   1992 CDTV master, and both Prey releases have a single track with no audio
-   at all. Mode 2 Form 1 is supposed to occur on this format; nobody has
-   produced one here yet.
+   Legends settles it by taking the pattern to its limit: the same amount of
+   *game* as Speris, and 65 minutes 36 seconds of Red Book audio over the top,
+   filling the disc to the edge. Five discs, and four of the five are a floppy
+   game with whatever audio the budget allowed; Prey is still the only one that
+   is not. **The remaining question is narrower and better: does any CD32 title
+   spend the disc on the game rather than on the soundtrack?**
+
+7. **New — is `MODE1/2048` universal?** All six discs so far, including a
+   1992 CDTV master, a disc with no audio track and a disc with twenty-eight.
+   Mode 2 Form 1 is supposed to occur on this format; nobody has produced one
+   here yet.
 
 8. **New — how many CD32 discs carry a second, Workbench entry point?**
    Marvin ships `<Game>.info` with `DefaultTool = IconX`, `c/IconX`, and a
    sibling AmigaDOS script, so the same disc boots on a console and
    double-clicks on an A1200 desktop. Dragonstone does not. Prey does not
    either — it has `c/IconX`, because it has the whole of Workbench's `C:`,
-   but no `.info` at the root and no sibling script. One of three.
+   but no `.info` at the root and no sibling script. **[Legends] does, in a
+   third form**: `/Disk.info` and `/InstallHD.info` are Workbench icons, and
+   the root holds a `StartUp-Sequence` and an `AssignInfo` that assign to
+   `Work:Legends` — a hard-disk path — beside a complete A1200 hard-disk
+   installer the CD32 can never run. Two of five, and the second one is not a
+   second entry point so much as **the floppy release's whole install path,
+   copied over unedited**. When a CD32 disc has `.info` files, check whether
+   they are an alternative way in or a fossil.
    Note that Prey still ships `lowlevel.library` and `nonvolatile.library`,
    which are the A1200 compatibility libraries, and opens the first and not
    the second. (Sections 1 and 4.)
@@ -1932,5 +2198,16 @@ the disc that gave it.
    tool in `c/` that nothing runs; and an easter-egg directory containing a
    working demo, 550 lines of its 68020 source, and a signed note inviting
    whoever finds it to read them. Dragonstone carries a cut level's blank
-   slot and a floppy prompt. **Neither disc was swept.** Whether that is
-   normal for the format, or normal for 1994, is worth two more discs.
+   slot and a floppy prompt. **[Legends] carries the A1200 release's complete
+   hard-disk installer** — script, ASCII-art dialogs, the `4.7 MB` figure and
+   a `Format DRIVE DF0:` — plus the two boot files it installs, a version
+   string reading `Version 0.99` in all five level executables, eighteen
+   `SIGN MESSAGE n` placeholders and fifteen `XXXXXXXXXXXXXXXXXXXXX` records
+   in the shipped text, `trackdisk.device` and `arp.library` on a disc with no
+   floppy, a `QWERTYUIOP` keyboard table, `EMPTY PAL` slots in every level's
+   palette table, eight IFF samples with their tracker's `ANNO` chunk intact,
+   photographs of the development team, and a sixth floppy volume that nothing
+   claims. **No disc yet examined on this format was swept**, across 1992 to
+   1996 and five studios. At this point the finding is the rule, not the
+   exception, and the useful question has inverted: **is there a CD32 disc
+   that *was* cleaned up, and what does one look like?**
