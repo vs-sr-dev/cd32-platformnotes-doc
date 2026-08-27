@@ -20,10 +20,10 @@ measured versus what is inferred.
 | Section | |
 |---|---|
 | 1 | Identifying the disc, why the system identifier says `CDTV`, and the three ISOCD habits — now with a **non-ISOCD disc** to check them against |
-| 2 | **The `.TM` block** — outside the file system, *not* always at sector 21, not always 2,048 bytes, and **not the same artefact on CDTV as on CD32** |
+| 2 | **The `.TM` block** — outside the file system, *not* always at sector 21, not always 2,048 bytes, and **not determined by the console either** |
 | 3 | Timestamps: **four** epochs to recognise, and why the outliers are the finding |
 | 4 | The boot chain, the `$VER:` strings, `freeanim.library`, and the two greps and one histogram that decide how you read the executable |
-| 5 | Compression — starting with whether there is any |
+| 5 | Compression — starting with whether there is any, then **RNC and the Imploder**, and getting the decruncher out of the loader |
 | 6 | Hunk files, toolchain fingerprints, symbol tables that survived, and data wrapped in hunk format |
 | 7 | Planar geometry without a copper list, interleaved versus separated, autocorrelation, HAM6 in a CDXL, and the **corrected** palette test |
 | 8 | Red Book, raw Paula samples, tracker modules, in-house players, and getting a headerless stream's sample rate out of the executable |
@@ -42,21 +42,24 @@ assume.
 |---|---|---|
 | [Prey: An Alien Encounter, CD32](https://github.com/vs-sr-dev/cd32-prey-doc) | **1993** | KirkMoreno Multimedia / Almathera, UK+DK — one track and **no audio track at all**, 1,439 files, nothing compressed, 18 % of the disc used, an hour of speech streamed as 1,225 identical 60 KB files, and the only disc so far that genuinely uses AGA |
 | [Prey: An Alien Encounter, **CDTV**](https://github.com/vs-sr-dev/cd32-prey-doc/blob/main/docs/09-cdtv-1992.md) | **1992** | The same game a year earlier. **The first disc here not mastered with ISOCD**, the first CDTV title, the oldest master, and the control that corrected two claims about the others. 1,453 files, **1,201 of them byte-identical to the CD32 release** |
+| [The Speris Legacy](https://github.com/vs-sr-dev/cd32-thesperislegacy-doc) | **1996** | Binary Emotions / Team 17, UK — the newest master here and the smallest disc: one track, **0.74 % of a CD**, 47 files, 35 of them Imploder-crunched, 24-bit AGA palettes in every level. **The disc that showed the `.TM` rule was wrong** |
 | [Dragonstone](https://github.com/vs-sr-dev/cd32-dragonstone-doc) | 1994/1995 | Core Design, UK — an Amiga floppy game ported to CD32: two tracks, 91 files, 84 RNC-crunched, 3 % of the disc used, no OS involvement after the first stage |
 | [Marvin's Marvellous Adventure](https://github.com/vs-sr-dev/cd32-marvinsmarvellousadventure-doc) | 1994/1995 | Infernal Byte Systems / 21st Century, DE+UK — twelve tracks, 212 files, **nothing compressed**, 61 % of the disc used, ten libraries opened and AmigaDOS alive throughout |
 
-The first three are about as unlike each other as CD32 titles can be, which
-makes the handful of things they agree on worth more than a count of three
-suggests. The fourth is not an independent sample at all — it is the *same
-game* on the previous console — and that is exactly why it is the most useful
-disc here: it is the only one that could show that something already written
-down was wrong.
+These are about as unlike each other as Amiga CD titles can be — 1992 to 1996,
+0.74 % of a disc to 61 % of one, 47 files to 1,453 — which makes the handful
+of things they agree on worth more than the count suggests.
 
-**Two things were.** A block of 1,213 timestamps read as a dead clock battery
-turned out to be a real build date inherited from the CDTV master, and a
-palette test that looked for one way of writing a 4-bit value into a byte
-scored every ECS palette on the CDTV disc as 24-bit colour. Both are corrected
-in place and marked as corrections.
+**And the discs that corrected this document are the ones worth having.** The
+CDTV Prey master is not an independent sample at all: it is the *same game* on
+the previous console, which is exactly why it could show that two things
+already written down were wrong. A block of 1,213 timestamps read as a dead
+clock battery turned out to be a real build date inherited from that master,
+and a palette test that looked for only one way of writing a 4-bit value into
+a byte scored every ECS palette on it as 24-bit colour.
+
+**Then Speris corrected the correction.** Three of these things are marked as
+corrections in place, and they are more useful than the claims they replaced.
 
 ## The question this repository was split out to answer, and its answers
 
@@ -87,7 +90,8 @@ trademark sector's.
 > copied the result.
 
 **Then the CDTV release of the same game showed that the block is not the same
-artefact on both consoles.** Same pointer, same `'TM'` tag, same constant —
+artefact on both consoles — and a fourth CD32 disc then showed it is not the
+console that decides.** Same pointer, same `'TM'` tag, same constant —
 and it points at **22,152 bytes at LBA 48,621**, with **no Commodore
 trademark banner anywhere on the disc**. What is there is `/CDTV.TM`:
 
@@ -101,21 +105,40 @@ Created by Carl Sassenrath, Ukiah CA
 The CDTV device driver, by the designer of AmigaOS's Exec kernel, in the block
 the format reserves. So:
 
-> Every CDTV and CD32 disc carries a `.TM` file and a pointer to it in the
-> volume descriptor. **What is in that file depends on the console** — and the
-> `exec` fragment is therefore a **CD32-era** accident, from before June 1993,
-> not something the format has carried since 1991.
-
 It also killed two positional rules this document had written down. **It is
 not at sector 21** (Prey CD32 puts it at 6021), and it is **not always the
 sector after the L path table** (the CDTV master's path tables are at 48,633
 and the block is at 48,621). Find the `'TM'` tag, read the length and the LBA
 after it, and dump exactly that. Never compute the position.
 
-The questions that replace it: **which tool mastered the CDTV disc** — it
-signs nothing — and is `CDTV.TM` always this same driver build? Section 2 has
-the three CD32 hashes and checking them takes thirty seconds. **A mismatch is
-still the interesting result.**
+At that point the conclusion here was that the block's contents depend on the
+console. **They do not.**
+
+### The correction: a CD32 disc carrying the CDTV driver
+
+**The Speris Legacy is a CD32 disc, cut with ISOCD 1.04 on 10 January 1996,
+and its `.TM` block is 22,152 bytes of `cdtv.device` 35.2** — SHA-1
+`fd3e764e6393974dea05612909e25ddb2124eb8b`, **byte for byte the `/CDTV.TM` of
+the 1992 CDTV Prey master**, three and a half years and one console away.
+There is no Commodore banner anywhere on it, and nothing on the disc ever
+reads the block.
+
+> Commodore shipped developers a `.TM` file per console. ISOCD copies the
+> bytes it is handed into the reserved area and writes the length and LBA into
+> the descriptor; it does not know or care which file it got. **The `.TM`
+> block is whatever the person cutting the master fed to the tool** — not a
+> property of the console, and not a property of the format.
+
+Which downgrades the three identical CD32 hashes from evidence about the
+format to evidence about **how widely one particular file circulated**. That
+is still worth recording, and section 2 keeps all four hashes, because a
+mismatch is still the interesting result — **this was the first, and it took
+four discs to find it.**
+
+The question that replaces it: **how often does this happen?** One CD32 disc
+with the CDTV block makes it possible; a second would make it a habit. And
+still open from before: **which tool mastered the CDTV disc?** It signs
+nothing.
 
 ## Contributing from a pipeline
 
