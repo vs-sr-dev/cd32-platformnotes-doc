@@ -625,15 +625,51 @@ release, and a strong hint that there are floppy-era leftovers elsewhere in the
 code. [Dragonstone] writes it in the first-stage loader and never touches
 `BPLCON3`, `BPLCON4` or the AGA colour banks anywhere on the disc.
 
-**Where `FMODE` is not reachable, read the palettes instead — and this may be
-the better test.** An Amiga `$0RGB` word is 12-bit; AGA's colour registers
-take 24. [Marvin] has 21 raw palette files on the disc and **not one value
-exceeds `0x0FFF`**, in a game whose own manual says CD32/A1200/A4000 and
-whose code is 68020. So: two AGA-only discs, and both decline to use AGA —
-one its fetch mode, the other its colour depth. The generalisation to test is
-that **CD32 titles very largely ran ECS-era display code on AGA hardware**,
-and a disc that genuinely uses 24-bit colour or 32-bit fetch is the one worth
-writing up.
+**Where `FMODE` is not reachable, read the palettes instead — but ask two
+separate questions, because they have different answers.**
+
+*Precision.* An Amiga `$0RGB` word is 12-bit; AGA's colour registers take 24.
+[Marvin] has 21 raw palette files and **not one value exceeds `0x0FFF`**.
+[Dragonstone] likewise. Two discs, neither using AGA's colour depth.
+
+*Count.* This is the one that decides whether the disc **needs** AGA, and it
+is a two-line test. OCS and ECS reach 64 colours only through
+**Extra-Half-Brite**, in which entries 32–63 are entries 0–31 at half
+brightness:
+
+```python
+def half(w): return ((w>>8&15)//2)<<8 | ((w>>4&15)//2)<<4 | (w&15)//2
+ehb = sum(1 for i in range(32) if pal[32+i] == half(pal[i]))   # 32 => EHB
+```
+
+[Marvin] scores **0 of 32** on eight of its nine tile palettes (2 of 32 on
+the ninth, by coincidence), with 107 distinct colours in one 128-entry file.
+Arbitrary 64- and 128-colour palettes cannot exist on ECS, so this disc
+genuinely requires AGA.
+
+**So do not collapse the two findings.** Dragonstone writes `FMODE = 0` and
+runs an ECS display on AGA silicon — a floppy port wearing new hardware.
+Marvin needs AGA for its bitplane count and then uses nothing else AGA
+offers: no 32-bit fetch, no 24-bit colour, no Akiko. The pattern worth
+testing across more discs is **AGA used as a deeper ECS**, which is a
+different and fairer claim than "CD32 games ignore AGA".
+
+Two structural reasons a CD32 title will refuse Akiko even when its authors
+can drive it, both visible on Marvin's disc without any disassembly:
+
+* **The same binary has to run on an A1200.** Marvin ships `<Game>.info`
+  with `DefaultTool = IconX`, and ships `lowlevel.library` and
+  `nonvolatile.library` in `libs/` because an A1200 running Workbench 3.0
+  does not have them. Akiko exists only on the CD32, so a C2P renderer would
+  have meant maintaining two display paths.
+* **There is a floppy SKU.** The plain-text DISKMAP compiled into the CD32
+  executable assigns every asset to one of three floppies. The CD build is
+  the floppy build plus Red Book audio and an intro animation.
+
+Marvin's programmer knew all of this: the C2P demo he left on the disc
+carries a note saying *"'ROTATE' really work's only on systems, supporting
+the c2p hardware..."*, and its own header is dated **© 1993/4** while the
+game's is **© 1992/3/4**. The engine predates the console.
 
 Palette files are usually raw and headerless: a run of big-endian `$0RGB`
 words, sized 2 x the colour count (256 bytes = 128 entries, 64 bytes = 32).
