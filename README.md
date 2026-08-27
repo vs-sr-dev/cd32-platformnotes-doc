@@ -20,61 +20,69 @@ measured versus what is inferred.
 | Section | |
 |---|---|
 | 1 | Identifying the disc, why the system identifier says `CDTV`, and the three habits ISOCD leaves behind |
-| 2 | **Sector 21** — the Commodore trademark block, outside the file system, and the object file after the banner |
-| 3 | Timestamps: **three** epochs to recognise, and why the outliers are the finding |
-| 4 | The boot chain, the `$VER:` strings, `freeanim.library`, and the one grep that decides how you read the executable |
+| 2 | **The Commodore trademark block** — outside the file system, *not* always at sector 21, and where the object file after the banner actually comes from |
+| 3 | Timestamps: **four** epochs to recognise, and why the outliers are the finding |
+| 4 | The boot chain, the `$VER:` strings, `freeanim.library`, and the two greps and one histogram that decide how you read the executable |
 | 5 | Compression — starting with whether there is any |
 | 6 | Hunk files, toolchain fingerprints, symbol tables that survived, and data wrapped in hunk format |
-| 7 | Planar geometry without a copper list, autocorrelation, palettes as an AGA test |
-| 8 | Red Book, raw Paula samples, tracker modules, and in-house players found by diffing |
+| 7 | Planar geometry without a copper list, interleaved versus separated, autocorrelation, palettes as an AGA test |
+| 8 | Red Book, raw Paula samples, tracker modules, in-house players, and getting a headerless stream's sample rate out of the executable |
 | 9 | Text encodings, password systems, placeholders, and reading the file *names* |
 | 10 | Baselines, disc by disc, side by side |
 | 11 | The order of work that worked |
 
-Findings confirmed on every disc so far are marked **[all]**; those confirmed
-on fewer are marked **[N of M]**. Everything else is named after the disc it
-came from, and is the kind of thing to test rather than assume.
+Findings confirmed on every disc so far are marked **[all]** or **[N of N]**;
+those confirmed on fewer are marked **[N of M]**. Everything else is named
+after the disc it came from, and is the kind of thing to test rather than
+assume.
 
 ## Discs it is drawn from
 
-| Disc | Year | What it is |
+| Disc | Master | What it is |
 |---|---|---|
+| [Prey: An Alien Encounter](https://github.com/vs-sr-dev/cd32-prey-doc) | **1993** | KirkMoreno Multimedia / Almathera, UK+DK — one track and **no audio track at all**, 1,439 files, nothing compressed, 18 % of the disc used, an hour of speech streamed as 1,225 identical 60 KB files, and the only disc so far that genuinely uses AGA |
 | [Dragonstone](https://github.com/vs-sr-dev/cd32-dragonstone-doc) | 1994/1995 | Core Design, UK — an Amiga floppy game ported to CD32: two tracks, 91 files, 84 RNC-crunched, 3 % of the disc used, no OS involvement after the first stage |
 | [Marvin's Marvellous Adventure](https://github.com/vs-sr-dev/cd32-marvinsmarvellousadventure-doc) | 1994/1995 | Infernal Byte Systems / 21st Century, DE+UK — twelve tracks, 212 files, **nothing compressed**, 61 % of the disc used, ten libraries opened and AmigaDOS alive throughout |
 
-The two are about as unlike each other as two CD32 titles can be, which makes
-the handful of things they agree on worth more than a count of two suggests.
+The three are about as unlike each other as CD32 titles can be, which makes
+the handful of things they agree on worth more than a count of three suggests.
 
 ## The question this repository was split out to answer, and its answer
 
-**Sector 21 belongs to no file.** No directory record covers it; the only
-pointer to it on the whole disc is a field in the primary volume descriptor's
-application-use area that is normally empty. Every CDTV and CD32 disc has it,
-because Commodore required the trademark block, and a sector map built from
-the file system shows it as free space.
+**The trademark block belongs to no file.** No directory record covers it; the
+only pointer to it is a field in the primary volume descriptor's application-use
+area that is normally empty. Every CDTV and CD32 disc has it, because Commodore
+required it, and a sector map built from the file system shows it as free space.
 
-On Dragonstone, the Commodore copyright banner was followed by **876 bytes of
-unlinked AmigaDOS object file**: compilation unit `exec`, 268 bytes of 68000
-code defining `AddPort`, `GetMsg`, `PutMsg`, `FindPort`, `ReplyMsg` and
-`WaitPort`, with `HUNK_SYMBOL` intact and local labels (`REMHEAD.033`,
-`ENABLE.031/032/034`) that are Commodore's own Exec assembler macros expanded
-by line number. The open question was whether that was one master's accident
-or something Commodore shipped to every developer.
+The first ~1,100 bytes are an ASCII-art Commodore copyright banner. What
+follows, at offset `0x44C`, is **876 bytes of unlinked AmigaDOS object file**:
+compilation unit `exec`, 268 bytes of 68000 code defining `AddPort`, `GetMsg`,
+`PutMsg`, `FindPort`, `ReplyMsg` and `WaitPort`, with `HUNK_SYMBOL` intact and
+local labels (`REMHEAD.033`, `ENABLE.031/032/034`) that are Commodore's own
+Exec assembler macros expanded by line number.
 
-**Marvin's Marvellous Adventure has the same 2,048 bytes.** All three SHA-1s
-match — whole sector, banner, object file. Different studio, different
-country, different engine, master cut a month apart, and nothing in either
-game reads the sector.
+**All three discs have the identical 2,048 bytes** — whole sector, banner and
+object file, all three SHA-1s — across three studios, three publishers, three
+engines and fourteen months.
 
-So the trademark block Commodore distributed was itself built by
-concatenating the banner with a stale buffer, and **a fragment of the Amiga
-operating system's own source has been pressed onto discs of this format,
-with its debug symbols, since at least 1993**.
+And the third disc says where they came from. **Prey ships `/CD32.TM`**: an
+ordinary file in the root directory, 2,048 bytes, dated **10 June 1993**,
+referenced by nothing on the disc, whose SHA-1 is the trademark sector's.
 
-Two discs is not every disc. The question that replaces it is whether the
-bytes ever *differ* — a 1991 CDTV title, a different mastering house, a
-non-European pressing. The three hashes are in section 2 and checking them
-takes thirty seconds. **A mismatch is now the interesting result.**
+> Commodore distributed the trademark block to CD32 developers **as a file**,
+> and that file already contained the fragment of Exec's source. The
+> stale-buffer accident happened once, at Commodore; every disc since has
+> copied the result.
+
+Prey also corrects the section's own title. **It is not at sector 21** — it is
+at LBA 6021, because that disc's volume starts at 6019, and the PVD says so.
+The rule that holds is *the sector immediately after the L path table*. Read
+the pointer; never assume 21.
+
+The questions that replace it: does a CDTV title from 1991 or 1992 carry a
+`CDTV.TM`, and do the bytes ever differ? Section 2 has the three hashes and
+checking them takes thirty seconds. **A mismatch is now the interesting
+result.**
 
 ## Contributing from a pipeline
 
