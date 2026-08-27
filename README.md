@@ -23,11 +23,11 @@ measured versus what is inferred.
 | 2 | **The `.TM` block** — outside the file system, *not* always at sector 21, not always 2,048 bytes, and **not determined by the console either** |
 | 3 | Timestamps: **five** epochs to recognise, why the outliers are the finding, and checking the descriptor's date against the files it indexes |
 | 4 | The boot chain, the `$VER:` strings, `freeanim.library`, and the two greps and one histogram that decide how you read the executable |
-| 5 | Compression — starting with whether there is any, then **RNC, the Imploder and Bytekiller**, why **a magic scan that finds nothing proves nothing**, and getting the decruncher out of the loader |
+| 5 | Compression — starting with whether there is any, then **RNC, the Imploder, Bytekiller and a fourth that wears RNC's magic over a different stream**, why **a magic scan that finds nothing proves nothing**, and getting the decruncher out of the loader |
 | 6 | Hunk files, toolchain fingerprints, symbol tables that survived, and data wrapped in hunk format |
-| 7 | Planar geometry without a copper list, interleaved versus separated, autocorrelation, HAM6 in a CDXL, the **corrected** palette test, and a disc that answers the AGA question **twice** |
+| 7 | Planar geometry without a copper list, interleaved versus separated, autocorrelation, HAM6 in a CDXL, the **corrected** palette test, the one-line `LoadRGB4`-versus-`LoadRGB32` test, sparse plane tables that compress without a codec, and a "3D" game whose surfaces are 10,792 **pre-rendered** sprites |
 | 8 | Red Book, raw Paula samples, tracker modules, in-house players, and getting a headerless stream's sample rate out of the executable |
-| 9 | Text encodings, password systems, placeholders, and reading the file *names* |
+| 9 | Text encodings, password systems, placeholders, reading the file *names*, and a disc that stores a text **generator** and shipped its source with a note to translators in it |
 | 10 | Baselines, disc by disc, side by side |
 | 11 | The order of work that worked — ending with **diff the other release of the same game** |
 
@@ -46,10 +46,12 @@ assume.
 | [Dragonstone](https://github.com/vs-sr-dev/cd32-dragonstone-doc) | 1994/1995 | Core Design, UK — an Amiga floppy game ported to CD32: two tracks, 91 files, 84 RNC-crunched, 3 % of the disc used, no OS involvement after the first stage |
 | [Marvin's Marvellous Adventure](https://github.com/vs-sr-dev/cd32-marvinsmarvellousadventure-doc) | 1994/1995 | Infernal Byte Systems / 21st Century, DE+UK — twelve tracks, 212 files, **nothing compressed**, 61 % of the disc used, ten libraries opened and AmigaDOS alive throughout |
 | [Legends](https://github.com/vs-sr-dev/cd32-legends-doc) | **1996** | Krisalis Software / Guildhall, UK — one data track and **twenty-eight audio tracks**, 111 files, **89.4 % of the disc used and only 0.72 % of it by the game**, a six-floppy A1200 release copied onto a CD with its hard-disk installer still on it, and 79 files packed by a cruncher with **no magic number at all** |
+| [Liberation: Captive II](https://github.com/vs-sr-dev/cd32-liberation-doc) | **1994** | Byte Engineers / Mindscape, UK — **the largest data track on the format**, 82,502 sectors, **91.2 % of it digitised speech**; a 3D engine shipped as three in-house shared libraries, three procedural generators the game runs as separate programs, a boot script that mounts a **reset-surviving RAM disk**, and a codec wearing RNC ProPack's magic over a twelve-byte header and a different stream |
 
 These are about as unlike each other as Amiga CD titles can be — 1992 to 1996,
-0.74 % of a disc to 89.4 % of one, 47 files to 1,453 — which makes the handful
-of things they agree on worth more than the count suggests. And the two 1996
+0.74 % of a disc to 89.4 % of one, 47 files to 1,453, a 4.9 MB data track to a
+169 MB one — which makes the handful of things they agree on worth more than
+the count suggests. And the two 1996
 discs are the sharpest pair: Speris and Legends have games of almost exactly
 the same size, and one of them fills the rest of the CD with music while the
 other leaves 99 % of it empty.
@@ -65,8 +67,15 @@ a byte scored every ECS palette on it as 24-bit colour.
 **Then Speris corrected the correction, and Legends corrected section 5.** A
 scan for every compression magic this document knew returned nothing on a disc
 where 79 of 111 files are packed, because the container has no magic number at
-all. Four of these things are marked as corrections in place, and they are more
-useful than the claims they replaced.
+all.
+
+**And Liberation corrected two more.** This document had "exactly 32 unclaimed
+zero sectors at the end of the volume" as an ISOCD 1.04 fingerprint on four
+discs; the fifth leaves **232**. And it had the timestamp problem needing a
+second release of the same game to settle — where here the game executable's
+own `$VER:` build stamp (`Friday 08-Apr-94 09:35:08`) disproves its 1992
+directory record in one `grep`. Six of these things are marked as corrections
+in place, and they are more useful than the claims they replaced.
 
 ## The question this repository was split out to answer, and its answers
 
@@ -82,9 +91,9 @@ compilation unit `exec`, 268 bytes of 68000 code defining `AddPort`, `GetMsg`,
 local labels (`REMHEAD.033`, `ENABLE.031/032/034`) that are Commodore's own
 Exec assembler macros expanded by line number.
 
-**Four of the five CD32-era discs have the identical 2,048 bytes** — whole
-sector, banner and object file, all three SHA-1s — across four studios, four
-publishers, four engines and thirty-eight months.
+**Five of the six CD32-era discs have the identical 2,048 bytes** — whole
+sector, banner and object file, all three SHA-1s — across five studios, five
+publishers, five engines and thirty-eight months.
 
 And the third of them says where they came from. **Prey's CD32 master ships
 `/CD32.TM`**: an ordinary file in the root directory, 2,048 bytes, dated
@@ -139,13 +148,13 @@ reads the block.
 Which downgrades the identical CD32 hashes from evidence about the format to
 evidence about **how widely one particular file circulated**. That is still
 worth recording, and section 2 keeps all the hashes, because a mismatch is
-still the interesting result — **this was the first, and it took four discs to
-find it.**
+still the interesting result — **this was the first, it took four discs to
+find, and two discs since have matched again.**
 
 The question that replaces it: **how often does this happen?** One CD32 disc
 with the CDTV block makes it possible; a second would make it a habit. Legends
-is not it — it carries the Commodore banner, so the score stands at **four to
-one**. And still open from before: **which tool mastered the CDTV disc?** It
+is not it, and neither is Liberation — both carry the Commodore banner, so the
+score stands at **five to one**. And still open from before: **which tool mastered the CDTV disc?** It
 signs nothing.
 
 **The same mechanism turns out to cover more than the `.TM` block.** Legends'
