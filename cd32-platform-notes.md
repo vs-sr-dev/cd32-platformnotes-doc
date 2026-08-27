@@ -1,9 +1,16 @@
 # Amiga CD32 / CDTV platform notes — a checklist for the next disc
 
 A running checklist, carried from one Amiga CD documentation pipeline to the
-next and added to by each. It currently rests on **three discs**, so most of it
+next and added to by each. It currently rests on **four discs**, so most of it
 is still marked with the title it came from: treat it as a list of things to
 *test*, not a list of things that are true of the format.
+
+The fourth is the **CDTV release of a title whose CD32 release is also here**,
+which is the most productive single thing that has happened to this document:
+it supplied a control for claims that had been made on one disc's evidence,
+and **two of them were wrong**. Both are corrected in place below, and both
+corrections are marked. If you can get two releases of the same game on two
+generations of the format, do that before you generalise anything.
 
 Findings are marked:
 
@@ -21,7 +28,8 @@ suggests.
 |---|---|---|
 | [Dragonstone](https://github.com/vs-sr-dev/cd32-dragonstone-doc) | 1994/1995 | Core Design, UK — an Amiga floppy game ported to CD32: two tracks, 91 files, 84 RNC-crunched, 3 % of the disc used, no OS involvement after the first stage |
 | [Marvin's Marvellous Adventure](https://github.com/vs-sr-dev/cd32-marvinsmarvellousadventure-doc) | 1994/1995 | Infernal Byte Systems / 21st Century, DE/UK — twelve tracks, 212 files, **nothing compressed**, 61 % of the disc used, ten libraries opened and AmigaDOS alive throughout |
-| [Prey: An Alien Encounter](https://github.com/vs-sr-dev/cd32-prey-doc) | **1993** | KirkMoreno Multimedia / Almathera, UK+DK — **one track and no audio track at all**, 1,439 files, nothing compressed, 18 % of the disc used, an hour of speech streamed as 1,225 identical 60 KB files, and the only disc so far that genuinely uses AGA. The oldest master here by fourteen months |
+| [Prey: An Alien Encounter, CD32](https://github.com/vs-sr-dev/cd32-prey-doc) | **1993** | KirkMoreno Multimedia / Almathera, UK+DK — **one track and no audio track at all**, 1,439 files, nothing compressed, 18 % of the disc used, an hour of speech streamed as 1,225 identical 60 KB files, and the only disc so far that genuinely uses AGA |
+| [Prey: An Alien Encounter, **CDTV**](https://github.com/vs-sr-dev/cd32-prey-doc/blob/main/docs/09-cdtv-1992.md) | **1992** | The same game a year earlier, published by KirkMoreno alone. **The first disc here not mastered with ISOCD**, the first CDTV disc, the oldest master by fourteen months, and the control that corrected two claims about the other three. 1,453 files, of which **1,201 are byte-identical to the CD32 release** |
 
 ---
 
@@ -94,8 +102,24 @@ Pantaray wrote more than the mastering tool. [Prey] `MORENO/XLPlay`, dated
 a CDXL player the developers evaluated and did not ship with. If a disc
 carries an unexplained tool, check whether the mastering house wrote it.
 
-**ISOCD 1.04 has three visible habits, and all three discs show all three.**
-**[3 of 3]**
+**ISOCD 1.04 has three visible habits, and all three ISOCD discs show all
+three — and the one non-ISOCD disc shows none of them.** That is what turns
+three sightings of one tool into an actual attribution.
+
+| | ISOCD 1.04 (3 discs) | the CDTV Prey master |
+|---|---|---|
+| String padding | NUL | **space** |
+| Data preparer | names the tool and a person | **empty** |
+| Optional path tables | copies of the mandatory ones | **separate, at their own LBAs** |
+| Modification date | NUL | **set** |
+| File names | mixed case | **strict upper-case 8.3** |
+| Path tables | before the files | **after them, at the end of the volume** |
+| PVD written twice at 16 and 17 | yes | **yes** |
+
+**Only the duplicated descriptor survives the change of tool.** Two
+unrelated mastering systems both write the primary volume descriptor twice
+with the terminator at 18, so that one is a property of the format or the
+era, not of ISOCD. Everything else on the list is ISOCD's.
 
 1. **It writes the primary volume descriptor twice**, at sectors 16 and 17,
    byte for byte identical, with the terminator at 18. Nothing is wrong; a
@@ -106,9 +130,9 @@ carries an unexplained tool, check whether the mastering house wrote it.
 3. **It NUL-pads every string field** where ISO 9660 asks for spaces.
 
 Other tools do other things. Log which tool wrote which disc and what its
-layout habits are. **A disc mastered with something other than ISOCD is now
-the interesting one to find**, because everything above is currently
-attributed to a single tool on the strength of three discs it wrote.
+layout habits are. The empty preparer field on the CDTV master is itself the
+fingerprint of *not* being ISOCD: the tool did not sign its work, and
+identifying it is an open item.
 
 **The declared volume size and the image size need not agree.** Dragonstone
 declares 1,635 sectors in a 1,741-sector image; Marvin declares 6,681 in
@@ -118,8 +142,16 @@ how a dump was made, not of the format. Build your sector map against the
 declared size either way.
 
 **Count the unclaimed sectors inside the volume.** [Marvin] 32, all zero, at
-the end. [Prey] **32, all zero, at the end.** Two ISOCD discs, same number.
-Cheap to check and now specific enough to be a test.
+the end. [Prey CD32] **32, all zero, at the end.** Two ISOCD discs, same
+number. Cheap to check and now specific enough to be a test — the CDTV master
+has none, which fits it being a different tool.
+
+**A dump can be much larger than the disc.** [Prey CDTV] the image is 119,988
+sectors and the declared volume is 48,637; the 71,351 sectors after it —
+146 MB, **58 % of the file you were given** — hold no ISO structure, no
+readable string, and a short repeating byte pattern. It is a dump artefact.
+Always build the map against the declared size, and say what the remainder
+is rather than assuming it is content.
 
 **The volume need not start at LBA 19.** [Prey] The descriptor terminator is
 at 18 and the M path table is at **6019**, with **6,000 sectors of zero in
@@ -132,14 +164,17 @@ pointer in section 2 legible as a pointer.
 
 ---
 
-## 2. The Commodore trademark block — follow the pointer, do not assume 21
+## 2. The `.TM` block — follow the pointer, and read what it points at
 
 **Do this on every CD32 and CDTV disc.** It costs a minute and it is the
 highest-yield first move on the format so far.
 
-**It is not always at sector 21.** It was on the first two discs here, which
-is why earlier versions of this section were called "Sector 21". [Prey] puts
-it at **LBA 6021**, and sector 21 on that disc is entirely zero.
+**It is not always at sector 21, it is not always 2,048 bytes, and it is not
+always a trademark.** All three were true of the first two discs here, which
+is why earlier versions of this section were called "Sector 21". [Prey CD32]
+puts it at **LBA 6021**, and sector 21 on that disc is entirely zero.
+[Prey CDTV] puts **22,152 bytes** at **LBA 48,621**, and what is there is a
+device driver.
 
 The block is **outside the file system**: no directory record covers it, and a
 sector map built from the directory shows it as free space. The only pointer
@@ -147,21 +182,36 @@ to it anywhere is in the PVD's **application-use area** (offset 883 onward),
 which is normally empty and on all three discs holds the same shape:
 
 ```
+ISOCD 1.04 (three discs)
 offset 883:  00
 offset 884:  46 53 00 00        "FS"
 offset 888:  54 4D 00 14        "TM", 0x0014 = 20      <- a CONSTANT
-offset 892:  00 00 08 00        0x0800 = 2048
-offset 896:  00 00 00 15        the trademark LBA      <- 21, 21, and 6021
+offset 892:  00 00 08 00        0x0800 = 2048          <- the block's LENGTH
+offset 896:  00 00 00 15        the block's LBA        <- 21, 21, and 6021
+
+the CDTV Prey master
+offset 883:  00
+offset 884:  54 4D 00 14        "TM", 0x0014 = 20      <- same constant
+offset 888:  00 00 56 88        0x5688 = 22,152        <- eleven sectors
+offset 892:  00 00 BD ED        0xBDED = 48,621, and repeated four times
 ```
 
-**Correction.** This section used to read the `20` at offset 890 as the
-path-table LBA, because on Dragonstone and Marvin the L path table is at 20
-and the trademark block at 21. Prey's L path table is at **6020** and the
-field still reads **20**, so it is a fixed value and that reading was wrong.
+**Find the `'TM'` tag; do not assume an offset.** The `'FS'` record before it
+is ISOCD's, and the CDTV master omits it, so a parser that reads fixed offsets
+gets the wrong longwords. Read the two-byte constant, then the length, then
+the LBA.
 
-What does hold on all three: **the trademark sector is the sector immediately
-after the L path table** (20→21, 20→21, 6020→6021), and the LBA in the last
-longword is correct and absolute. Read it; do not compute it.
+**Correction 1.** This section used to read the `20` at the constant position
+as the path-table LBA, because on Dragonstone and Marvin the L path table is
+at 20 and the block at 21. Prey's L path table is at **6020** and the field
+still reads **20**; so does the CDTV master's, whose path tables are at
+48,633. It is a fixed value and that reading was wrong.
+
+**Correction 2.** A later version of this section said the block is always
+"the sector immediately after the L path table". That holds on the three
+ISOCD discs (20→21, 20→21, 6020→6021) and **not** on the CDTV master, whose
+path tables are at 48,633–48,636 and whose block is at 48,621. **There is no
+positional rule. Follow the pointer.**
 
 The first ~1,100 bytes of the sector are ASCII art: `Copyright (c) 1993 -
 Commodore Electronics Ltd.`, the Commodore logo drawn in `C`, `/` and `\`, and
@@ -197,7 +247,7 @@ are Commodore's Exec assembler macros expanded by line number. This is a
 fragment of the Amiga operating system's own source, compiled, pressed onto a
 game disc in 1994, in a sector nothing reads.
 
-### ANSWERED: three discs, the same bytes
+### On CD32-era discs: three discs, the same bytes
 
 **All three SHA-1s match, byte for byte, on all three discs:**
 
@@ -208,13 +258,13 @@ SHA-1  690aae24a96b69659066e691d0b07db301260572   object file, bytes 0x44C..0x7B
 ```
 
 Three studios, three publishers, three engines with nothing in common, and
-**fourteen months** between Prey's master (1993-11-29) and the other two. Same
-2,048 bytes, in a sector nothing on any of them reads.
+**fourteen months** between Prey's CD32 master (1993-11-29) and the other two.
+Same 2,048 bytes, in a sector nothing on any of them reads.
 
 ### ANSWERED, and by a file: `/CD32.TM`
 
-Prey has the trademark block **twice**: once in the reserved sector at 6021,
-and once as an ordinary file in the root of the file system.
+Prey's CD32 master has the trademark block **twice**: once in the reserved
+sector at 6021, and once as an ordinary file in the root of the file system.
 
 ```
 LBA 6062   2,048 bytes   1993-06-10 14:39:53   /CD32.TM
@@ -240,19 +290,61 @@ the distribution file concatenated the banner with a buffer that still held a
 fragment of the operating system's own build output. Every disc since has
 copied that file. Prey is the disc that shipped the file itself.
 
+### ANSWERED: the CDTV block is a different thing entirely
+
+The CDTV release of Prey has the same pointer, the same `'TM'` tag and the
+same constant, and there is **no Commodore trademark banner anywhere on the
+disc** — zero hits for `Commodore Electronics`, zero for `registered
+trademark`, zero for the ASCII-art logo, in a 245 MB image. What the pointer
+points at is `/CDTV.TM`, 22,152 bytes, beginning:
+
+```
+4E 75 00 00  "cdtv 35.2 (6.2.91)" 0D 0A 00
+             "CDTV Device Driver" 00
+             "Copyright (c) 1990, Commodore-Amiga, Inc." 00
+             "Created by Carl Sassenrath, Ukiah CA" 00
+             "cdtv.device" 00 "dmac.semaphore" 00
+```
+
+**The CDTV device driver**, by the designer of AmigaOS's Exec kernel, in the
+block the format reserves. Note there is **no `$VER:` prefix** on that version
+string, so a `$VER:` sweep of the disc never finds it — it was found by
+dumping what the pointer pointed at.
+
+Note also that here the PVD points **at the file itself**: same LBA, same
+length, no separate reserved copy. ISOCD makes a duplicate; this tool did not
+need to.
+
+So the rule generalises and the payload does not:
+
+> **Every CDTV and CD32 disc carries a `.TM` file in its root and a pointer to
+> it in the volume descriptor's application-use area. What is in that file
+> depends on the console.** On CDTV it is a working device driver. On CD32 it
+> is a 2,048-byte trademark banner with 876 bytes of stale `exec` object code
+> stuck to the end of it.
+
+Which also dates the `exec` fragment. It is **not** something Commodore has
+been pressing onto discs since 1991: it arrived when the shorter **CD32-era**
+`.TM` file was assembled, some time before 10 June 1993, replacing a file that
+had a real job to do. Whoever built it concatenated the banner with a buffer
+that still held part of the operating system's own build output.
+
 **What to do on the next disc**
 
-1. Read the application-use area and **follow the pointer**. Do not assume 21.
-2. **Look for a `.TM` file in the root** — `CD32.TM`, and on a CDTV title
-   perhaps `CDTV.TM`. Its date is a date for the artefact; its contents say
-   whether the CDTV block and the CD32 block are the same bytes.
-3. **Keep recording the three hashes.** Three discs across fourteen months now
-   agree; a mismatch is the interesting result.
+1. Read the application-use area, **find the `'TM'` tag, and follow the
+   pointer**. Do not assume 21, do not assume 2,048 bytes, do not assume an
+   `'FS'` record precedes it.
+2. **Look for the `.TM` file in the root** and read its date.
+3. **Keep recording the three CD32 hashes.** Three discs across fourteen
+   months agree; a mismatch is the interesting result.
+4. On a CDTV disc, **record the driver version**. One CDTV disc cannot say
+   whether `CDTV.TM` is always `cdtv 35.2 (6.2.91)` or tracks the master date.
 
 `tools/tmsector.py` in
-[cd32-prey-doc](https://github.com/vs-sr-dev/cd32-prey-doc) reads the pointer
-out of the PVD and dumps whatever it points at, for any track-1 image; the
-copies in the Dragonstone and Marvin repositories assume sector 21.
+[cd32-prey-doc](https://github.com/vs-sr-dev/cd32-prey-doc) finds the `'TM'`
+tag, reads the declared length and LBA, and dumps whatever is there, on both
+layouts; the copies in the Dragonstone and Marvin repositories assume sector
+21 and 2,048 bytes.
 
 ---
 
@@ -268,13 +360,25 @@ ISO 9660 directory records store the year as an offset from 1900. There are
 |---|---|
 | 1978-01-01 + mm:ss, or 1978-01-*nn* | AmigaDOS `DateStamp` day zero — an Amiga whose clock was never set. The day number is days of uptime |
 | 1980-01-01 or a few weeks after | **MS-DOS `FAT` day zero** — the file came through a PC filesystem |
-| a plausible date **one to two years before the master** | a build or mastering machine whose clock battery was dead. [Marvin] directories at 1992-12-21, master 1995. [Prey] 1,213 files at 1992-09-03, master 1993-11-29 |
+| a plausible date **one to two years before the master** | **check before you call this a dead clock battery.** It is at least as often an earlier build of the same material, carried forward with its dates intact — see the correction below |
 | a plausible real date | a machine whose clock was set; note *which* machine |
 
-**Two discs out of three have a machine stuck in 1992.** Marvin's directories
-all read 1992-12-21 and Prey's bulk copy reads 1992-09-03, on masters cut in
-1995 and 1993 respectively. Probably two dead batteries; cheap to keep
-counting.
+**CORRECTION — "a machine stuck in 1992" was wrong on one of the two discs it
+was claimed for.** This document used to say that Marvin and Prey both had a
+build machine with a dead clock battery reporting 1992. Then the **CDTV
+release of Prey** turned up, and it was mastered on **1992-09-02**, with its
+1,453 files stamped 15:00:53–15:05:26 that afternoon.
+
+The CD32 disc's 1,213-file block is stamped 1992-09-03, 15:01:00–15:05:25 —
+the same four-and-a-half-minute bulk copy, the same time of day, one day
+later — and **1,201 of those files are byte-identical to the CDTV ones**. The
+dates are real. They are the CDTV build session, carried into the CD32 master
+fourteen months afterwards with the datestamps intact.
+
+Marvin's 1992-12-21 directories may still be a dead battery; nothing tests
+that. **The method is the finding: when a date is one or two years early,
+look for an earlier release of the same title before concluding the clock was
+wrong. A byte-level diff against that release settles it in one pass.**
 
 Amiga build machines frequently had no set clock, and **1 January 1978 is day
 zero of the AmigaDOS `DateStamp`**. A record reading:
@@ -322,6 +426,19 @@ build.
   name order (`S0077C03` between `S0074C01` and `S0074C02`; `S0068C12` alone,
   two days after its neighbours). One block of the soundtrack re-recorded
   chunk by chunk on a machine with no clock.
+
+  **And this one has been checked against an independent source.** Diffing the
+  CD32 disc against the CDTV release of the same game: the scene files that
+  *differ* inside that directory number **113**, and they are **the same 113
+  files**. Two unrelated signals — a timestamp epoch and a byte comparison
+  against a disc made a year earlier — pointing at exactly the same set. That
+  is as close to confirmation as this method gets, and it is worth doing when
+  a second release exists.
+
+  Two honest footnotes from the same comparison: eight further chunks differ
+  and are *not* at the 1978 epoch, so content can change without the datestamp
+  moving; and one file *is* at the 1978 epoch and is byte-identical to the
+  older disc, so a 1978 stamp does not always mean the content changed.
 
 **When the outliers are at the 1978 epoch, sort them and read them as a log.**
 The day number is uptime, so several separate sittings show up as several
@@ -432,6 +549,13 @@ switches the CD32 drive to double speed and prints
 `Read commands are at maximum speed` — and nothing on the disc runs it. It
 is a development tool that shipped.
 
+**Read the `c/` directory as a dating tool.** [Prey CDTV] `ASK`, `NEWCLI`,
+`ENDCLI`, `FF`, `LAB`, `RESIDENT`, `SETENV`, plus `L/DISK-VALIDATOR`,
+`L/NEWCON-HANDLER`, `L/SPEAK-HANDLER` and `LIBS/INFO.LIBRARY` — that is a
+**Workbench 1.3** system, which is what a CDTV runs. [Prey CD32] the same
+project's next release ships Workbench 3.1. The `c/` directory tells you which
+Kickstart the disc was built against before you look at a single executable.
+
 **And be prepared for the whole of Workbench.** [Prey] `c/` holds **59
 commands** — `Ed`, `Edit`, `Install`, `Mount`, `MagTape`, `RemRAD`,
 `UpdateWBFiles`, `ExtractKickstart` — of which the boot script runs **two**.
@@ -442,8 +566,24 @@ and nobody looked at what was in it. One of the things in it is
 tool for partitioning, RDB-writing and low-level formatting a SCSI hard
 drive — on a retail game disc, in the directory Kickstart assigns to `C:`.
 `c/joymouse` is *"JoyMouse ... Copyright 1990 by Jonathan Potter"*, a
-joystick-to-pointer handler, also unused. **Read the usage text of every
-command in `c/` that is not a Workbench one you recognise.**
+joystick-to-pointer handler, also unused.
+
+[Prey CDTV] does the same thing a generation earlier and worse: **`c/WACK`**,
+35,336 bytes, is *"Wack Version 1.0"* — Commodore's low-level debugger, with
+breakpoints, single-stepping, disassembly, `tasks`, `symbols` and a serial
+console. And **`c/BOOKIT`** says of itself:
+
+```
+Written by Leo L. Schwab.  Designed by Sassenrath/Reichart/Ware.
+Copyright 1991, Silent Software, Inc.
+Part of the CDTV Survival Kit.
+*** This program may NOT be freely distributed ***
+```
+
+— on a pressed retail disc, and it *is* used, from the boot script. So the
+same studio shipped a piece of Commodore's internal tooling on both of its
+masters, a different one each time. **Read the usage text of every command in
+`c/` that is not a Workbench one you recognise.**
 
 **Read the `$VER:` string in every `c/` command.** They date the tools and say
 whether the command is Commodore's or the studio's:
@@ -490,6 +630,25 @@ CD32 extended ROM.
 
 Six sightings across three discs, no function call in any of them, always at
 the moment the program claims the machine.
+
+**New, and the first independent support the reading has had: the CDTV
+generation has a command whose name says it.** [Prey CDTV] the boot script is
+
+```
+CD0:c/bookit bjv
+CD0:c/rmtm
+Prey:Moreno/Prey
+CD0:c/endcli >NIL:
+```
+
+`c/RMTM` — *remove TM* — is 2,820 bytes, opens `dos.library`,
+`intuition.library` and **`playerprefs.library`**, and runs once, immediately
+before the game. Same position in the sequence as the CD32 `freeanim` open,
+same shape of job: make the console's boot-time branding go away and give the
+memory back. On CDTV it is a named command in `c/`; on CD32 it is a library
+whose *open* is the operation. Not proof — `rmtm` has not been disassembled —
+but it is the first thing outside the CD32 discs that points the same way.
+**On a CDTV disc, look for `c/rmtm` in the boot script.**
 
 **New: the argument template.** [Prey] `c/freeanim`'s `ReadArgs` template is
 
@@ -818,6 +977,18 @@ list at runtime through an in-house library — `color_fx.library`'s
 disc. When that happens, autocorrelation plus rendering is the whole method,
 and the display depth has to come from an emulator trace instead.
 
+**A CDXL stream can be either, too, and two releases of one game disagreed.**
+[Prey CD32] 619 frames, 240 x 96, 7 planes, **plane-separated**.
+[Prey CDTV] 100 frames, 160 x 128, 6 planes, **line-interleaved**. Render four
+frames both ways and look; it costs nothing and the wrong one is obvious.
+
+**A CDXL whose palette is too small for its plane count is HAM.** [Prey CDTV]
+6 planes with a 32-byte palette — 16 entries where 64 are needed — is HAM6:
+sixteen base colours and 4,096 displayable, which is how you got photographic
+colour out of an ECS Amiga. Decoded as plain planar it is noise; decoded as
+HAM6 it is a flight over forested mountains. **The palette-to-plane mismatch
+is the tell**, and it is in the header, so you never have to guess.
+
 **Interleaved and separated can coexist in one file family.** [Marvin] Eight
 of nine `blockNN.fbb64` files are 320 x 400 six-plane *interleaved* tile
 banks; the ninth, same extension and same directory, is 448 x 256 six-plane
@@ -840,20 +1011,31 @@ code. [Dragonstone] writes it in the first-stage loader and never touches
 separate questions, because they have different answers.**
 
 *Precision.* An Amiga `$0RGB` word is 12-bit; AGA's colour registers take 24.
-[Marvin] has 21 raw palette files and **not one value exceeds `0x0FFF`**.
-[Dragonstone] likewise. **[Prey] does use the full depth**, and it is the
-first disc here that does. In an IFF `CMAP` the test is nibble-doubling: a
-12-bit value written into a 24-bit register comes out as `0x11`, `0x22`, ...,
-so count the bytes where the high nibble equals the low one:
+An IFF `CMAP`, however, **always stores eight bits per gun whatever the target
+hardware**, so the question is whether the bytes in it are reducible to four
+bits.
+
+**CORRECTION — the test this section used to give was unsound.** It looked
+only for nibble-*doubling* (`v * 17`: `0xF` written as `0xFF`). A 4-bit value
+is just as often written as `v << 4` (`0xF` as `0xF0`), and the CDTV Prey
+master uses that form **exclusively**: its six ILBM screens are 5-plane,
+32-colour, unambiguously ECS, and the doubling-only test scores every one of
+them as 24-bit colour. Use both conventions:
 
 ```python
-nib = sum(1 for b in cmap if (b >> 4) == (b & 15))   # == len(cmap) => 12-bit
+def needs_more_than_4_bits(b):
+    return (b & 0x0F) != 0 and (b >> 4) != (b & 0x0F)
 ```
 
-Prey scores 516/768 on one screen, 532/768 on another, 88/384 on a third —
-**nine of thirteen palettes hold colours ECS cannot represent**. Four score
-768/768. The split is per image and does not follow the date or the paint
-program, so run the test on every file rather than one.
+Re-run on the four discs: the CDTV master scores **0 bytes on all six files**,
+as ECS requires. [Prey CD32] **6 of 14 screens** carry a substantial count
+(282 of 384 bytes on one, 222 of 768 on another), three more carry eight
+stray bytes each that are probably conversion rounding, and five are pure
+12-bit. [Marvin] and [Dragonstone] have no value above `0x0FFF` at all in
+their raw palette files.
+
+So AGA colour depth *is* used on one disc — but **the plane count is the
+claim that needs no interpretation**, and it should carry the weight.
 
 *Count.* This is the one that decides whether the disc **needs** AGA, and it
 is a two-line test. OCS and ECS reach 64 colours only through
@@ -870,11 +1052,19 @@ the ninth, by coincidence), with 107 distinct colours in one 128-entry file.
 Arbitrary 64- and 128-colour palettes cannot exist on ECS, so this disc
 genuinely requires AGA.
 
-**Where the graphics are IFF, the plane count is free.** [Prey] ten of its
-fourteen ILBM screens have `BMHD.nPlanes == 8` — 256 colours, which no ECS
-Amiga can display — and their `CAMG` is `0x00021000`, plain PAL lo-res, with
-`0x00029004` (PAL + HIRES + LACE) on the one 640 x 512 title screen. Read
-`BMHD` and `CAMG` before doing anything else with an IFF file.
+**Where the graphics are IFF, the plane count is free, and it is the strong
+evidence.** [Prey CD32] ten of its fourteen ILBM screens have
+`BMHD.nPlanes == 8` — 256 colours, which no ECS Amiga can display — and their
+`CAMG` is `0x00021000`, plain PAL lo-res, with `0x00029004`
+(PAL + HIRES + LACE) on the one 640 x 512 title screen. Read `BMHD` and `CAMG`
+before doing anything else with an IFF file.
+
+**The control makes this airtight.** The same six screens on the CDTV release
+of the same game, by the same people, are **5 planes and 32 colours**. And
+`EVALUATE`'s first 32 `CMAP` entries on the CD32 disc are byte-identical to
+the CDTV file's entire palette, with 224 entries added underneath: the
+artwork was deepened for AGA, not redrawn. **If two releases of a title exist,
+diff the palettes — it tells you what the hardware upgrade actually bought.**
 
 **So do not collapse the two findings.** Dragonstone writes `FMODE = 0` and
 runs an ECS display on AGA silicon — a floppy port wearing new hardware.
@@ -1162,43 +1352,45 @@ cut.
 
 ## 10. Baselines
 
-Three discs, and they bracket the format rather than agreeing on it.
+Four discs, and they bracket the format rather than agreeing on it. The last
+two are the same game on the two consoles, so the last column is a control for
+the one before it rather than another independent sample.
 
-| | Dragonstone (1995) | Marvin's Marvellous Adventure (1995) | **Prey (1993)** |
-|---|---|---|---|
-| Publisher / studio | Core Design, UK | 21st Century / Infernal Byte, UK+DE | Almathera / KirkMoreno, UK+DK |
-| Master cut | 1994/1995 | 1994/1995 | **1993-11-29 21:15:11** |
-| Tracks | 1 data (`MODE1/2048`) + 1 audio | 1 data (`MODE1/2048`) + **11** audio | 1 data (`MODE1/2048`), **no audio track** |
-| Data track sectors | 1,741 (1,635 declared) | 6,833 (6,681 declared) | **59,787 (59,787 declared — equal)** |
-| Audio | 118.08 s, 8,856 sectors | **2,600.9 s**, 195,068 sectors | 0 s Red Book; **3,820 s of PCM in files** |
-| Share of a 333,000-sector CD | ~3.2 % | **60.7 %** | 18.0 % |
-| Files / directories | 91 / 2 | 212 / 9 | **1,439 / 24** |
-| Bytes on disc / unpacked | 2,721,914 / 10,284,352 | 13,251,697 / — | 109,786,031 / — |
-| Compression | RNC ProPack 1, 84 of 91 files, 25.7 % | **none at all** | **none at all** |
-| PVD system id | `CDTV` | `CDTV` | `CDTV` |
-| PVD application id | `DragonStone` (the title) | `Platformer` (the genre) | `Game` (the medium) |
-| Cue `CATALOG` | absent | `5012635300344` | `5024913000068` |
-| Mastering tool | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) |
-| Preparer field | `Sajjad Majid - ...` | `Stewart.. - ...` | `Almathera - ...` |
-| Duplicate PVD | yes, sectors 16 and 17 | yes, sectors 16 and 17 | yes, sectors 16 and 17 |
-| Volume starts at LBA | 20 | 20 | **6019 — 6,000 zero sectors first** |
-| Trademark block at | sector 21 | sector 21 | **sector 6021**, and again as `/CD32.TM` |
-| Trademark object file | yes, 876 bytes, unit `exec` | **yes, identical, all 3 SHA-1s match** | **yes, identical, and its source file** |
-| Unclaimed sectors in the volume | — | 32, all zero | **32, all zero** |
-| Timestamps | AmigaDOS 1978 epoch, except 3 files | real 1994 dates; dirs 1992; **2 files at the MS-DOS 1980 epoch** | four epochs: 131 at 1978, **1,213 at 1992-09-03**, 84 Commodore stamps, 43 real |
-| SetPatch | 40.14 (7.10.93) | 39.6 (8.9.92) | 40.12 (16.9.93) |
-| First stage | 1 hunk, 3 relocations, **0 library calls**, Akiko direct | 6 hunks all chip, 4,278 relocations, **169 library calls**, no Akiko | 1 hunk any-mem, 245 relocations, 64 library calls, **0 hardware registers** |
-| Game executable | (same file) | (same file) | 1 hunk, **5,323 relocations**, 120 library calls, **448 register writes** |
-| Libraries opened | none | 10, via `OldOpenLibrary` | 6, via `OldOpenLibrary` |
-| `freeanim.library` | opened by `c/FreeAnim` | opened **first** by the game, never called | opened by the first stage; `c/freeanim` ships unused |
-| Akiko | driven directly | untouched | untouched |
-| `FMODE` | written as 0 — ECS path on AGA hardware | not written statically; **all palettes 12-bit** | not written; **9 of 13 palettes genuinely 24-bit** |
-| Graphics | interleaved planar, 3 and 4 planes | interleaved planar, 6 planes (one file separated) | **separated planar**, 4 planes; ILBM at **8 planes** |
-| Text encoding | CP437, with two files in a third encoding | ISO 8859-1, all four languages | 7-bit ASCII, and there is almost none |
-| Languages | 3 (EN/FR/DE) | 4 (EN/DE/FR/IT) | 1 (EN), with Danish filenames |
-| Music | 1 CD track + 1 ProTracker module | 11 CD tracks + 12 in-house `.pc` modules | **1,225 raw PCM files at 19,705 Hz** |
-| Save system | password, 64-char alphabet, bit field | password table + CD32 `nonvolatile.library` | **none** |
-| Cut content | level 4, `0xFFFF` row in the loader table | 3 unlisted working levels, 1 unused music file | 7 sprite banks, 1 door animation, 2 files the code still names |
+| | Dragonstone (1995) | Marvin's Marvellous Adventure (1995) | **Prey CD32 (1993)** | **Prey CDTV (1992)** |
+|---|---|---|---|---|
+| Publisher / studio | Core Design, UK | 21st Century / Infernal Byte, UK+DE | Almathera / KirkMoreno, UK+DK | **KirkMoreno alone** |
+| Master cut | 1994/1995 | 1994/1995 | **1993-11-29 21:15:11** | **1992-09-02 15:05:26** |
+| Tracks | 1 data (`MODE1/2048`) + 1 audio | 1 data (`MODE1/2048`) + **11** audio | 1 data (`MODE1/2048`), **no audio track** | 1 data, **no audio track** |
+| Data track sectors | 1,741 (1,635 declared) | 6,833 (6,681 declared) | **59,787 (59,787 declared — equal)** | 48,637 declared **in a 119,988-sector dump** |
+| Audio | 118.08 s, 8,856 sectors | **2,600.9 s**, 195,068 sectors | 0 s Red Book; **3,820 s of PCM in files** | 0 s Red Book; **3,922 s of PCM in files** |
+| Share of a 333,000-sector CD | ~3.2 % | **60.7 %** | 18.0 % | 14.6 % |
+| Files / directories | 91 / 2 | 212 / 9 | **1,439 / 24** | **1,453 / 20** |
+| Bytes on disc / unpacked | 2,721,914 / 10,284,352 | 13,251,697 / — | 109,786,031 / — | 99,327,202 / — |
+| Compression | RNC ProPack 1, 84 of 91 files, 25.7 % | **none at all** | **none at all** | **none at all** |
+| PVD system id | `CDTV` | `CDTV` | `CDTV` | `CDTV` (correctly, this time) |
+| PVD application id | `DragonStone` (the title) | `Platformer` (the genre) | `Game` (the medium) | **empty** |
+| Cue `CATALOG` | absent | `5012635300344` | `5024913000068` | — (no cue) |
+| Mastering tool | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) | **not ISOCD — unidentified** |
+| Preparer field | `Sajjad Majid - ...` | `Stewart.. - ...` | `Almathera - ...` | **empty** |
+| Duplicate PVD | yes, sectors 16 and 17 | yes, sectors 16 and 17 | yes, sectors 16 and 17 | **yes** — the one habit that crosses tools |
+| Volume starts at LBA | 20 | 20 | **6019 — 6,000 zero sectors first** | 19; **path tables at 48,633, after the files** |
+| `.TM` block at | sector 21, 2,048 B | sector 21, 2,048 B | **6021**, 2,048 B, and again as `/CD32.TM` | **48,621, 22,152 B**, and it *is* `/CDTV.TM` |
+| `.TM` contents | trademark banner + 876 B `exec` object | identical | identical | **`cdtv.device` 35.2, Carl Sassenrath — no banner anywhere** |
+| Unclaimed sectors in the volume | — | 32, all zero | **32, all zero** | none |
+| Timestamps | AmigaDOS 1978 epoch, except 3 files | real 1994 dates; dirs 1992; **2 files at the MS-DOS 1980 epoch** | four epochs: 131 at 1978, **1,213 inherited from the CDTV build**, 84 Commodore stamps, 43 real | one 4½-minute session, all real |
+| SetPatch | 40.14 (7.10.93) | 39.6 (8.9.92) | 40.12 (16.9.93) | none — `bookit` + `rmtm` instead |
+| First stage | 1 hunk, 3 relocations, **0 library calls**, Akiko direct | 6 hunks all chip, 4,278 relocations, **169 library calls**, no Akiko | 1 hunk any-mem, 245 relocations, 64 library calls, **0 hardware registers** | **324 bytes**: open dos, load the game |
+| Game executable | (same file) | (same file) | 1 hunk, **5,323 relocations**, 120 library calls, **448 register writes** | 71,316 B, and a **324-byte** first stage |
+| Libraries opened | none | 10, via `OldOpenLibrary` | 6, via `OldOpenLibrary` | `cdtv.device`, `bookmark.device` |
+| `freeanim.library` | opened by `c/FreeAnim` | opened **first** by the game, never called | opened by the first stage; `c/freeanim` ships unused | **not present — `c/rmtm` instead, and it is run** |
+| Akiko | driven directly | untouched | untouched | n/a (CDTV) |
+| Colour | `FMODE = 0`, ECS path on AGA silicon | **all palettes 12-bit** | **6 of 14 screens exceed 12-bit** | all 12-bit, as ECS requires |
+| Graphics | interleaved planar, 3 and 4 planes | interleaved planar, 6 planes (one file separated) | **separated planar**, 4 planes; ILBM at **8 planes** | same frames, 4 planes; ILBM at **5 planes** |
+| Text encoding | CP437, with two files in a third encoding | ISO 8859-1, all four languages | 7-bit ASCII, and there is almost none | 7-bit ASCII, and even less of it |
+| Languages | 3 (EN/FR/DE) | 4 (EN/DE/FR/IT) | 1 (EN), with Danish filenames | 1 (EN), same Danish filenames |
+| Music | 1 CD track + 1 ProTracker module | 11 CD tracks + 12 in-house `.pc` modules | **1,225 raw PCM files at 19,705 Hz** | **1,258 of the same files**, 178 scenes |
+| Save system | password, 64-char alphabet, bit field | password table + CD32 `nonvolatile.library` | **none** | **none** |
+| Cut content | level 4, `0xFFFF` row in the loader table | 3 unlisted working levels, 1 unused music file | 7 sprite banks, 1 door animation, 2 files the code still names, **scene 0 dropped** | the same 7 sprite banks and door are already missing here |
 
 ---
 
@@ -1213,11 +1405,13 @@ Three discs, and they bracket the format rather than agreeing on it.
 3. **Walk the directory and build a sector map.** List what is *not* claimed
    by any file. On this format that is where the trademark block turns up.
    Build it against the *declared* volume size, not the image size.
-4. **Follow the trademark pointer** at PVD offset 896, dump that sector, hash
-   it in three pieces, and compare against the three SHA-1s in section 2.
-   Thirty seconds; a mismatch is now the finding. **Then look for a `.TM` file
-   in the root** — Prey ships the block as `/CD32.TM` as well, dated, and that
-   file is where the `exec` fragment came from.
+4. **Find the `'TM'` tag in the application-use area, read the length and the
+   LBA after it, and dump exactly that many bytes.** Not sector 21, not 2,048
+   bytes: the CDTV Prey master declares 22,152 bytes at LBA 48,621 and what is
+   there is a device driver. On a CD32-era disc, hash the result in three
+   pieces against section 2. **Then look for the `.TM` file in the root** —
+   both Prey masters ship it as a file, dated, and on CD32 that file is where
+   the `exec` fragment came from.
 5. **Sort the directory by timestamp** before reading a single file. Free, and
    it has given up a subsystem on all three discs. Recognise four epochs
    (1978, 1980, a wrong-by-years clock, real), and separate file dates from
@@ -1253,12 +1447,22 @@ Three discs, and they bracket the format rather than agreeing on it.
     before reading any of them.
 14. **Diff the music files against each other** before analysing any one of
     them; the common prefix is the player.
-15. **Check every path the executables name against the directory.** Every
+15. **Find out whether the title exists on the other console, or on floppy,
+    and diff the two releases byte for byte.** This is the highest-value step
+    on the list and it is the last one added, because it is the only one that
+    can tell you that something you already believed is wrong. On Prey it
+    turned 1,213 "wrong clock" timestamps into a real build date, confirmed a
+    113-file subsystem split from a completely independent direction, showed
+    what an AGA upgrade actually changed in the artwork, produced the first
+    non-ISOCD master on this format, and demonstrated that the `.TM` block is
+    a different artefact on each console. Two releases of one game are worth
+    more than two unrelated discs.
+16. **Check every path the executables name against the directory.** Every
     one is a plain string; the ones that are missing are cut content that the
     code still believes in, and the files on the disc that no string names are
     leftovers. On Prey this found two absent files and four unused tools in
     about a minute.
-16. **If there are headerless files that look like waveforms, get the rate out
+17. **If there are headerless files that look like waveforms, get the rate out
     of the executable** — the `AUDxPER` immediates — and check the `AUDxLEN`
     immediates against the file sizes. On a disc with no audio track this is
     the whole soundtrack.
@@ -1277,7 +1481,9 @@ When a new title turns up something about the *format* rather than the title:
 5. Answer the open items below, or say that you checked and it did not apply.
 
 State what is measured and what is inferred, and keep the measurements in the
-document.
+document. **And when a control disc contradicts something here, correct it in
+place and mark the correction** — two of the entries above are corrections and
+they are more useful than the claims they replace.
 
 ## Open across the format
 
@@ -1302,15 +1508,18 @@ the disc that gave it.
    and does a CDTV disc ship a `CDTV.TM`? Keep recording the three hashes; a
    mismatch is now the interesting result. (Section 2.)
 
-2. **Still open, and narrowed further — is the duplicated PVD a habit of
-   ISOCD?** All three discs were written by **ISOCD 1.04 by Pantaray** and all
-   three show all three of its habits: descriptor written twice at 16 and 17,
-   optional path-table pointers filled with the mandatory ones, every string
-   field NUL-padded. Three sightings of one tool are still one data point.
-   **A disc mastered with something else is the single most useful next
-   find.** New and testable: **32 unclaimed zero sectors at the end of the
-   volume** on two of three. And Pantaray wrote more than ISOCD — Prey carries
-   their CDXL player `XLPlay` as an unused leftover. (Section 1.)
+2. **ANSWERED — is the duplicated PVD a habit of ISOCD?** No: it is the one
+   habit that crosses tools. The CDTV Prey master was written by something
+   that is **not** ISOCD — space-padded strings, empty preparer field, real
+   separate optional path tables, a modification date, upper-case 8.3 names,
+   path tables placed *after* the files — and it still writes the primary
+   volume descriptor twice at 16 and 17 with the terminator at 18. Everything
+   else this document attributed to ISOCD really is ISOCD's, and now has a
+   negative control.
+
+   **What replaces it: which tool wrote the CDTV master?** It signs nothing.
+   The preparer field is 128 spaces. Identifying it, or finding a second disc
+   with the same habits, is the next useful thing. (Section 1.)
 
 3. **Still open, and sharper again — what is `freeanim.library`?** Six
    sightings across three discs and it is on none of them, so it is resident
@@ -1331,16 +1540,21 @@ the disc that gave it.
    anything. Dragonstone's hand-written ISO parser is still worth documenting
    here **if a third disc has one too**. (Section 4.)
 
-5. **ANSWERED for one disc — do other CD32 titles actually use AGA?**
-   **Prey does.** Eight bitplanes on ten IFF screens (256 colours, impossible
-   on ECS) and **nine of thirteen `CMAP` chunks whose component bytes are not
-   nibble-doubled** — colours only AGA's 24-bit registers can hold. That is
-   the first disc here that uses AGA for anything other than depth.
-   Dragonstone writes `FMODE = 0` and Marvin's 21 palette files contain no
-   value above `0x0FFF`, so **AGA used as a deeper ECS** is still the common
-   case, two of three. Keep running both cheap tests: the plane count in
-   `BMHD`, and the nibble-doubling count in `CMAP`. And **no disc yet uses
-   Akiko in the game** — that is now the open question worth chasing.
+5. **ANSWERED for one disc, and the test was fixed along the way — do other
+   CD32 titles actually use AGA?** **Prey's CD32 release does.** Eight
+   bitplanes on ten IFF screens, 256 colours, impossible on ECS — and the CDTV
+   release of the same game is the control at five planes and 32 colours.
+
+   The colour-depth half of the test **was wrong** and the CDTV disc caught
+   it: it looked only for nibble-doubling (`v * 17`), while that disc writes
+   4-bit values as `v << 4`, so every one of its ECS palettes scored as
+   24-bit. Corrected in section 7; accept both conventions. Re-run, 6 of 14
+   CD32 screens carry values needing more than four bits per gun and all six
+   CDTV screens carry none.
+
+   Dragonstone writes `FMODE = 0` and Marvin's palettes contain no value above
+   `0x0FFF`, so **AGA used as a deeper ECS** remains the common case. And **no
+   disc yet uses Akiko in the game** — that is the open question worth chasing.
    (Section 7.)
 
 6. **New, with a third answer — what fraction of a CD32 disc does a CD32 game
@@ -1352,9 +1566,10 @@ the disc that gave it.
    the pattern to watch for is whether "CD32 game" mostly means "floppy game
    plus a soundtrack" — Prey is the one so far that is not that.
 
-7. **New — is `MODE1/2048` universal?** All three discs so far, and Prey has
-   a single track with no audio at all. Mode 2 Form 1 is supposed to occur on
-   this format; nobody has produced one here yet.
+7. **New — is `MODE1/2048` universal?** All four discs so far, including a
+   1992 CDTV master, and both Prey releases have a single track with no audio
+   at all. Mode 2 Form 1 is supposed to occur on this format; nobody has
+   produced one here yet.
 
 8. **New — how many CD32 discs carry a second, Workbench entry point?**
    Marvin ships `<Game>.info` with `DefaultTool = IconX`, `c/IconX`, and a
@@ -1366,8 +1581,14 @@ the disc that gave it.
    which are the A1200 compatibility libraries, and opens the first and not
    the second. (Sections 1 and 4.)
 
-9. **New, and now three for three — how much of the *development* survives on
-   a typical disc?** Prey carries: two files the executables still name and
+9. **New, and now four for four — how much of the *development* survives on
+   a typical disc?** The CDTV Prey master carries **`c/WACK`, Commodore's
+   low-level debugger** — breakpoints, single-step, disassembly, serial
+   console — and `c/BOOKIT` from the *CDTV Survival Kit*, which states in its
+   own banner that it may not be freely distributed, on a pressed retail disc.
+   The same studio's next master carried Commodore's factory hard-disk
+   formatter instead. Two masters, two different pieces of Commodore's
+   internal tooling, neither swept. Prey carries: two files the executables still name and
    that are not on the disc, one of them a CDXL for the publisher's logo that
    was replaced by a still image eleven minutes before the master; seven
    consecutive sprite banks and one door animation missing from the middle of
