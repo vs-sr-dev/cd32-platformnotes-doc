@@ -1,11 +1,11 @@
 # Amiga CD32 / CDTV platform notes — a checklist for the next disc
 
 A running checklist, carried from one Amiga CD documentation pipeline to the
-next and added to by each. It currently rests on **fourteen discs**, so much of it
+next and added to by each. It currently rests on **fifteen discs**, so much of it
 is still marked with the title it came from: treat it as a list of things to
 *test*, not a list of things that are true of the format.
 
-One of the thirteen is the **CDTV release of a title whose CD32 release is also
+One of the fifteen is the **CDTV release of a title whose CD32 release is also
 here**,
 which is the most productive single thing that has happened to this document:
 it supplied a control for claims that had been made on one disc's evidence,
@@ -66,6 +66,7 @@ negative**. See section 4.
 | [Banshee](https://github.com/vs-sr-dev/cd32-banshee-doc) | **1994** | Core Design, UK — the same label as Dragonstone and **written by a two-person Danish team**, which makes it the first same-label control here. 45 files, 37 RNC ProPack 1, 1,455 sectors, **0.44 % of a CD**; five minutes of Red Book played out of the drive; a **live developer hook in the pressed boot script**; and a 274 KB program nothing runs, holding a **640 × 512 interlaced HAM8** picture behind RNC ProPack **method 2** |
 | [Fire & Ice](https://github.com/vs-sr-dev/cd32-fireandice-doc) | **1994** | Graftgold / Renegade, UK — a 1992 Amiga floppy platform game on CD32, and the **third `D J Pocock` master**. 29 files, **22 Red Book tracks** and 50:33 of music against a 1,270-sector data track; 21 files packed with **PowerPacker 2.0, the seventh cruncher here**, plus **29 more PP20 streams nested inside them that entropy cannot see**; an eight-plane dual-playfield AGA display run almost entirely from one copper list; and a floppy disk-swap prompt and a manual copy-protection prompt still in the pressed executable |
 | [Universe](https://github.com/vs-sr-dev/cd32-universe-doc) | **1994** | Core Design, UK — the **third disc from this label** and the set's **first point-and-click**. 52 files, 47 RNC ProPack 1 nested **three levels deep** (342 validated streams), 2,429 sectors, **0.73 % of a CD** against **23 Red Book tracks and 40:37 of music**; **602 KB of prose in four complete languages**; a **16-opcode bytecode interpreter** with an explicit program counter; the CD-ROM *and* the CD32's serial EEPROM driven by hand through Akiko with the OS switched off; a six-plane **Extra-Half-Brite** display on AGA silicon with `FMODE = 0`; and the **fourth `D J Pocock` master**, leaving 232 sectors exactly as predicted |
+| [Gunship 2000](https://github.com/vs-sr-dev/cd32-gunship2000-doc) | **1994** | MicroProse — the **first flight simulator** here and the **first non-British publisher**, so the first test of whether ISOCD mastering practice follows the label. 140 files, five Red Book tracks, and the **second-largest data track in the set** at 157.84 MB — of which **63.4 % is a hole of exactly 100 MiB of zeros** and 86.9 % of the file bytes are CDXL video, leaving a 7.98 MB game. 542 RNC ProPack **method 2** streams; a resource archive that uses `LoadSeg`'s relocation table as its own pointer fixup; the game's own IFF data files written **little-endian**; a complete, unreachable **Pirates! Gold demo** with CD32 language detection; and the **fifth `D J Pocock` master**, leaving 232 sectors exactly as predicted |
 | [Prey: An Alien Encounter, **CDTV**](https://github.com/vs-sr-dev/cd32-prey-doc/blob/main/docs/09-cdtv-1992.md) | **1992** | The same game a year earlier, published by KirkMoreno alone. **The first disc here not mastered with ISOCD**, the first CDTV disc, the oldest master by fourteen months, and the control that corrected two claims about the other three. 1,453 files, of which **1,201 are byte-identical to the CD32 release** |
 
 ---
@@ -1509,7 +1510,7 @@ sightings suggested was normal:
 | `c/setpatch` 40.12 | **3** | 1993–1994, three studios, three publishers |
 | **`setpatch` 40.3** | **2 discs + 1 floppy** | [Guardian] (CD32, Aug 1994), [Guardian] (A1200 floppy) and [Gloom] (June 1995) — SHA-1 `8b6cf0011d6a55754c8b762eec1e808576e6c246`, 10,964 B |
 | `c/SetPatch` 39.6 | 2 | Marvin, Legends |
-| **`c/SetPatch` 40.14** | **3** | [Dragonstone], [Banshee] **and [Fire & Ice]** — 13,200 B, SHA-1 `00d74a35300f7009ed02bc47db88427e9e0fc0a5`. **CORRECTION: this row used to read "the only same-label pair in the table"**, because the first two are both Core Design. Fire & Ice is Graftgold, published by Renegade, and carries the same 13,200 bytes — so the pair was a coincidence of sample size and the row now spans two studios and two labels, like the others |
+| **`c/SetPatch` 40.14** | **5** | [Dragonstone], [Banshee], [Fire & Ice], **[Universe] and [Gunship 2000]** — 13,200 B, SHA-1 `00d74a35300f7009ed02bc47db88427e9e0fc0a5`. **CORRECTION: this row used to read "the only same-label pair in the table"**, because the first two are both Core Design. Fire & Ice is Graftgold, published by Renegade, and carries the same 13,200 bytes — so the pair was a coincidence of sample size and the row now spans two studios and two labels, like the others. **SECOND CORRECTION, from [Gunship 2000]:** the row is now **five** discs — four studios, five labels, two countries — and it includes both `D J Pocock` and non-Pocock masters. A 13,200-byte `SetPatch` means "somebody installed Workbench 3.1" and nothing narrower. Note also that Gunship's other ten `c/` commands are all **37.x** (Workbench 2.0): a 3.1 `SetPatch` dropped into an otherwise 2.0 `C:` directory, which is worth recording separately from the `SetPatch` hash |
 | `freeanim` (3,492 B) | 2 | Liberation, Gloom |
 | **`s/startup-sequence.info`** | **2** | [Guardian] and [Gloom] — SHA-1 `6bb943b7dac227070ce10d44f82a9ed85f51a74e`, 396 B, and it is **not** a Commodore file (below) |
 
@@ -4258,7 +4259,7 @@ sentences rather than markup is worth reading to the end.
 
 ## 10. Baselines
 
-Twelve discs, and they bracket the format rather than agreeing on it. Prey CD32
+Fifteen discs, and they bracket the format rather than agreeing on it. Prey CD32
 and Prey CDTV are the same game on the two consoles, so that pair is a control
 rather than two independent samples. Legends and Gloom are two discs with
 the same *publisher* — Guildhall, a year apart — and they agree on nothing at
@@ -4290,6 +4291,16 @@ decompressed one lands inside it. **Measure the decompressed size**, every time.
 decompressed figure to rescue it. Two earlier discs went below the floor
 compressed and came back inside it unpacked; this one is 2.25 MB either way, and
 it sits below Dragonstone's 2.7.
+
+**AND THE FIFTEENTH DISC WAS THE BEST CHANCE TO BREAK THE CEILING, AND DID NOT.**
+[Gunship 2000] has the **second-largest data track in the set** — 157.84 MB,
+within 2 % of Liberation's — and it is the disc this document expected to break
+13.3 MB from above. The game is **6,939,994 bytes on disc and 8,363,560 resident
+(7.98 MiB)**, comfortably inside. Where the 157.84 MB goes is the whole answer:
+**63.4 % of the volume is a zero hole of exactly 100 MiB**, 86.9 % of the *file*
+bytes are three CDXL streams, 1.3 % is a bundled second game that never runs, and
+**the game is 4.2 % of its own disc**. Fifteen discs, eleven studios, five years,
+and the ceiling has still not moved.
 
 The band's *floor* therefore moves to **2.25 MB** and what the band measures is
 unchanged: 2 MB of chip RAM and a 68EC020 still bound how much resident code and
@@ -4340,8 +4351,28 @@ says something about the studio; keep collecting it.
 **44,197 bytes — 0.5 %**.
 
 ```
-Fire & Ice  0.3 %      Universe  0.5 %      Banshee  3.9 %      Dragonstone  9.1 %
+Gunship 2000  0.004 %   Fire & Ice  0.3 %   Universe  0.5 %   Banshee  3.9 %   Dragonstone  9.1 %
 ```
+
+**THE FIFTH POINT FALSIFIES THE HYPOTHESIS BELOW. Read the paragraph after this
+one, then read this.** [Gunship 2000] is **6,939,994 on disc / 8,363,560 resident
+/ 8,363,199 used**, slack **361 bytes — 0.004 %**, the tightest in the set by two
+orders of magnitude over Dragonstone. And it **keeps AmigaDOS alive throughout**:
+it boots from a startup-sequence, opens eight libraries and three devices, calls
+`LoadView` rather than seizing the display, and *returns to the shell* so the
+script can kill its own backdrop task by name. By the hypothesis it should be at
+the loose end. It is at the tight end, alone.
+
+So slack tracks neither studio (Universe killed that) nor OS survival (Gunship
+kills this). The plainest remaining candidate is that it tracks whether the asset
+build tool padded to a block size, which is a fact about a tool and not about a
+game. **Keep collecting the number, stop theorising about it until a sixth point
+suggests something.**
+
+The per-file check still earns its place: on Gunship the largest single slack on
+the disc is **245 bytes in `roster.dat`** — a 1,680-byte scratch save whose
+squadron is named `ERASE ME` — and everything else is one or two bytes of IFF
+even-length padding.
 
 Two of the four are now under 1 %, which **weakens the "studio habit" reading**:
 Universe and Dragonstone are the same label and sit at opposite ends of the
@@ -4792,6 +4823,48 @@ band and been wrong.
     [Universe] a colour render of a six-plane picture came out as structured
     noise and the geometry was correct all along — the palette had 32 entries
     and the display was Extra-Half-Brite. (Section 7.)
+
+35. **Check the byte order of every IFF-shaped file, not just its magic.** IFF is
+    defined big-endian and a file that starts with `FORM` is assumed to obey that.
+    [Gunship 2000] has **41 files that do not**: its own form types — `SCRN`,
+    `SCNR`, `WRLD`, `SHIN`, `SHIP`, `THTR`, `WSYS` — store every chunk size in
+    Intel order, so a standard reader reports a **3.4 GB FORM inside a 3 KB
+    file** and a census records them as corrupt. Read little-endian, the chunk
+    walk lands exactly on the last byte, on all 41.
+
+    The test is one line and it cannot give a false positive: walk the chunks
+    both ways and accept the byte order whose walk ends at the file end. Do it
+    for every `FORM` on the disc, because the split can run *within* one disc —
+    on Gunship every picture is correct big-endian and only the game's own forms
+    are reversed, which is what makes the finding mean something. A reversed
+    byte order is direct evidence of which architecture the authoring tool ran
+    on, and it is better evidence than a timestamp because a clock can be set
+    and a byte order cannot be faked by accident (open item 24).
+
+    `tools/iffle.py` in `cd32-gunship2000-doc`. Watch the tolerance: allow the
+    walk to end one byte short, because an archive may append a terminator (on
+    Gunship, `0xFF`, 45 times out of 45).
+
+36. **Read a hunk file's relocation table before deciding it is a program.** A
+    file beginning `00 00 03 F3` is an AmigaDOS executable to every census, and
+    it may be nothing of the sort. [Gunship 2000]'s `cd32rez` is 641,768 bytes
+    with **one CODE hunk and exactly fifteen relocations, all fifteen pointing
+    at the first sixty bytes**, which are a fifteen-entry pointer table
+    terminated by `FFFFFFFF`. The other 641,596 bytes are 526 concatenated RNC
+    streams. It is a resource archive that does no fixup of its own: it declares
+    its group pointers as relocations and lets `LoadSeg` patch them while
+    loading.
+
+    The signal is the ratio. A real program of that size has thousands of
+    relocations (`gs2.run`: 6,595 in 197 KB). Fifteen in 641 KB, all in the
+    first sixty bytes, means the hunk header is a wrapper. `tools/relocs.py
+    FILE --list 0` prints them; if they all land in a short prefix, read that
+    prefix as a table and check whether the first entry points at the byte after
+    the table ends. On `cd32rez` it does, exactly.
+
+    This is the mirror of step 25's other use. Step 25 says a constant *not*
+    covered by a relocation is a literal; this says a file whose relocations are
+    *only* a prefix is data with an executable's hat on.
 
 ## Contributing from a pipeline
 
@@ -5694,7 +5767,47 @@ the disc that gave it.
     separately from the 1978 ones and record their spread, not just their
     presence.**
 
-20. **PROMOTED TO A FINDING, AND STILL UNEXPLAINED — the 232-sector trailing
+20. **FIVE FOR FIVE, ACROSS TWO COUNTRIES, AND THE ONE FILE-LEVEL LEAD IS DEAD —
+    the 232-sector trailing run is a person.**
+
+    **[Gunship 2000] is the fifth.** MicroProse, 1994, preparer `D J Pocock`,
+    **232 sectors**, predicted in writing before the filesystem was parsed. The
+    group is now Liberation (82,502 sectors declared), Banshee (1,687),
+    Fire & Ice (1,270), Universe (2,429) and Gunship 2000 (80,735) — a **65 : 1**
+    span inside the group, five studios, five publishers, and now **two
+    countries**, because Gunship is the first non-British label here. Ten discs
+    at 32 under nine other names.
+
+    **AND THE UNIVERSE LEAD IS REFUTED, TWICE.** Universe's contribution to this
+    item was a *file-level* one: `C/FreeAnim` (3,492 B, `449c6100…`) and
+    `C/noopenwb` (204 B, `e0538ef1…`) are byte-identical on Universe and
+    Liberation, which were then the only two Pocock masters with a `c/`, and the
+    reading was a build kit travelling between studios. Both halves fail:
+
+    * **[Dragonstone] carries the identical pair**, and Dragonstone's preparer is
+      `Sajjad Majid`. The pair crosses the Pocock boundary, so it never separated
+      the group.
+    * **Gunship 2000, the fifth Pocock master, has a `c/` with eleven files and
+      neither of those two is in it.** What its `c/` shares with the group is
+      stock Commodore material — `Assign` 3,220 B (also Liberation, Banshee),
+      `execute` 4,432 B (also Banshee), `SetPatch` 13,200 B (five discs including
+      a non-Pocock one).
+
+    So the correlation is back to being **purely field-level, with no mechanism
+    attached**, and stronger than ever as a correlation. Everything previously
+    excluded stays excluded and Gunship re-excludes it: volume size, ISOCD
+    version (1.04 on all fifteen), audio track count (the group now spans 2–23,
+    the rest 0–28), studio, publisher, field padding, duplicate PVD, `.TM` block,
+    record order, `;1` suffixes, root extent. Image overrun is 78 on Gunship,
+    which **widens** the Pocock range to 78–103 and leaves Dragonstone's 106
+    outside it — still not a clean separation, exactly as Universe found.
+
+    **What would settle it:** a sixth Pocock master, or a 232 under a different
+    name. The latter kills it outright. (Sections 1, 4, 7, 9 and 10.)
+
+    The original entry, kept because the reasoning is still the reasoning:
+
+20a. **PROMOTED TO A FINDING, AND STILL UNEXPLAINED — the 232-sector trailing
     run is a person.** Ten discs at 32 across a 331 : 1 span of volume sizes;
     **three at 232, and those three are the only ones whose preparer field reads
     `D J Pocock`** ([Liberation], 82,502 sectors; [Banshee], 1,687;
@@ -5801,7 +5914,51 @@ the disc that gave it.
     record their spread, and check whether anything in the group could not
     predate the CD32.** (Section 3.)
 
-25. **New - how common is a script interpreter, and what does its opcode space
+    **THE BEST AVAILABLE TEST WAS RUN AND CAME BACK EMPTY — AND HANDED OVER A
+    BETTER PROBE.** The hypothesis needs a publisher whose main platform is DOS.
+    [Gunship 2000] is MicroProse, the most DOS-first label in this set, and it
+    has **zero 1980 files and zero 1978 files**: 148 dated records over 24
+    calendar days, 1993-12-20 to 1994-04-19, every one of them coherent. The
+    prediction, written before the sort, was that it would have *more* than
+    Fire & Ice's ten. It has none.
+
+    But the same disc proves the DOS side of the pipeline a different way, and
+    the evidence is in the data rather than in the directory. Gunship's pictures
+    are **76 correct big-endian IFF**, and its own form types — `SCRN`, `SCNR`,
+    `WRLD`, `SHIN`, `SHIP`, `THTR`, `WSYS` — are **41 files that store every
+    chunk size little-endian**, so a standard reader sees a 3.4 GB FORM inside a
+    3 KB file. Read Intel-order the chunk walk lands exactly on the last byte, on
+    all 41. And `logo.pix` is a **`PBM `** form with a `TINY` chunk — PC
+    DeluxePaint's chunky format — the only chunky picture on the disc.
+
+    **So: byte order beats timestamps as a probe for a DOS-side pipeline.** A
+    clock can be set; a byte order cannot be faked by accident. Added to the
+    order of work as step 35. Whether Guardian's and Fire & Ice's 1980 files are
+    accompanied by little-endian data is untested and costs one run of
+    `iffle.py`.
+
+25. **A NEGATIVE FROM THE GENRE MOST LIKELY TO GIVE A POSITIVE — how common is a
+    script interpreter, and what does its opcode space look like?**
+
+    **[Gunship 2000] says no, and it is a good no.** A mission-based simulator
+    with campaigns, objectives, briefings and an endgame was the second-best
+    candidate after a point-and-click, and the prediction written before the scan
+    said a dispatch table would be there. `dispatch.py` finds **zero** tables of
+    the Universe shape in all four programs. The only `bra.w` run on the disc is
+    **10 entries at `gs`+0x1122 with 10 distinct handlers**, with nothing
+    dispatching into it by complemented index — too small and too isolated to be
+    an interpreter.
+
+    What it does instead is the alternative worth naming: the front end is
+    **data-driven by IFF**. 25 `SCRN` files carry `SCHD` headers and 39 `AREA`
+    chunks of screen coordinates, and the program walks them. A game can have
+    missions, branching and an endgame without a bytecode VM by putting the
+    structure in a chunk format instead. **Check for a data-driven screen format
+    before concluding a game is hard-coded, not only for a VM.**
+
+    The original entry:
+
+25a. **New - how common is a script interpreter, and what does its opcode space
     look like?** [Universe] is the first disc here with a genuine bytecode VM:
     16 opcodes reached through `lea $12(pc),a6 / neg.b d0 / subq #1 / andi #$ff
     / asl #2 / jsr (a6,d0.w)`, so the index is the **complement** of the opcode
@@ -5879,3 +6036,53 @@ the disc that gave it.
     So a long zero run inside an unpacked blob is worth measuring rather than
     skipping, and the two readings are told apart by whether the length is a
     round multiple of something the display needs. (Sections 7 and 9.)
+
+30. **New — what is a fixed-length zero hole in front of the files for, and does
+    a round number separate the cases?** Four discs now leave a gap between the
+    volume descriptors and the first file: [Prey CD32] 6,000 sectors,
+    [Microcosm] 15,000, [HeroQuest II] 24,272 (95.4 % of the volume) and
+    **[Gunship 2000] 51,200 — which is 104,857,600 bytes, exactly 100 MiB, every
+    byte zero**. It is *inside* the declared volume, so ISOCD counted it
+    deliberately.
+
+    The three earlier gaps are odd numbers and were never explained. Gunship's
+    is a round binary number to the byte, and that changes what kind of thing it
+    can be: a round reservation is something **asked for**, not something a
+    layout algorithm produces. The reading this document has been carrying —
+    seek optimisation for Red Book during play — was already refuted four times
+    (Guardian, Banshee, Fire & Ice, Universe, the last two being the most
+    audio-heavy discs here) and is refuted again from a new direction: Gunship's
+    files sit *after* the hole, at the outer edge of a 45 %-full disc, which is
+    backwards for a seek argument.
+
+    What would settle it: another ISOCD master with a round-number gap, or a
+    second pressing of any of these four with a different one. What is worth
+    doing on every disc meanwhile: **build the sector map against the declared
+    volume size and report every unclaimed run with its LBA range and whether it
+    is zero, before opening a single file.** A 100 MiB hole is invisible to a
+    file census and obvious in a sector map. (Sections 1 and 10.)
+
+31. **New — how much of a disc is a second game, and does anything launch it?**
+    [Gunship 2000] ships a complete, playable **Pirates! Gold** demo that nothing
+    runs: `pirates.demo` is a full alternative boot script with CD32 front-panel
+    language detection (`c/getlang`, 104 bytes, returns `RETURN_WARN` for
+    German), two 383 KB executables differing only in one hunk, a self-contained
+    disk font, **15 IFF 8SVX samples buried inside a chip DATA hunk**, and a
+    21.6 MB CDXL intro. The disc's actual `s/startup-sequence` never calls it,
+    and the one line that would have launched it is commented out with its
+    template instruction still attached — `;pirates 2 <TAB> ; replace 5 with the cd
+    music track number` — where someone had already replaced the 5 with a 2 and
+    left the note.
+
+    The video *is* reachable (`gs` carries `Press RED button to view Pirates!
+    Gold intro`), so **13.1 % of the disc advertises a demo the disc will not
+    launch**. This is a different scale from open item 21's "a whole program
+    pressed and never reached": that was one executable, this is a second
+    product with its own boot chain, localisation, assets and audio.
+
+    Two things follow for the next disc. First, **read every script on the disc,
+    not only the one AmigaDOS runs** — `pirates.demo` is 386 bytes and it is the
+    single most informative file on this master. Second, **a commented-out line
+    is evidence, and its comment is evidence about the comment** — the stale
+    "replace 5" says the line was edited by hand and then disabled, which is a
+    different story from a line that was never enabled. (Sections 4 and 6.)
