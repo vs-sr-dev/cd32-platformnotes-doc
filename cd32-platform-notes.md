@@ -5785,8 +5785,11 @@ the disc that gave it.
     reading was a build kit travelling between studios. Both halves fail:
 
     * **[Dragonstone] carries the identical pair**, and Dragonstone's preparer is
-      `Sajjad Majid`. The pair crosses the Pocock boundary, so it never separated
-      the group.
+      `Sajjad Majid`. **[Gloom] carries the same `FreeAnim`** — 3,492 bytes,
+      SHA-1 `449c610071ace58d…`, in its root as `/freeanim` rather than in a
+      `c/` — and Gloom's preparer name is **empty**. So that binary is on four
+      discs under **three different preparer values**, and it never separated
+      the group at all.
     * **Gunship 2000, the fifth Pocock master, has a `c/` with eleven files and
       neither of those two is in it.** What its `c/` shares with the group is
       stock Commodore material — `Assign` 3,220 B (also Liberation, Banshee),
