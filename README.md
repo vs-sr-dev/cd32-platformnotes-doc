@@ -23,10 +23,10 @@ measured versus what is inferred.
 | 2 | **The `.TM` block** — outside the file system, *not* always at sector 21, not always 2,048 bytes, and **not determined by the console either** |
 | 3 | Timestamps: **five** epochs to recognise, why the outliers are the finding, and checking the descriptor's date against the files it indexes |
 | 4 | The boot chain, the `$VER:` strings, `freeanim.library`, and the two greps and one histogram that decide how you read the executable |
-| 5 | Compression — starting with whether there is any, then **RNC, the Imploder, Bytekiller and a fourth that wears RNC's magic over a different stream**, why **a magic scan that finds nothing proves nothing**, and getting the decruncher out of the loader |
+| 5 | Compression — starting with whether there is any, then **RNC, the Imploder, Bytekiller, a fourth that wears RNC's magic over a different stream, and CrunchMania**, why **a magic scan that finds nothing proves nothing**, and getting the decruncher out of the loader |
 | 6 | Hunk files, toolchain fingerprints, symbol tables that survived, and data wrapped in hunk format |
-| 7 | Planar geometry without a copper list, **the palette test's third outcome** (a program that calls neither `LoadRGB4` nor `LoadRGB32` because it writes 256 registers from the copper), interleaved versus separated, autocorrelation, HAM6 in a CDXL, the **corrected** palette test, the one-line `LoadRGB4`-versus-`LoadRGB32` test, sparse plane tables that compress without a codec, and a "3D" game whose surfaces are 10,792 **pre-rendered** sprites |
-| 8 | Red Book **and whether anything plays it**, raw Paula samples, tracker modules, in-house players, and getting a headerless stream's sample rate out of the executable |
+| 7 | Planar geometry without a copper list, **the palette test's third outcome** (a program that calls neither `LoadRGB4` nor `LoadRGB32` because it writes the registers from the copper), **a framebuffer that *is* a copper list**, interleaved versus separated, autocorrelation, HAM6 in a CDXL, the **corrected** palette test, the one-line `LoadRGB4`-versus-`LoadRGB32` test, palettes stored as AGA `LOCT` pairs, sparse plane tables that compress without a codec, and a "3D" game whose surfaces are 10,792 **pre-rendered** sprites |
+| 8 | Red Book **and whether anything plays it** (count `OpenDevice` first), raw Paula samples that carry their own period, ProTracker **and OctaMED** modules, in-house players, and getting a headerless stream's sample rate out of the executable |
 | 9 | Text encodings, password systems, placeholders, reading the file *names*, and a disc that stores a text **generator** and shipped its source with a note to translators in it |
 | 10 | Baselines, disc by disc, side by side |
 | 11 | The order of work that worked — **diff the other release of the same game**, and parse the one file that is most of the disc with a resynchroniser |
@@ -48,11 +48,12 @@ assume.
 | [Legends](https://github.com/vs-sr-dev/cd32-legends-doc) | **1996** | Krisalis Software / Guildhall, UK — one data track and **twenty-eight audio tracks**, 111 files, **89.4 % of the disc used and only 0.72 % of it by the game**, a six-floppy A1200 release copied onto a CD with its hard-disk installer still on it, and 79 files packed by a cruncher with **no magic number at all** |
 | [Microcosm](https://github.com/vs-sr-dev/cd32-microcosm-doc) | **1994** | Psygnosis, UK — **the first CD32-exclusive title here**, and the largest data track on the format: 255,552 sectors, of which **92.3 % is one 483 MB file** holding 30,707 frames of video in 261 movies, streamed with `CD_READXL` and decoded straight into eight AGA bitplanes. 34 files, a **five-byte** boot script, a retail volume identifier of `CDTV_TEST`, a Red Book track nothing plays, and an executable carrying the names of all **77 of its source files** |
 | [Liberation: Captive II](https://github.com/vs-sr-dev/cd32-liberation-doc) | **1994** | Byte Engineers / Mindscape, UK — the largest data track on the format until Microcosm, 82,502 sectors, **91.2 % of it digitised speech**; a 3D engine shipped as three in-house shared libraries, three procedural generators the game runs as separate programs, a boot script that mounts a **reset-surviving RAM disk**, and a codec wearing RNC ProPack's magic over a twelve-byte header and a different stream |
+| [Gloom](https://github.com/vs-sr-dev/cd32-gloom-doc) | **1995** | Black Magic Software / Guildhall, UK — **the smallest volume on the format**, 772 sectors and 0.23 % of a CD; 131 files, 115 packed with **CrunchMania**, no `c/` and no `libs/`; a seven-bitplane AGA display and a real-time texture-mapped renderer whose **framebuffer is a copper list with one `MOVE` per pixel** — which is why it needs no chunky-to-planar step and never touches Akiko |
 
 These are about as unlike each other as Amiga CD titles can be — 1992 to 1996,
-0.74 % of a disc to 89.4 % of one, 34 files to 1,453, a 4.9 MB data track to a
-**499 MB** one — which makes the handful of things they agree on worth more than
-the count suggests. And the two 1996
+**0.23 %** of a disc to 89.4 % of one, 34 files to 1,453, a **1.6 MB** data
+track to a **499 MB** one — which makes the handful of things they agree on
+worth more than the count suggests. And the two 1996
 discs are the sharpest pair: Speris and Legends have games of almost exactly
 the same size, and one of them fills the rest of the CD with music while the
 other leaves 99 % of it empty.
@@ -81,6 +82,25 @@ than on audio poured over it — and its *game* is 9.1 MB, still inside the
 **32** unclaimed sectors, which kills the reading that 32 was a coincidence of
 small volumes and leaves Liberation's 232 as the one unexplained outlier.
 
+**Then Gloom changed the Akiko question rather than answering it.** It is the
+real-time renderer the previous entry was waiting for, and everything it draws
+is 8-bit chunky — textures, sprites, HUD — so on the "is there chunky data"
+axis it is the strongest candidate the format has produced. Akiko is still
+**zero**, in the raw image, in all 131 extracted files and in all 115 decrunched
+ones. What it does instead is display the 3D view **as a copper list carrying
+one `MOVE` per pixel**, over bitplanes that hold a fixed colour-index ramp, with
+`BPLCON4`'s `BPLAM` and the `BPLCON3` bank alternating every row so the copper
+can fill one half of AGA's 256 registers while the other half is on screen. The
+value the renderer produces is a colour, not an index. So the question is no
+longer "does it rasterise in chunky?" but **"does the frame ever have to become
+bitplanes?"** — and nine discs in, no CD32 title here has needed it to.
+
+Gloom also tested the size band from underneath and the 32-sector run from the
+small end. Its data track is **1.6 MB, 0.23 % of a CD, the smallest on the
+format**; 115 of its 131 files are packed at 30 %, so the *game* is 3.86 MB and
+the band holds. And its **772-sector** volume leaves **32**, which removes the
+last size reading anyone could appeal to.
+
 **And Liberation corrected two more.** This document had "exactly 32 unclaimed
 zero sectors at the end of the volume" as an ISOCD 1.04 fingerprint on four
 discs; the fifth leaves **232**. And it had the timestamp problem needing a
@@ -103,9 +123,9 @@ compilation unit `exec`, 268 bytes of 68000 code defining `AddPort`, `GetMsg`,
 local labels (`REMHEAD.033`, `ENABLE.031/032/034`) that are Commodore's own
 Exec assembler macros expanded by line number.
 
-**Six of the seven CD32-era discs have the identical 2,048 bytes** — whole
-sector, banner and object file, all three SHA-1s — across six studios, six
-publishers, six engines and thirty-eight months.
+**Seven of the eight CD32-era discs have the identical 2,048 bytes** — whole
+sector, banner and object file, all three SHA-1s — across seven studios, seven
+publishers, seven engines and thirty-eight months.
 
 And the third of them says where they came from. **Prey's CD32 master ships
 `/CD32.TM`**: an ordinary file in the root directory, 2,048 bytes, dated
@@ -165,16 +185,26 @@ find, and two discs since have matched again.**
 
 The question that replaces it: **how often does this happen?** One CD32 disc
 with the CDTV block makes it possible; a second would make it a habit. Legends
-is not it, and neither is Liberation — both carry the Commodore banner, so the
-score stands at **five to one**. And still open from before: **which tool mastered the CDTV disc?** It
+is not it, and neither are Liberation, Microcosm or Gloom — all carry the
+Commodore banner, so the score stands at **seven to one**. And still open from before: **which tool mastered the CDTV disc?** It
 signs nothing.
 
 **The same mechanism turns out to cover more than the `.TM` block.** Legends'
 `c/SetPatch` is byte for byte Marvin's — SHA-1
 `4d4aae988310b07726329e436b2250c0f769ddff`, 7,364 bytes, two studios, two
-publishers, two years. Commodore's system files circulated as single copies
-and studios passed them around, so **hash the binaries in `c/`, not only their
-`$VER:` strings**.
+publishers, two years. And **Gloom's `/freeanim` is byte for byte Liberation's
+`/c/FreeAnim`** — SHA-1 `449c610071ace58d8c7877aafd114588b8aa7074`, 3,492 bytes,
+another two studios, another two publishers, fourteen months. Commodore-era
+developer files circulated as single copies and studios passed them around, so
+**hash the binaries in `c/`, not only their `$VER:` strings** — and on a disc
+with no `c/`, hash whatever is in the root.
+
+**Which is also the answer to the publisher question.** Legends and Gloom are
+the two discs here from the same publisher, a year apart, and they agree on
+nothing — preparer, application id, timestamps, audio, cruncher, `SetPatch`
+version, save system, plane count. The files that *are* shared cross publishers
+instead. **On this format the unit of shared practice is the developer's tool
+shelf, not the label on the box.**
 
 ## Contributing from a pipeline
 
