@@ -2124,11 +2124,21 @@ moveq   #2,d1               ; MEMF_CHIP
 ```
 
 Four bytes per pixel is not a pixel format, it is a **copper instruction**, and
-the extra longword per 32 pixels is a `BPLCON3` bank switch while the three per
-row are a `WAIT`, a `BPLCON4` write and slack. The emitter writes, per rendered
-row, a `WAIT` at that raster line (`VP, $E1, $FFFE`), then one
+the accounting closes with **no slack at all**: for width 90 the 95 longwords are
+90 `COLOR` moves + 3 `BPLCON3` bank switches + 1 `WAIT` + 1 `BPLCON4`, and for
+width 66 the 71 are 66 + 3 + 1 + 1. The emitter writes, per rendered row, a
+`WAIT` at that raster line (`VP, $E1, $FFFE`), then one
 `MOVE COLORnn, <value>` per pixel with the register index counting **down** from
 127, then `BPLCON4`.
+
+**And the skeleton is built once per screen, not once per frame** — which is the
+first thing to check before costing the technique. On [Gloom] the builder has
+**no direct callers**: it is reached only by the fall-through from the screen
+constructor, which runs at screen open, and the per-row `WAIT` emitter is called
+from two sites, both inside the builder. So the register numbers, the bank
+switches, the `WAIT`s and the `BPLCON4` writes are static, and a frame changes
+**two bytes out of every four** — 16,200 B for a 90 x 90 view, 7,920 B for
+66 x 60. **Trace the builder's callers before assuming a per-frame cost.**
 
 Underneath it, the bitplanes hold a **fixed descending ramp of colour indices**
 — 127, 126, 125 … each repeated `xscale` times — written once at screen creation
@@ -2149,10 +2159,28 @@ Three consequences worth carrying to the next disc:
   Gloom's 3D views are 90 x 90 and 66 x 60 (doubled to 180 x 180 and 132 x 120);
   its 320-wide screen descriptor is the one the menus and title pictures use,
   which is an ordinary planar bitmap with a 128-colour palette copper.
-* **The cost is bounded and computable**: 4 x (width + width/32 + 3) x height x 2
-  bytes of chip RAM, 68 KB for the 90 x 90 view and 34 KB for the split-screen
-  one — comparable with the buffers a C2P would need, and it spends copper DMA
-  instead of CPU.
+* **It is not an extra pass, it is the only pass.** There is no chunky buffer,
+  so the rasteriser's store *is* the copper-list write. For the same 8,100
+  pixels a chunky-buffer-plus-C2P route moves 8,100 B written + 8,100 B read
+  back + 7,087 B of planar output = **23,287 B** plus the conversion; the copper
+  route moves **16,200 B**, once, with no read-back and no ALU work. The price
+  is two bytes per pixel where a planar bitmap costs seven-eighths of one, which
+  is why the view is a window.
+* **The binding constraint is copper DMA, and it sets the geometry.** A copper
+  `MOVE` takes two DMA slots and a `WAIT` three; a PAL line offers on the order
+  of 113 slots. A 90-pixel row block is 94 `MOVE`s and a `WAIT` = **191 slots
+  against ~226** in the two scanlines it covers — **85 %**. Which is why
+  `yscale = 2` exists at all (at 1:1 there would be ~113 slots for 191 slots of
+  work), and why the width ceiling is **~108 pixels** — 217 free slots after the
+  fixed six, before bitplane DMA takes anything — rather than the 128 the
+  seven-bitplane palette would allow. The widest view shipped is 90. **Do this
+  arithmetic before believing a width you have only read out of a table.**
+* **A display like this makes the widest AGA fetch mode look like a bandwidth
+  decision.** Gloom writes `FMODE = $000F` for a 320-pixel lores screen, which
+  needs nothing like it for width; what it does need is bitplane DMA out of the
+  copper's way. That is an inference, not a measurement, and it wants an
+  emulator trace to confirm — but on any disc that drives the display from the
+  copper, read `FMODE` as a bandwidth setting first.
 
 Two structural reasons a CD32 title will refuse Akiko even when its authors
 can drive it, both visible on Marvin's disc without any disassembly:
