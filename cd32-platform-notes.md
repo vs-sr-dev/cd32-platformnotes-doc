@@ -1,7 +1,7 @@
 # Amiga CD32 / CDTV platform notes — a checklist for the next disc
 
 A running checklist, carried from one Amiga CD documentation pipeline to the
-next and added to by each. It currently rests on **thirteen discs**, so much of it
+next and added to by each. It currently rests on **fourteen discs**, so much of it
 is still marked with the title it came from: treat it as a list of things to
 *test*, not a list of things that are true of the format.
 
@@ -36,7 +36,18 @@ And one of the twelve is the **second disc here from a label that already had
 one**, three months apart in the same year and close enough to have shared a
 build kit. It is the most productive control after the two Prey masters,
 because it tested a prediction this document had been carrying for eight discs
-and **the prediction was wrong**. See open item 14.
+and **the prediction was wrong**. See open item 14. **A third disc from that
+same label has since arrived** — Universe, Core Design, 1994 — which turns that
+one-off comparison into a three-point test, and the answer holds: see open
+item 14.
+
+And the fourteenth is the set's **first point-and-click**, which matters
+because it is the first title here whose *content* is text rather than
+artwork. It supplied the section 9 numbers this document had been unable to
+fill in, a **bytecode interpreter** nothing in the set had shown before, and
+the correction that matters most operationally — **the Akiko scan carried from
+Guardian was looking at two of the eight address registers and returns a false
+negative**. See section 4.
 
 ## Discs this rests on
 
@@ -54,6 +65,7 @@ and **the prediction was wrong**. See open item 14.
 | [Guardian](https://github.com/vs-sr-dev/cd32-guardian-doc) | **1994** | Acid Software — a **CD32-first** third-person polygon shooter, and the first genuine real-time triangle rasteriser in this set. 61 files, **none of them compressed**, 1,193 sectors, 0.40 % of a CD, twelve Red Book tracks the game plays out of the disc's own TOC. A **six-plane HUD panel stacked over a four-plane 3D view**, 24-bit colour reached through `BPLCON4`'s `BPLAM`, the pad clocked by hand on **both ports**, and a rasteriser that fills each polygon scanline with **one Blitter cookie-cut across all four interleaved planes** — so Akiko is zero again |
 | [Banshee](https://github.com/vs-sr-dev/cd32-banshee-doc) | **1994** | Core Design, UK — the same label as Dragonstone and **written by a two-person Danish team**, which makes it the first same-label control here. 45 files, 37 RNC ProPack 1, 1,455 sectors, **0.44 % of a CD**; five minutes of Red Book played out of the drive; a **live developer hook in the pressed boot script**; and a 274 KB program nothing runs, holding a **640 × 512 interlaced HAM8** picture behind RNC ProPack **method 2** |
 | [Fire & Ice](https://github.com/vs-sr-dev/cd32-fireandice-doc) | **1994** | Graftgold / Renegade, UK — a 1992 Amiga floppy platform game on CD32, and the **third `D J Pocock` master**. 29 files, **22 Red Book tracks** and 50:33 of music against a 1,270-sector data track; 21 files packed with **PowerPacker 2.0, the seventh cruncher here**, plus **29 more PP20 streams nested inside them that entropy cannot see**; an eight-plane dual-playfield AGA display run almost entirely from one copper list; and a floppy disk-swap prompt and a manual copy-protection prompt still in the pressed executable |
+| [Universe](https://github.com/vs-sr-dev/cd32-universe-doc) | **1994** | Core Design, UK — the **third disc from this label** and the set's **first point-and-click**. 52 files, 47 RNC ProPack 1 nested **three levels deep** (342 validated streams), 2,429 sectors, **0.73 % of a CD** against **23 Red Book tracks and 40:37 of music**; **602 KB of prose in four complete languages**; a **16-opcode bytecode interpreter** with an explicit program counter; the CD-ROM *and* the CD32's serial EEPROM driven by hand through Akiko with the OS switched off; a six-plane **Extra-Half-Brite** display on AGA silicon with `FMODE = 0`; and the **fourth `D J Pocock` master**, leaving 232 sectors exactly as predicted |
 | [Prey: An Alien Encounter, **CDTV**](https://github.com/vs-sr-dev/cd32-prey-doc/blob/main/docs/09-cdtv-1992.md) | **1992** | The same game a year earlier, published by KirkMoreno alone. **The first disc here not mastered with ISOCD**, the first CDTV disc, the oldest master by fourteen months, and the control that corrected two claims about the other three. 1,453 files, of which **1,201 are byte-identical to the CD32 release** |
 
 ---
@@ -172,6 +184,8 @@ Gloom                     - ISOCD 1.04 by Pantaray, Inc. USA -
 HeroQuest II  Kevin Dudley - ISOCD 1.03 by Pantaray, Inc. USA -
 Guardian                  - ISOCD 1.04 by Pantaray, Inc. USA -
 Banshee       D J Pocock - ISOCD 1.04 by Pantaray, Inc. USA -
+Fire & Ice    D J Pocock - ISOCD 1.04 by Pantaray, Inc. USA -
+Universe      D J Pocock - ISOCD 1.04 by Pantaray, Inc. USA -
 ```
 
 **AND THE ELEVENTH ENTRY IS A REPEAT, ACROSS TWO UNRELATED STUDIOS.**
@@ -421,6 +435,41 @@ nothing on any of the three. **Read the preparer field first on every disc**,
 and if a fourth `Pocock` master turns up, the useful thing is not another 232 —
 it is anything else about the three that differs from the ten.
 
+**AND THE FOURTEENTH DISC IS A FOURTH `POCOCK` MASTER.** [Universe] (Core
+Design, 1994) declares 2,429 sectors and leaves **232, all zero, at LBA
+2,197–2,428** — 9.6 % of its volume — again against a prediction written before
+the sector map was built.
+
+```
+disc         preparer      declared volume   trailing zero run
+Liberation   D J Pocock            82,502    232
+Banshee      D J Pocock             1,687    232
+Fire & Ice   D J Pocock             1,270    232
+Universe     D J Pocock             2,429    232
+the other 10 various            772..255,552  32
+```
+
+Four discs, four studios, four publishers, one name. The correlation is not in
+question; the mechanism still is, and Universe was measured specifically to
+attack it. Newly ruled out on that disc: **image overrun 80 sectors** (the
+group now reads 103/86/87/80 against 106/150/152/152/152/180/225/227/0 — and
+Dragonstone's 106 sits *inside* the Pocock range, so the separation is not
+clean and this is not it); **directory record order** (strict ISO 9660 ASCII,
+three inversions against LBA order); **`;1` version suffixes** (present,
+ordinary); **root directory extent** (4,096 bytes, two sectors); audio track
+count (23, against 10/2/22 in the group and 0–28 outside it).
+
+**And one new lead, which is a file rather than a field.** Universe's
+`C/FreeAnim` and `C/noopenwb` are **byte-identical to Liberation's, timestamps
+to the second included** — and Liberation is the other Pocock master that has
+a `c/` directory at all. Banshee and Fire & Ice ship neither file and open
+`freeanim.library` from CD32 ROM. So two of the four Pocock discs shipped the
+same two utility binaries out of the same directory, across two unrelated
+studios. That is not a property of the group and does not explain the 232, but
+it is the first artefact found that links two Pocock masters and no other
+disc. **On the fifth `Pocock` disc, hash the `c/` directory before anything
+else.**
+
 **AND THE SEVENTH DISC LEAVES 32 AS WELL, INCLUDING THE ONE CUT WITH A
 DIFFERENT TOOL VERSION.** [HeroQuest II]'s volume is 25,436 sectors, cut with
 **ISOCD 1.03** rather than 1.04, and the trailing run is **32, all zero, at LBA
@@ -491,6 +540,15 @@ at 24**, no gap anywhere. **Three negatives, and the three include the two
 discs with the most audio in the set.** The seek-optimisation reading should now
 be treated as refuted rather than merely unsupported; the three discs that have
 the gap need an explanation from the *mastering* side.
+
+**AND THE FOURTH NEGATIVE IS THE MOST AUDIO-HEAVY DISC IN THE SET.**
+[Universe] carries **23 Red Book tracks and 40:37 of music against a
+2,429-sector data track** — 98.65 % of the sectors it uses are audio, the
+highest ratio here — and plays them while the game runs, out of a hand-written
+Akiko driver. Descriptors 16–18, path tables 19/20, trademark block 21, root
+22–23, **first file at 24**, one unclaimed run in the whole volume and it is
+the trailing 232. No gap. Four negatives, and they are the four discs with the
+most Red Book in the set.
 
 Two practical consequences, both cheap. A sector map built against the *image*
 rather than the declared volume merges the trailing run with the overrun and
@@ -617,9 +675,10 @@ game disc in 1994, in a sector nothing reads.
 
 ### On CD32-era discs: ten discs, the same bytes
 
-**All three SHA-1s match, byte for byte, on ten of the eleven CD32-era discs**
-— Dragonstone, Marvin, Prey CD32, [Legends], [Liberation], [Microcosm],
-[Gloom], [HeroQuest II], [Guardian] and **[Banshee]**:
+**All three SHA-1s match, byte for byte, on twelve of the thirteen CD32-era
+discs** — Dragonstone, Marvin, Prey CD32, [Legends], [Liberation], [Microcosm],
+[Gloom], [HeroQuest II], [Guardian], [Banshee], [Fire & Ice] and
+**[Universe]**:
 
 ```
 SHA-1  c5ffcef2a5e33d2df606185823cd95d1c174d65f   the whole sector, 2048 bytes
@@ -1879,9 +1938,21 @@ conversion — and a title can use either without the other:
 
 | | Discs using it | Which |
 |---|---:|---|
-| `$00B80000` as a **pointer load** — driving the drive | **1 of 13** | [Dragonstone] |
-| `$00B80038` / `$00B8003C` — the **C2P port** | **0 of 13** | none |
-| `$C0DE0000` — the identification constant | **0 of 13** | none |
+| `$00B80000` as a **pointer load** — driving the drive | **2 of 14** | [Dragonstone], **[Universe]** |
+| `$00B80030` — the **I²C port to the CD32's serial EEPROM** | **1 of 14** | **[Universe]** |
+| `$00B80038` / `$00B8003C` — the **C2P port** | **0 of 14** | none |
+| `$C0DE0000` — the identification constant | **0 of 14** | none |
+
+**A THIRD COLUMN, FROM THE FOURTEENTH DISC.** Akiko's register block does not
+carry two jobs, it carries three. [Universe] loads `$00B80030` into `a2` and
+`$00BFE001` into `a1` and then **bit-bangs I²C** — address counter, read/write
+bit, clocked-out bytes, an acknowledge test that branches on the sign bit — to
+reach the CD32's 1 KB serial EEPROM. That is the save system, written by hand,
+because the loader called `SuperState()` and cleared `INTENA`/`DMACON` before
+the game started and there is no Exec left to call `nonvolatile.library` with.
+**Eight discs here save through that library and this one cannot**, so when a
+disc kills the OS, look for the EEPROM at `$B80030` before concluding it has no
+save system.
 
 [Banshee] is what forced the split, because it was the best remaining candidate
 for the first column and came back zero. Same label as Dragonstone, three
@@ -1908,6 +1979,48 @@ and hunk before you check the byte pattern.**
 Keep both scans and report both numbers. A disc that scores zero on the second
 and non-zero on the first is doing something completely different from what
 "uses Akiko" usually means.
+
+**CORRECTION — SCAN ALL EIGHT ADDRESS REGISTERS. THE SCAN THIS DOCUMENT WAS
+CARRYING RETURNS A FALSE NEGATIVE.** `tools/akiko.py`, written for Guardian and
+reused on five discs since, matches exactly two encodings: `41f9`
+(`lea $B80000,a0`) and `2c7c` (`movea.l #$B80000,a6`). [Universe] loads the
+Akiko base into **`a5`** (`4bf9`) in three places and into **`a2`** (`45f9`) in
+two more, and every one of the five was invisible to it. The prediction written
+before the scan — negative on all three columns, following thirteen discs of
+precedent — was **wrong**, and it was wrong because of the tool rather than
+because of the reasoning.
+
+There are eight forms of each instruction and a scan has to cover all sixteen:
+
+```
+lea $xxxxxxxx.l, An     41f9 43f9 45f9 47f9 49f9 4bf9 4df9 4ff9   a0..a7
+movea.l #$xxxxxxxx, An  207c 227c 247c 267c 287c 2a7c 2c7c 2e7c   a0..a7
+```
+
+`tools/akiko2.py` in
+[cd32-universe-doc](https://github.com/vs-sr-dev/cd32-universe-doc) does this.
+**Re-run it on any disc whose Akiko result was recorded as zero from the
+two-encoding scan** — the C2P and `$C0DE0000` columns are byte-pattern counts
+and are unaffected, but the pointer-load column is not.
+
+**And Universe supplies a new false positive for the C2P port, from a genre
+this document had not seen.** It shows seven raw `00 B8 00 38` hits and four
+`00 B8 00 3C`, none of them in code: all are inside resource files, and every
+one is a **hotspot rectangle in a point-and-click's clickable-region table**
+whose x coordinate is 184 (`$00B8`) and whose y coordinate is `$38` or `$3C`.
+One complete table from that disc:
+
+```
+00b8 0038 0028 0028 8013 8014 ffff      x=184 y=56 w=40 h=40, two message ids
+00b8 0004 0024 0024 8013 8014 ffff
+00f8 002c 0048 0048 8015 8016 ffff
+```
+
+So the collection of things that look like `$00B80038` and are not now reads:
+**ProTracker's period table** (Gloom, HeroQuest II), **planar sprite mask data
+at odd offsets** (Fire & Ice), and **screen coordinates in an object table**
+(Universe). Check alignment, check the hunk, and check whether the file
+contains any code at all.
 
 **Akiko is untouched on eleven of the twelve CD32 discs, and the twelfth uses
 it as a drive controller, not for chunky-to-planar.** The console's headline feature is
@@ -2130,6 +2243,37 @@ hit by actually running the decompressor.** That cannot produce a false
 positive, because a byte sequence that decodes cleanly to its own declared
 length is a packed stream by construction. Both checks belong in the method and
 only the second is reliable at small sizes.
+
+### AND THE NESTING GOES DEEPER THAN TWO LEVELS
+
+[Universe] takes the same idea one level further, in a different codec, with a
+CRC at every step. Its census reports **47 packed files**; a magic scan
+validated at every byte offset by running the decompressor reports **342
+streams**:
+
+```
+depth 0    62 streams    4,324,396 packed ->  5,664,640 unpacked   1.31x
+depth 1   236 streams    2,899,539 packed ->  6,078,872 unpacked   2.10x
+depth 2    44 streams      309,870 packed ->    609,936 unpacked   1.97x
+          259 raw gaps between streams, 1,092,381 bytes
+```
+
+Depth 2 is **RNC ProPack 1 inside RNC ProPack 1 inside RNC ProPack 1**, and
+every CRC-16 in all 342 headers matches. Three container shapes occur on the
+one disc and only the third is what a census sees:
+
+* a file that **is** one stream (`title.np`, `code.prg`);
+* a file that is a **concatenation of streams with raw gaps between them**
+  (`scene37.dat`: three streams, 92.5 % of the file covered, and a census that
+  reads only the first reports a 35 KB file that unpacks to 732 bytes when it
+  actually holds 87,552);
+* a file that is **one stream whose output is a concatenation** (`part9.dat`:
+  one outer stream, 22 inner, five inner-inner).
+
+**After you unpack, re-scan — and then re-scan again.** Two passes were enough
+on Fire & Ice; here it takes three. And the gaps are not padding: on this disc
+they carry the resource offset tables, the hotspot tables and the script
+bytecode.
 
 ### A SEVENTH CRUNCHER: PowerPacker 2.0
 
@@ -3054,6 +3198,25 @@ untouched: the deep strip is genuine EHB and behaves identically on OCS, ECS and
 AGA. **When you find `BPU = 6` and no `BPLCON3`, check `BPLCON2` bit 9 before
 concluding the disc needs AGA — and if it is clear, it does not.**
 
+**AND THE SECOND SIGHTING IS A WHOLE GAME, NOT A STRIP.** [Universe] runs its
+*entire* display in EHB: `BPLCON0 = $6200` (BPU = 6, and `BPU3` at bit 4 is
+zero, so the naive read of bits 14–12 happens to be right here),
+`BPLCON2 = $001B` with bit 9 clear, exactly 32 colour registers written and
+every value ≤ `$0FFF`, no `BPLCON3`, no `BPLCON4`, no `DIWHIGH`. **The only AGA
+register the disc touches anywhere is `FMODE`, written once, with zero** —
+which is the write that makes AGA silicon fetch like ECS. A 1994 CD32 release
+whose relationship with the CD32's graphics hardware is one instruction telling
+it to get out of the way.
+
+That disc also makes the practical consequence concrete. Its pictures are
+`6 x 8,000` separated planes plus a 64-byte 32-entry `$0RGB` palette, and
+**a renderer with 32 entries and no EHB draws every value 32–63 wrong** — which
+looks exactly like a bad stride and is not one. If a planar render comes out as
+structured noise, check the plane count against the palette size before you go
+looking for the geometry. Rendering the planes one at a time as monochrome
+settles it in seconds: six coherent images and two solid stencils is a
+different answer from six streams of noise.
+
 *Count.* This is the one that decides whether the disc **needs** AGA, and it
 is a two-line test. OCS and ECS reach 64 colours only through
 **Extra-Half-Brite**, in which entries 32–63 are entries 0–31 at half
@@ -3568,6 +3731,24 @@ what makes them survivable is that each one loads the request pointer from the
 same variable two instructions earlier. **Anchor the io_Command scan on the
 IORequest pointer, not on the offset `0x1c`.**
 
+**A THIRD ANSWER TO THE TOC QUESTION, AND IT MAKES THE WHOLE `io_Command`
+METHOD INAPPLICABLE.** [Universe] plays **23 Red Book tracks, 40:37**, and
+calls `OpenDevice` **zero** times. Its loader goes `SuperState()`, masks the
+interrupts and clears `DMACON` before the game starts, so there is no
+`cd.device`, no `IOStdReq`, no `io_Command` and no `io_Offset` to scan for at
+all. The game reaches the drive by driving **Akiko** directly — the CD-ROM
+interface at `$B80004`, `$B80008`, `$B80010`, `$B80014`, `$B80018`–`$B8001F`,
+`$B80020` and `$B80024`, with a hand-written service routine that tests bits
+26–31 of `$B80008 AND $B80004` and then reads CIA-B's `$BFED01`.
+
+So the column now reads: **reads the TOC and filters by CONTROL** (Guardian),
+**names tracks as constants in `io_Offset`** (Banshee, Fire & Ice), and
+**bypasses the OS entirely and builds the command in Akiko's register block**
+(Universe). Count `OpenDevice` first, as this section says — but read a zero as
+"look at `$B80000`", not as "no CD audio". How many of Universe's 23 tracks the
+game can reach is open, because no literal track number survives in either
+executable.
+
 Also: [Prey] there is
 not — one `MODE1/2048` track and nothing else, on a disc that carries
 **63 minutes 40 seconds of speech and atmosphere as ordinary files**. A CD32
@@ -3759,6 +3940,67 @@ different people in its own manual. Do not stop looking when you find one.
 
 ## 9. Text
 
+**HOW MUCH TEXT IS THERE? MEASURE IT, AND SAY WHICH DENOMINATOR.** This section
+was the thinnest in the document for thirteen discs because on thirteen discs
+the text was a garnish. [Universe] is the first title here whose *content* is
+text — a point-and-click — and it supplies the number the section was missing:
+
+```
+                bytes of prose   of the resident image   of the bytes on disc
+Universe             602,344            6.53 %                 13.70 %
+```
+
+6,644 strings, 6,426 of them unique, in **four complete languages** — English
+21.7 %, French 25.2 %, German 24.7 %, Italian 22.4 %, 6.0 % too short to
+classify. Those shares are what four real translations of one script look
+like, and a disc where they are lopsided has a localisation that stopped.
+
+**State which of the three figures you divided by.** On disc, 602 KB against
+4.19 MB is 13.7 %; against the fully unpacked 8.79 MB it is 6.5 %. Both are
+true and they differ by a factor of two. The rest of the set for comparison:
+Guardian "one language and about forty lines of it", Prey thirteen performance
+ratings and three death messages, Microcosm nothing outside the video.
+
+**And on a text-heavy disc, expect the prose at the bottom of the packing.**
+On Universe the string tables are at RNC nesting depth 1 and 2 (section 5);
+47 of the 49 tables are below the top level, so a pipeline that unpacks one
+level and greps finds the menus and none of the script.
+
+**A string table need not declare its own length, and the three things that
+break a naive parser are all on one disc.** [Universe]'s tables are a run of
+32-bit big-endian offsets at the head of a blob:
+
+* **there is no count.** The run ends at the first entry that does not point at
+  a plausible record, and it can never be longer than `min(offsets) / 4`
+  because the first record follows it;
+* **entries repeat and point *backwards*.** A line used twice is stored once.
+  So a record's extent comes from its NUL terminator and **never** from the
+  next offset — `offs[i+1] − offs[i]` produces garbage on a fifth of the tables
+  and makes the rest look non-monotonic;
+* **there are two record shapes and only the first byte distinguishes them.** A
+  speech record carries a four-byte header (`ff ff 14 08`, `0c 09 14 08`); a
+  plain name or description has none and the text starts at the offset. The
+  first byte of a header is never printable and the first byte of text always
+  is, which is the whole test.
+
+A parser that assumed a length field, forward-only offsets and one record
+shape found 26 tables and 61 KB on that disc. Fixing all three found **49
+tables and 180 KB**, and the raw prose scan over the leaves found 602 KB.
+**When a text scan on a text-heavy disc returns an implausibly small number,
+suspect the table model before suspecting the disc.**
+
+**And an entry of zero is a slot, not a parse failure.** Universe has 23 empty
+slots across 2,109 — some a null pointer, some a record header with no text
+behind it. Two of them are in the inventory-description table, which means two
+objects the player can be told nothing about.
+
+**Where a disc keeps its languages in one blob, look for a fixed-length
+separator.** Universe puts all four in the same blob, in the order EN/FR/DE/IT,
+separated by a run of **exactly 160 zero bytes**, with the offset table
+indexing only the English blocks and the translations reached by adding a
+per-language base. Nothing declares any of that; the constant 160 is what makes
+it recognisable as a marker rather than padding.
+
 **Do not assume anything about the encoding — determine it, because it says
 where the text was written.** The first two discs go opposite ways and both
 are informative; the third has almost no text at all.
@@ -3768,6 +4010,14 @@ are informative; the third has almost no text at all.
 * [Marvin] **ISO 8859-1** throughout, in all four language files and in the
   `©` of the boot script and the `´` in the executable's own error messages:
   `è` `0xE8`, `ß` `0xDF`, `Ü` `0xDC`. Authored on an Amiga.
+* [Universe] **7-bit ASCII plus CP437, and it is the cleanest case in the
+  set**: 23 distinct high bytes, every one of them a character English, French,
+  German or Italian needs (`0x82` é ×1,968, `0x81` ü ×723, `0xE1` ß ×487,
+  `0x8A` è ×934 …) and nothing else. Nothing outside CP437's accented block
+  and nothing inside it these four languages do not use. Where Banshee needed
+  CP437 *plus* a private substitution for Danish, this disc simply uses the
+  code page. The programme also carries an **accent-folding table** mapping the
+  high range onto base letters, right beside its keyboard map.
 * [Prey] **plain 7-bit ASCII, one language, no accented character anywhere**,
   because the only text the player reads outside a bitmap is thirteen
   performance ratings and three death messages. A disc can have almost no text
@@ -4067,6 +4317,32 @@ the slack is **8,212 bytes — 0.3 %**, against Banshee's 3.9 % and Dragonstone'
 was willing to carry. The number is cheap and it is starting to look like it
 says something about the studio; keep collecting it.
 
+**A fourth point, and it lands at the tight end.** [Universe]:
+**4,397,639 on disc / 9,217,125 resident / 9,172,928 used**, slack
+**44,197 bytes — 0.5 %**.
+
+```
+Fire & Ice  0.3 %      Universe  0.5 %      Banshee  3.9 %      Dragonstone  9.1 %
+```
+
+Two of the four are now under 1 %, which **weakens the "studio habit" reading**:
+Universe and Dragonstone are the same label and sit at opposite ends of the
+range, 18:1 apart. What the two tight discs share is not a studio but a shape —
+both take the machine over completely and allocate nothing, so there is no
+allocator rounding anything up. The two loose ones keep AmigaDOS alive. That is
+one hypothesis and one more disc tests it.
+
+Universe also makes the *third* figure worth stating separately for another
+reason: read at one unpack level it is 5.66 MB and read at all three it is
+8.79 MB. **A "resident" figure taken from a single unpack pass understated that
+disc by 38 %.** Say how deep you unpacked.
+
+And the per-file breakdown is more legible than the total: on Universe the
+slack is concentrated in exactly two files — `copper.prg` at **48.3 %** (two
+reserved copper-list regions) and `hand.spr` at **49.3 %** — and every other
+file on the disc is under 5 %. A single aggregate slack figure can be one
+deliberate buffer wearing a disguise.
+
 **And the on-disc reading of the band now has a second exception, from the same
 direction as the first.** Read on disc, Fire & Ice is **1.94 MB** — below the
 2.25 MB floor, and the smallest game in the set. Read unpacked it is **2.77 MB**
@@ -4089,41 +4365,41 @@ RAM and a 68EC020 rather than by the medium. **Measure the decompressed size,
 not the compressed one**: on Gloom the compressed figure would have broken the
 band and been wrong.
 
-| | Dragonstone (1995) | Marvin's Marvellous Adventure (1995) | **Prey CD32 (1993)** | **Prey CDTV (1992)** | **The Speris Legacy (1996)** | **Legends (1996)** | **Liberation: Captive II (1994)** | **Microcosm (1994)** | **Gloom (1995)** | **HeroQuest II (1994)** | **Guardian (1994)** | **Banshee (1994)** | **Fire & Ice (1994)** |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Publisher / studio | Core Design, UK | 21st Century / Infernal Byte, UK+DE | Almathera / KirkMoreno, UK+DK | **KirkMoreno alone** | Binary Emotions / Team 17, UK | **Krisalis Software / Guildhall, UK** | **Mindscape / Byte Engineers, UK** | **Psygnosis, UK — CD32-exclusive** | **Black Magic Software / Guildhall, UK** | **Gremlin Graphics, UK** | **Acid Software — CD32-first, and the first real polygon engine here** | **Core Design, UK — the same label as Dragonstone, and the first same-label control here; written by a two-person Danish team** | **Graftgold / Renegade, UK** — the studio is named nowhere in ISO 9660; it is inside the executable under XOR `0x1b`, together with the engine's own name, `68000 Game System`, and the copyright range `1990,94` |
-| Master cut | 1994/1995 | 1994/1995 | **1993-11-29 21:15:11** | **1992-09-02 15:05:26** | **1996-01-10 20:47:52** | **stamped 1992-03-06 18:12:02 — impossible** | **1994-04-15 09:39:39** — and the game was **linked 1994-04-08 09:35:08**, seven days earlier, per its own `$VER:` | **PVD stamped `1978-01-26 09:30:04` — the AmigaDOS epoch**; newest file 1994-02-09 02:46:04 | **1995-06-28 18:06:57** — every record on the disc is the same afternoon | **1994-06-15 17:34:13** — and the game executable was written **11m34s** earlier; the volume-set field reads `15 June 1994 17:30`, typed by hand | **1994-08-04 14:26:37** — and the root directory record **1m18s** earlier, the tightest gap in the set; the community dump is labelled *1995* | **1994-07-08 13:16:10** — and the executable's own banner says it was linked at **12:59** the same day, **17m10s** earlier | **1994-03-16 18:24:51** — six days after the last file it indexes, so the two halves of the timestamp evidence are consistent |
-| Tracks | 1 data (`MODE1/2048`) + 1 audio | 1 data (`MODE1/2048`) + **11** audio | 1 data (`MODE1/2048`), **no audio track** | 1 data, **no audio track** | 1 data (`MODE1/2048`), **no audio track** | 1 data (`MODE1/2048`) + **28** audio | 1 data (`MODE1/2048`) + **10** audio | 1 data (`MODE1/2048`) + 1 audio | 1 data (`MODE1/2048`); **no cue sheet or audio track in the dump supplied** | 1 data (`MODE1/2048`) + **5** audio | 1 data (`MODE1/2048`) + **12** audio | 1 data (`MODE1/2048`) + **2** audio | 1 data (`MODE1/2048`) + **22** audio — the second-highest track count here |
-| Data track sectors | 1,741 (1,635 declared) | 6,833 (6,681 declared) | **59,787 (59,787 declared — equal)** | 48,637 declared **in a 119,988-sector dump** | 2,455 in the image, **2,303 declared** | 2,404 in the image, **2,252 declared** | **82,605 in the image, 82,502 declared — the largest on the format** | **255,777 in the image, 255,552 declared — the largest on the format by 3.1x** | **952 in the image, 772 declared — the smallest volume on the format** | 25,663 in the image, **25,436 declared**, overrun 227 | **1,343 in the image, 1,193 declared**, overrun 150 — the second-smallest volume on the format | 1,773 in the image, **1,687 declared**, overrun 86; the volume's files end at 1,454 | **1,357 in the image, 1,270 declared**, overrun 87; the volume's files end at 1,038 |
-| Audio | 118.08 s, 8,856 sectors | **2,600.9 s**, 195,068 sectors | 0 s Red Book; **3,820 s of PCM in files** | 0 s Red Book; **3,922 s of PCM in files** | 0 s Red Book; **12 ProTracker modules** | **3,936.1 s**, 295,209 sectors | **2,064.9 s**, 154,864 sectors | **203.0 s**, 15,225 sectors — **and nothing on the disc plays it** | 0 s Red Book; **2 OctaMED `MMD1` modules + 24 raw PCM effects**, and **no `OpenDevice` anywhere** | **1,902.1 s**, 142,659 sectors — **and only tracks 2 and 3 are ever played**; 6 ProTracker modules + 39 raw PCM effects | **1,835.6 s**, 137,672 sectors, **all twelve tracks reachable** — the game filters the disc's own TOC by its CONTROL bits; no module and no PCM file anywhere | **305.7 s**, 22,928 sectors, **both tracks played while the game runs** with `CD_PLAYTRACK` and re-issued by a `CD_INFO` watchdog every 150 frames; + 2 **Player 6.0A** modules by Jarno Paananen, who is named on the credits screen | **3,033.4 s**, 227,506 sectors, **all 22 distinct by SHA-1** — three share a byte length and differ in content. Played with `CD_PLAYTRACK` while the game runs, and the player can switch to the internal replayer instead |
-| Share of a 333,000-sector CD | ~3.2 % | **60.7 %** | 18.0 % | 14.6 % | **0.74 %** | **89.4 %** — game 0.72 %, music 88.6 % | **71.3 %** — data 24.8 %, audio 46.5 % | **81.3 %** — data 76.7 %, audio 4.6 %; inside the data track, **video 70.8 %**, game 1.4 %, 15,000 empty sectors 4.5 % | **0.232 %** — a third of the previous smallest | **50.5 %** — data 7.6 %, audio 42.8 %; inside the data track, **95.4 % is zero** | **41.8 %** — game **0.40 %**, audio 41.3 % | **7.4 %** — game **0.44 %**, audio 6.9 % | **68.7 %** — game **0.41 %**, audio **68.3 %**; the music outweighs the data track **168 : 1** by sector |
-| Files / directories | 91 / 2 | 212 / 9 | **1,439 / 24** | **1,453 / 20** | **47 / 10** | 111 / 7 | 187 / 10 | **34 / 2** | **131 / 7** | **97 / 7** | **61 / 6** | **45 / 4** — and **two of the files are zero bytes long**, one directory is empty | **29 / 8** — and **two of the directories are empty** (`/Initial`, `/Misc`), created seven seconds apart as the last act of that session |
-| Bytes on disc / unpacked | 2,721,914 / 10,284,352 | 13,251,697 / — | 109,786,031 / — | 99,327,202 / — | 4,514,540 / **8,543,154** | 4,351,859 / **11,836,224** | 168,272,839 / — (**91.2 % of it speech**, 7.1 % wall sprites, 1.7 % game) | 492,497,755 / — (**98.1 % of it one video file**) | 1,315,110 / **3,855,390** | 2,156,143 / **4,285,931** | 2,249,822 / **2,249,822 — nothing is packed** | 2,879,663 / **5,768,936**; **bytes actually used 5,542,774 (96.1 %)** | **2,035,183 / 2,906,735**; **bytes actually used 2,898,523 (99.7 %)** — buffer slack **0.3 %**, the tightest in the set |
-| Compression | RNC ProPack 1, 84 of 91 files, 25.7 % | **none at all** | **none at all** | **none at all** | **Imploder `IMP!`, 35 of 47 files, 52.8 %** | **Bytekiller, no magic number**, 79 of 111 files, 35.2 % | **`RNC` with a 12-byte header — not RNC ProPack**, 44 blocks in 5 files, 1.0 MB of the 2.9 MB that is not speech or walls | **none at all** — nothing above entropy 7.2, no magic anywhere in 523 MB | **CrunchMania `CrM2`, 115 of 131 files, 30.0 %** — the fifth cruncher on the format, and the credits name its author | **RNC ProPack 1 with a rotating XOR key over the literals**, 106 blocks in 92 files, 49.1 % — three variants (fixed `0x5ED0` x88, plain x15, stream `0xBE1A` x3) | **none at all**, on any file — but **nine images inside the executable are ByteRun1**, and the same title's A1200 floppy packs the sprite banks it cannot fit | **RNC ProPack 1, 37 of 45 files, 45.7 %** — and Dragonstone's decoder unpacked all 37 first run. Plus **RNC ProPack *method 2* inside `picture.exe`**, 329,184 B in three hunks, which the file census scores as uncompressed | **PowerPacker 2.0 (`PP20`) — the seventh cruncher**, 21 of 29 files, 69.2 %, every one with the same `[9,10,12,13]` table and every one decoding to its declared length. **The format has no checksum at all**, so the length is the only validation there is. Plus **29 further PP20 streams nested inside already-unpacked files**, which a file census misses and for which **no 8 KB entropy window anywhere on the disc exceeds 7.5 b/B** |
-| PVD system id | `CDTV` | `CDTV` | `CDTV` | `CDTV` (correctly, this time) | `CDTV` | `CDTV` | `CDTV` | `CDTV` | `CDTV` | `CDTV` | `CDTV` | `CDTV` | `CDTV` |
-| PVD application id | `DragonStone` (the title) | `Platformer` (the genre) | `Game` (the medium) | **empty** | **empty** | `Legends` (the title) | `Liberation CD32` (title **and** console) | **empty** | **empty** | `Legacy of Sorasil CD32` (title **and** console) | **empty** | `Banshee CD32` (title **and** console) | **`Fire&Ice CD32`** (title **and** console) — the second disc to answer that box this way |
-| Cue `CATALOG` | absent | `5012635300344` | `5024913000068` | — (no cue) | **`0000000000000`** — thirteen zeros | `5012323060062` | **`0000000000000`** — thirteen zeros again | **`0000000000000`** — thirteen zeros, the third disc | — (no cue supplied) | absent | **`0000000000000`** — thirteen zeros, the fourth disc | **`5020717200444`** — a real UK EAN-13, Core's own `502071` prefix | **`5018247373455`** — a real UK EAN-13, the second real catalogue number here |
-| Mastering tool | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) | **not ISOCD — unidentified** | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) | **ISOCD 1.03** (Pantaray) — the first non-1.04 master here | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) |
-| Preparer field | `Sajjad Majid - ...` | `Stewart.. - ...` | `Almathera - ...` | **empty** | **empty name**, tool signature only | `Richard Teather (Programmer) - ...` — **and he is in the credits screen** | `D J Pocock - ...` — **and he is nowhere else on the disc** | **empty name**, tool signature only — the second such disc | **empty name**, tool signature only — the third such disc | `Kevin Dudley - ...` — **and he is `Programming` on the credits screen** | **empty name**, tool signature only — the fourth such disc | **`D J Pocock - ...` — character for character Liberation's**, a different studio and publisher; nowhere else on either disc | **`D J Pocock - ...` — the third disc with this name**, character for character; a third studio and a third publisher |
-| Duplicate PVD | yes, sectors 16 and 17 | yes, sectors 16 and 17 | yes, sectors 16 and 17 | **yes** — the one habit that crosses tools | yes, sectors 16 and 17 | yes, sectors 16 and 17 | yes, sectors 16 and 17 | yes, sectors 16 and 17 | yes, sectors 16 and 17 | yes, sectors 16 and 17 | yes, sectors 16 and 17 | yes, sectors 16 and 17 | yes, sectors 16 and 17 |
-| Volume starts at LBA | 20 | 20 | **6019 — 6,000 zero sectors first** | 19; **path tables at 48,633, after the files** | 19 | 19 | 19; M path table at 19, L at 20 | 19 — **but the first file is at 15,023, after 15,000 zero sectors** | 19; M path table at 19, L at 20 | 19; M path table at 19, L at 20 — **but the first file is at 24,295, after 24,272 zero sectors** | 19; M path table at 19, L at 20; **first file at 23 — no front gap** | 19; M path table at 19, L at 20; **first file at 24 — no front gap**, on a disc that streams Red Book during play | 19; M path table at 19, L at 20; **first file at 24 — no front gap**, on a disc that is 68 % Red Book and plays it during the game |
-| `.TM` block at | sector 21, 2,048 B | sector 21, 2,048 B | **6021**, 2,048 B, and again as `/CD32.TM` | **48,621, 22,152 B**, and it *is* `/CDTV.TM` | **21, 22,152 B** — eleven sectors | 21, 2,048 B | 21, 2,048 B | 21, 2,048 B | 21, 2,048 B | 21, 2,048 B | 21, 2,048 B | 21, 2,048 B | 21, 2,048 B |
-| `.TM` contents | trademark banner + 876 B `exec` object | identical | identical | **`cdtv.device` 35.2, Carl Sassenrath — no banner anywhere** | **`cdtv.device` 35.2 — the CDTV driver, on a CD32 disc** | trademark banner + 876 B `exec` object — **the fourth identical copy** | trademark banner + 876 B `exec` object — **the fifth identical copy** | trademark banner + 876 B `exec` object — **the sixth identical copy**; no `.TM` file in the root | trademark banner + 876 B `exec` object — **the seventh identical copy**; no `.TM` file in the root | trademark banner + 876 B `exec` object — **the eighth identical copy**, and the first written by ISOCD 1.03; no `.TM` file in the root | trademark banner + 876 B `exec` object — **the ninth identical copy**; no `.TM` file in the root | trademark banner + 876 B `exec` object — **the tenth identical copy**; no `.TM` file in the root | trademark banner + 876 B `exec` object — **the eleventh identical copy**; no `.TM` file in the root |
-| Unclaimed sectors in the volume | — | 32, all zero | **32, all zero** | none | **32, all zero** | **32, all zero** | **232, all zero** — the number that broke the "always 32" fingerprint | **32, all zero** — on a 255,552-sector volume, which kills the 'small volumes' reading | **32, all zero** — on a 772-sector volume, which kills the last size reading | **32, all zero, at the end** — *and* **24,272, all zero, at the front** | **32, all zero, at the end** | **232, all zero** — the second disc to do this, and the second `D J Pocock` disc | **232, all zero** — the third disc to do this and **the third `D J Pocock` disc**; on a 1,270-sector volume, so **18.3 % of the whole volume**, the largest share the anomaly has taken |
-| Timestamps | AmigaDOS 1978 epoch, except 3 files | real 1994 dates; dirs 1992; **2 files at the MS-DOS 1980 epoch** | four epochs: 131 at 1978, **1,213 inherited from the CDTV build**, 84 Commodore stamps, 43 real | one 4½-minute session, all real | **all real**; four sittings, Dec 1995 and Jan 1996 | **all 118 read 1992-03-06**; four sittings, and the PVD is stamped before nine of its files | 184 real (1993-05-19 to 1994-01-23); **12 at 1992-02-05, disproved by the executable's own build stamp**; the root record at the 1978 epoch | **inverted**: all 34 files real and self-consistent; **the PVD itself at the 1978 epoch**. Three sittings; the whole game copied in **66 seconds** | **all real and all one hour**: 128 files copied in 17 s, the executable 48 min later, the master 35 s after that | **all real**; 92 files in a six-minute copy on 1994-06-02, three files on three later days, the executable 11m34s before the master | **60 of 61 files and all 6 directories in one seven-second copy** (1994-08-03 11:36:39–46); `/game` alone at **1980-01-09 23:17:58 — the MS-DOS epoch, day 9** | **41 of 45 at 1992-12-21 15:11:46–15:27:34, a wrong clock**, disproved by the executable's own build banner; 3 `C:` commands 1993; boot script 1994-06-22; directories and PVD 1994-07-08. The two zero-length files carry an all-zero stamp | **two clocks and no AmigaDOS epoch anywhere.** 19 files with real 1994 dates that read as a work log — six `Graphic` files in one second, seven `Set` files one a minute, `SetPatch` and `core4.bin` **18 s apart**, the two executables **2m08s apart** — and **10 files at the MS-DOS 1980 epoch**, the largest such group in the set. Inheritance from the 1992 floppy release was a priori plausible here and is **disproved by the disc**: 1980 predates the Amiga, and `AskBoot`, a CD32-only tool, is in the 1980 group. **No `1992-12-21` anywhere** |
-| SetPatch | 40.14 (7.10.93) | 39.6 (8.9.92) | 40.12 (16.9.93) | none — `bookit` + `rmtm` instead | **40.16 (14.2.94) — ships, never run** | **39.6 (8.9.92) — byte-identical to Marvin’s** | 40.12 (16.9.93) | **none — no `c/` directory at all** | **40.3 (10.5.93)** — a fifth version | **40.12 (16.9.93) — byte-identical to Liberation’s and Prey CD32’s**; `c/Assign` 37.4 byte-identical to four other discs | **40.3 (10.5.93) — byte-identical to Gloom's and to this title's own A1200 floppy**; no `c/` at all, it sits in the root | **40.14 (7.10.93) — byte-identical to Dragonstone's**, and the only same-label pair among six binaries | **40.14 (7.10.93) — byte-identical to Dragonstone's *and* Banshee's.** Third disc, second studio, second label: **the 'only same-label pair' reading of this hash is retired.** No `c/Assign` on the disc |
-| First stage | 1 hunk, 3 relocations, **0 library calls**, Akiko direct | 6 hunks all chip, 4,278 relocations, **169 library calls**, no Akiko | 1 hunk any-mem, 245 relocations, 64 library calls, **0 hardware registers** | **324 bytes**: open dos, load the game | none — a **7-line** script, 4 of them `assign` | none — a **9-line** script; `ShutDown`, `SetPatch`, 6 `assign` | none — a **22-line** script that mounts a **recoverable RAM disk** and makes it bootable | none — a **five-byte** boot script: `cosm` | none — a **three-line** script; `freeanim`, `setpatch`, `gloom`, all in the **root** (no `c/`) | none — a **seven-line** script; `setpatch`, `/loaderblackpal` (in the root), `Stack 8192`, **three `Assign`s of floppy volume names**, `QuestII 2` | none — a **three-line** script; `setpatch`, `freeanim`, `game m1 f`, both commands in the **root**; and `s/startup-sequence.bak` beside it runs **`sw`** | none — a **twelve-line** script with a **live `DebugDisk:` developer branch** and four `assign bansheeN: CD0:` | none — a **nine-line** script: `SetPatch QUIET`, `AskBoot`, then `FireNTSC` or `FirePAL` on `If WARN`. No assign, no RAM disk, no debug branch. **`AskBoot`** is a 3,144-byte SAS/C program whose payload is **14 instructions** reading `GfxBase->DisplayFlags` bit 0 |
-| Game executable | (same file) | (same file) | 1 hunk, **5,323 relocations**, 120 library calls, **448 register writes** | 71,316 B, and a **324-byte** first stage | 1 hunk, **1,647,128 B in chip**, 3,404 relocations, 72 library calls | 1 hunk, 37,848 B **in chip**, 1,020 relocations, 60 library calls | 4 hunks, 225 KB code + 14 KB data + 32 KB bss + **40 bytes chip**, 1,356 relocations, 181 library calls | 2 hunks, 106 KB code + 117 KB **chip** data, **22 relocations**, ~50 library calls, **68020-only addressing**, and **78 `HUNK_DEBUG` blocks naming 77 source files** | 1 hunk, 174,128 B `MEMF_ANY`, 1,277 relocations, **no symbols and no debug hunks**, 56 library calls, **29.9 % of the hunk is zero** | 6 hunks, 1,153,536 B allocated (**762,988 chip**), **0 relocations, 0 symbols, 0 debug in the file** — it decrunches and relocates itself in 584 bytes, with 5,524 relocations compressed inside the hunks; 78 library calls, 33 LVOs | **3 hunks** — 152,164 CODE (any) + 232,188 DATA (any) + **245,656 DATA (chip)**; 5,113 relocations, 4,893 of them hunk 0 into itself; no symbols, no debug, **no `$VER:` anywhere**; 62 library calls, 32 LVOs | **6 hunks** — 97,500 CODE + 26,932 DATA + 342,356 BSS + 288 CODE (chip) + 16,752 DATA (chip) + **1,285,052 BSS (chip)**; 1,948 relocations; 71 library calls, 33 LVOs; **1.30 MB of chip RAM claimed before it allocates anything**. A second executable, `picture.exe`, is **named by nothing on the disc** | **two whole executables, one per video standard.** `FirePAL`: 2 hunks — 92,236 CODE (any) + **309,252 DATA (chip)**; 2,155 relocations, 2,106 of them hunk 0 into itself; no symbols, no debug, **no `$VER:` anywhere** — the version is a bare banner, `AGA 1.04`, inside XOR-`0x1b` text. `FireNTSC` is the same program 364 bytes shorter, built **2m08s** later; the two differ in 23 scanlines of copper list and one string |
-| Libraries opened | none | 10, via `OldOpenLibrary` | 6, via `OldOpenLibrary` | `cdtv.device`, `bookmark.device` | 5: graphics, dos, intuition, lowlevel, nonvolatile | 3: dos, intuition, graphics (+ `cd.device`, `ciaa`/`ciab.resource`) | **9**, all via `OpenLibrary` (−552): dos, intuition, graphics, lowlevel, nonvolatile, **and three in-house — `vector`, `tridee`, `math`** | 5: graphics, nonvolatile, dos, lowlevel, **freeanim** (+ `cd.device`, opened twice) | 3, via `OldOpenLibrary`: dos, graphics, nonvolatile (+ `ciaa`/`ciab.resource`). **`lowlevel.library` never opened** | 4, all via `OpenLibrary` (−552): dos, graphics, nonvolatile, lowlevel (+ `cd.device` twice, `input.device` once). **`graphics.library` is never called** | **3**, all via `OldOpenLibrary` (−408): nonvolatile, dos, graphics — in that order (+ `cd.device` once). **`lowlevel.library` never opened and not on the disc**; `freeanim` opened by a 72-byte root command | **5**, all via `OpenLibrary` (−552): lowlevel, freeanim, graphics, dos, intuition (+ `cd.device`, `input.device`, `audio.device`). Files are loaded with `dos.library` `Open`/`Read`/`Seek`/`Close` | **5**, all via `OpenLibrary` (−552): **freeanim**, lowlevel, nonvolatile, dos, graphics — in that order (+ `cd.device` **twice**, `input.device` once). Files are loaded with `dos.library` `Open`/`Read`/`Close`. An `audio.device` name string ships and is reached by nothing |
-| `freeanim.library` | opened by `c/FreeAnim` | opened **first** by the game, never called | opened by the first stage; `c/freeanim` ships unused | **not present — `c/rmtm` instead, and it is run** | opened by `c/FreeAnim`; **not on the disc** — it is in CD32 ROM | **opened by `c/ShutDown` in order to `RemLibrary` it** | opened by `c/FreeAnim` (SAS/C, template `/auto/close/wait`); **`c/CloseAnim` ships too and is run by nothing** | opened and closed **four instructions apart, with nothing in between** — the documented pair, with a zero-length gap | opened by `/freeanim` in the root — **byte-identical to Liberation’s `c/FreeAnim`** | opened **first** by `/loaderblackpal` in the root, closed after three further opens; that file keeps its **13 symbols** | opened by **`/freeanim`, 72 bytes, 18 of them code** — the smallest wrapper on the format, and the gap is zero | opened by the game; **not on the disc and no wrapper command** — CD32 ROM only, so this executable cannot run from this disc on an A1200 | opened **first** by the game; **not on the disc and no wrapper command** — CD32 ROM only. And the Workbench script tries `Assign Libs: Fire:Libs Add` when **`/Libs` does not exist**, so the A1200 path is broken twice over |
-| Akiko | driven directly | untouched | untouched | n/a (CDTV) | untouched | untouched | untouched — 0 pointer loads, 0 C2P-port references, 0 `$C0DE0000` | untouched — **0 references to `$00B80038` in 9.5 MB of code**, and the decoder writes planar directly, so there is no chunky data to convert | untouched — **0 `$00B80038` in the image, in all 131 files and in all 115 decrunched files**, and the 3D view has **no planar destination** to convert to | untouched — 0 `$00B80038`, 0 pointer loads, 0 `$C0DE0000` in the image, in all 97 files and in all 111 decrunched blocks; the 6 bare `00 B8 00` hits include **ProTracker’s period table**, the same one Gloom shows | untouched — 0 `$00B80038`, 0 pointer loads, 0 `$C0DE0000` in the image and in all 61 files. **Eleven of eleven**, and on the best candidate yet: the rasteriser writes planar with the Blitter, so there is nothing to convert | untouched — **0 pointer loads, 0 `$00B80038`, 0 `$C0DE0000`** in both executables and all 37 unpacked files. **Twelve of twelve on the C2P port**, and the best remaining candidate for the drive-controller use came back zero | untouched — **0 pointer loads, 0 `$00B80038`, 0 `$C0DE0000`** in both executables and all 21 unpacked files. **Thirteen of thirteen on the C2P port.** The two raw `00 B8 00 38` hits are at **odd offsets inside the chip data hunk**, inside a run of `F8`/`FC`/`E0` bytes — planar sprite mask, not an address |
-| Colour | `FMODE = 0`, ECS path on AGA silicon | **all palettes 12-bit** | **6 of 14 screens exceed 12-bit** | all 12-bit, as ECS requires | **24-bit palettes in all 16 levels**, 6 planes | **front end 8 planes / 256 colours / 24-bit; levels 4-5 planes / 32 colours / 12-bit** | **`LoadRGB4` only, `LoadRGB32` never**; the one stored palette is 32 entries, all ≤ `0x0FFF` | **genuine 24-bit AGA, loaded entirely from the copper**: 8 `BPLCON3` banks x 32 registers x 2 (`LOCT`), 8 bitplanes, `FMODE 0x400F`. **`LoadRGB4` and `LoadRGB32` both never called** | **128 colours at 24 bits**, built into a 1,072-byte copper list at run time (4 banks x 32 registers x 2 `LOCT`). `LoadRGB4` and `LoadRGB32` both never called | **32 colours, 5 bitplanes**, 6 in EHB below raster line 204 (`KILLEHB` clear). **No `BPLCON3`, `BPLCON4`, `FMODE` or `DIWHIGH` anywhere on the disc**; `LoadRGB4` and `LoadRGB32` both never called; the start-up blank writes exactly 32 registers | **64 entries at 8 bits per gun** in AGA registers **128–191**, reached through `BPLCON4`'s `BPLAM = $80`; `BPLCON3` banks 4 and 5, each twice with `LOCT`. `FMODE $000F`. `LoadRGB4` and `LoadRGB32` **both never called** — the third zero-zero disc | **256 colours at 8 bits per gun**, from **16 `BPLCON3` blocks** (banks 0–7, plain and `LOCT`) × 32 registers in the copper; `FMODE $0007`; `KILLEHB` set. And the unreferenced `picture.exe` runs **HAM8** with a 64-entry 24-bit palette. `LoadRGB4` and `LoadRGB32` both never called | **32 colours at 8 bits per gun**, from `BPLCON3` banks **0 and 1**, each written plain and with `LOCT`, entirely in the copper; `PF2OF = 5` puts playfield 2 at colour 32. **`LoadRGB4` and `LoadRGB32` both never called** — the fourth zero-zero disc. Bank 1 is reloaded **193 times down the screen**, once per scanline of the play area; bank 0 gets its low nibbles exactly once. The only palette baked into the file is the status panel's, and it is **12-bit — high nibbles only** |
-| Graphics | interleaved planar, 3 and 4 planes | interleaved planar, 6 planes (one file separated) | **separated planar**, 4 planes; ILBM at **8 planes** | same frames, 4 planes; ILBM at **5 planes** | interleaved planar, 6 planes; 16×16 tiles + **3 property planes** each | **separated planar**, 8 planes; 16x16 font glyphs also separated | **separated planar**, 4–6 planes; `ImgA` skips all-zero planes; **10,792 pre-rendered wall sprites instead of a texture mapper** | planar, **5 / 6 / 7 / 8 planes** selected per frame; video 320 x 144, decoded plane by plane with unrolled `move.l` | **7 bitplanes**, interleaved, 320 px, double-buffered; screens are ByteRun1 inside CrunchMania; **everything else is 8-bit chunky** and the 3D view is a **copper list, one `MOVE` per pixel** | **separated planar**, 320 x 200 at 4 and 5 planes; sprites 32 px x 6 planes (5 + mask), **24 bytes per row on all 36 sheets**; dungeons are 64 x 64 grids of 8-byte cells | **two stacked screens**: a 320 x 38 **six**-plane HUD panel over a 320 x 200 **four**-plane 3D view, both interleaved, `BPL1MOD = 200`; per-scanline 24-bit sky from a 7,144-byte copper list fed by 16,384-byte `LOCT` tables | **two eight-plane screens** — 320 × 256 lores for the game and **640 × 256 hires** for the pictures; picture files are 1,024 B of hardware-format palette + 163,840 B of interleaved bitmap. Objects are masked bob blits (minterm `$CA` with **`USEA` set**, six planes, 24,576 B plane stride); the only `BLTCON1` write carries a B-shift and **no fill bits**. `picture.exe` displays **640 × 512 interlaced HAM8** | **one eight-plane dual-playfield screen.** `BPLCON0 $0611`, whose plane count is **`BPU3` at bit 4** — a scan of bits 14-12 reads it as zero. 320 px foreground over a **960-px-wide** parallax layer, four interleaved planes each, derived from `BPL1MOD 120` and `BPL2MOD 440`; a four-plane status panel takes over 193 lines down. **One stored copper list on the whole disc**, a 5,496-byte template in the *code* hunk with every colour and every bitplane pointer zero-filled. Tiles are **16 x 16, four interleaved planes, 128 bytes**, 576-660 per world. Blitter: minterm `$CA` x7 with **`USEA` set** (ordinary masked bob), `$F0` x4, `$C0` x2; `BLTCON1` written twice, `$0000` both times — **no fill, no descending blit, no line mode** |
-| Text encoding | CP437, with two files in a third encoding | ISO 8859-1, all four languages | 7-bit ASCII, and there is almost none | 7-bit ASCII, and even less of it | 7-bit ASCII, 30-char fixed lines, **no apostrophe in the font** | 7-bit ASCII; **accents and eszett dropped**, not transliterated | 7-bit ASCII; a caret-introduced generator language, `0xD7` records, `0xB1` speech markers | 7-bit ASCII, upper case, five typos in the shipped mission text | 7-bit ASCII, lower case, and the mission script ships as **editable plain text** | 7-bit ASCII; **accents remapped onto punctuation** — `)` = Ä, `*` = Ö, `+` = Ü, `(` = Ç, `<`/`>` = quotes and apostrophe | 7-bit ASCII, upper case, **one language and about forty lines of it**; a 32-character alphabet string is the font's only index | **CP437 for German and French *and* a private substitution for Danish in the same table** — `"` Æ, `$` Å, `+` æ, `=` å, `~` ø, `0x9C` Ø, confirmed by the ordering of the hall-of-fame alphabet | 7-bit ASCII **XORed with the constant `0x1b`** — every user-visible string on the disc, including the strings inside the PowerPacker streams. The key is recoverable by scoring all 256 candidates; the giveaway is `;` where a space belongs |
-| Languages | 3 (EN/FR/DE) | 4 (EN/DE/FR/IT) | 1 (EN), with Danish filenames | 1 (EN), same Danish filenames | 1 (EN) | 3 (EN/DE/FR) | 1 (EN) — **and a 384-word note to translators, plus 23 accented glyphs nothing prints** | 1 (EN) | 1 (EN) | 3 (EN/DE/FR) — **and 19 strings were never translated, 18 of them the whole ending** | 1 (EN) | **4 (EN/DE/FR/DA)** — and the Danish is not a translation: it renames the hero `Svend` and adds a joke the other three do not have | 1 (EN) |
-| Music | 1 CD track + 1 ProTracker module | 11 CD tracks + 12 in-house `.pc` modules | **1,225 raw PCM files at 19,705 Hz** | **1,258 of the same files**, 178 scenes | **12 ProTracker modules** — 8 files, 4 embedded | **28 CD tracks** + 1 ProTracker module + 8 IFF 8SVX in the level code | **10 CD tracks** + 46 IFF 8SVX effects; **no ProTracker module, and the executable still names `mod.ingame`** | **13 ProTracker modules**, one per overlay, + 4 whole IFF 8SVX effects with their `ANNO` chunks; 1 Red Book track **never played**; 864 KB of raw PCM **interleaved between video frames** | **2 OctaMED `MMD1` modules**; 24 effects each carrying its own Paula period; no CD audio and no `cd.device` | **5 CD tracks, 2 of them reachable** + 6 ProTracker modules + 39 raw PCM effects; the replay is `Imagitec ProTracker Replay Routine (C) 1991 Imagitec Design Ltd` | **12 CD tracks, every one reachable** — played out of the disc's own TOC with `CD_PLAYTRACK`/`SendIO`; **no module, no 8SVX, no PCM file**; effects compiled into the chip data hunk and driven on channel pairs | **2 CD tracks, both played** + **2 Player 6.0A modules**; effects in two sample banks with a 16-byte record header each; Paula programmed both absolutely and through `d16(a6)` | **22 CD tracks** + an **in-house Paula replayer** written straight to `AUDnLCH/LEN/PER/VOL` with the channel index shifted in at run time; **no module and no PCM file anywhere**. The options panel offers `Off` / `On Chip` / `On CD`, so the player chooses which. **The disc never reads its own TOC** — `CD_PLAYTRACK` with `io_Offset = index + 2`, a constant in the executable. Second negative case, and the one with the most tracks to get wrong |
-| Save system | password, 64-char alphabet, bit field | password table + CD32 `nonvolatile.library` | **none** | **none** | CD32 `nonvolatile.library` **and** floppy save-disk code | password, 8 characters; **no `nonvolatile.library`** | CD32 `nonvolatile.library` (4 vectors, one call each) **and** `RAM:Game.DAT` **and** a reset-surviving `RAD:` disk | CD32 `nonvolatile.library` alone, unguarded — app `MCOSM`, item `core`, ten bytes, **first word incremented every launch** | CD32 `nonvolatile.library` alone — app `Gloom`, item `Games`, **stores 2 bytes and reads 20 back** | CD32 `nonvolatile.library` alone — app `Hero Quest II `, item ` Save`; **stores 24 bytes and reads 238 back** (`divu.w #10` on the length) | CD32 `nonvolatile.library` alone — app `Guardian`, item `Heroes`; **stores 8 bytes and reads 80 back**; base null-checked at every call site | **none at all** — no `nonvolatile.library` anywhere, no password, no save file. The hall of fame lives in RAM and its default table is the development team | CD32 `nonvolatile.library` alone — app **`FireAndIce`**, item **`HiScores`**; the record is the 20-row high-score table. Both directions go through **generic wrappers taking the length in `d0`**, so there is no literal size at the library call and the store/read mismatch four other discs show cannot be checked here |
-| Cut content | level 4, `0xFFFF` row in the loader table | 3 unlisted working levels, 1 unused music file | 7 sprite banks, 1 door animation, 2 files the code still names, **scene 0 dropped** | the same 7 sprite banks and door are already missing here | template level name in all 16; a **corrupt `BGFX` tag that shipped**; a crunched level in a stale buffer | `Legends_Disk4:` named by nothing, 18 `SIGN MESSAGE n` placeholders, 15 `XXXX` records, `EMPTY PAL` slots | `MainSP16.Img`, `Wall.Log` and `mod.ingame` named and absent; three test objects (`FatAnt.x3d`) and three pre-split geometry files present and unnamed; `[Sorry, this is only a 1 disk demo.]` in the retail binary | **`briefing` and `eolb4` named in the loader table with a presence flag of 0** and their `LEVELS/*4.S` modules still linked in; `filelist.i`/`filelist.s` generator stubs; the whole debug console and 195 copies of `internal hardware error` | the floppy release’s **hard-disk installer**, its boot script, its save file and two disk prompts; a demo build’s refusal; **ten debug colour flashes**, one of them the whole out-of-memory handler; 224 `FFFF` palette slots per texture bank; and **no zone 2 anywhere** | `Level.Map` named by the loader and absent; **a title screen that still reads `MASTERS`**; the publisher logo shipped twice, the unreferenced copy **with the copyright line removed**; `Please insert Legacy of Sorasil Patch` naming a fourth floppy volume; a complete disk-swap wait loop with **no callers**; three Red Book tracks nothing plays; nine placeholders x 3 languages; an empty container slot and four more pointing at end-of-file; map cell byte 7 zero in all nine dungeons; `BLUEBITS`/`GREENBITS` symbols with no code | a **twelfth zone's assets nothing can load** (`split12`, `spr12` — the largest sprite bank on the disc — `sprhead12`, `map12`), plus `map00`, `map99`, `dither00`, `dither98` and `dither99.iff`: **179,796 bytes, 8.0 % of the disc**, against an eleven-record zone table; `dither99.iff` is the **artist's Deluxe Paint working file** with its `GRAB` and six `CRNG` chunks intact; `PIRATES FUCK OFF` beside the copyright string at the top of the code hunk; **`hElP` written at the end of seven buffers and checked at run time**; `WAS ` and `GON `, four bytes each, in front of the two strings the save code does address | **`picture.exe`, 9.5 % of the data track, named by nothing** and holding a 640 × 512 HAM8 picture; the installer chain as **two zero-byte files** (`/scrpt2`, `/C/Installer`); an **empty `/icons`** on a disc with no `.info` anywhere; a thirty-eighth loader filename **with no record header**, `bans1:flev`, naming a volume nothing assigns; a **flashing-border halt loop with an `ILLEGAL` behind it**; a **live `DebugDisk:` branch** in the pressed boot script; and eight English-only lines, outside the four-language table, asking how anyone could seriously want to kill animals and civilians | a **floppy disk-swap prompt** (`Please put volume <n> in any drive and press FIRE or SPACE.`) and a **manual-lookup copy-protection prompt** (`Please match the key at location: F*7`) in a 1994 CD32 executable; `Assign Libs: Fire:Libs` naming a directory that is not there; a **developer diagnostic panel** reporting free chip RAM, free fast RAM and **disk cache size**, which is also the only place the build version is written down; **two empty directories**; `AskBoot` shipping its **`HUNK_SYMBOL` table** (`_OpenLibrary`, `_CloseLibrary`) and the whole SAS/C runtime error path it never reaches; **nine resource slots zero in all seven worlds**; an `audio.device` string nothing uses; and a default top high score of **68000 points to `AEB`** — the CPU part number and the programmer's initials |
+| | Dragonstone (1995) | Marvin's Marvellous Adventure (1995) | **Prey CD32 (1993)** | **Prey CDTV (1992)** | **The Speris Legacy (1996)** | **Legends (1996)** | **Liberation: Captive II (1994)** | **Microcosm (1994)** | **Gloom (1995)** | **HeroQuest II (1994)** | **Guardian (1994)** | **Banshee (1994)** | **Fire & Ice (1994)** | **Universe (1994)** |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Publisher / studio | Core Design, UK | 21st Century / Infernal Byte, UK+DE | Almathera / KirkMoreno, UK+DK | **KirkMoreno alone** | Binary Emotions / Team 17, UK | **Krisalis Software / Guildhall, UK** | **Mindscape / Byte Engineers, UK** | **Psygnosis, UK — CD32-exclusive** | **Black Magic Software / Guildhall, UK** | **Gremlin Graphics, UK** | **Acid Software — CD32-first, and the first real polygon engine here** | **Core Design, UK — the same label as Dragonstone, and the first same-label control here; written by a two-person Danish team** | **Graftgold / Renegade, UK** — the studio is named nowhere in ISO 9660; it is inside the executable under XOR `0x1b`, together with the engine's own name, `68000 Game System`, and the copyright range `1990,94` | **Core Design, UK — the third disc from this label, and the first of the three whose credit panel names its whole team: Gary Antcliffe (code), Rolf Mohr / Stuart Atkinson / Jim Bottomley-Mason (art), Martin Iveson (music)** |
+| Master cut | 1994/1995 | 1994/1995 | **1993-11-29 21:15:11** | **1992-09-02 15:05:26** | **1996-01-10 20:47:52** | **stamped 1992-03-06 18:12:02 — impossible** | **1994-04-15 09:39:39** — and the game was **linked 1994-04-08 09:35:08**, seven days earlier, per its own `$VER:` | **PVD stamped `1978-01-26 09:30:04` — the AmigaDOS epoch**; newest file 1994-02-09 02:46:04 | **1995-06-28 18:06:57** — every record on the disc is the same afternoon | **1994-06-15 17:34:13** — and the game executable was written **11m34s** earlier; the volume-set field reads `15 June 1994 17:30`, typed by hand | **1994-08-04 14:26:37** — and the root directory record **1m18s** earlier, the tightest gap in the set; the community dump is labelled *1995* | **1994-07-08 13:16:10** — and the executable's own banner says it was linked at **12:59** the same day, **17m10s** earlier | **1994-03-16 18:24:51** — six days after the last file it indexes, so the two halves of the timestamp evidence are consistent | **1994-09-13 11:48:04**, 2 h 17 m after the last file was written |
+| Tracks | 1 data (`MODE1/2048`) + 1 audio | 1 data (`MODE1/2048`) + **11** audio | 1 data (`MODE1/2048`), **no audio track** | 1 data, **no audio track** | 1 data (`MODE1/2048`), **no audio track** | 1 data (`MODE1/2048`) + **28** audio | 1 data (`MODE1/2048`) + **10** audio | 1 data (`MODE1/2048`) + 1 audio | 1 data (`MODE1/2048`); **no cue sheet or audio track in the dump supplied** | 1 data (`MODE1/2048`) + **5** audio | 1 data (`MODE1/2048`) + **12** audio | 1 data (`MODE1/2048`) + **2** audio | 1 data (`MODE1/2048`) + **22** audio — the second-highest track count here | **24** — 1 data + **23 audio** |
+| Data track sectors | 1,741 (1,635 declared) | 6,833 (6,681 declared) | **59,787 (59,787 declared — equal)** | 48,637 declared **in a 119,988-sector dump** | 2,455 in the image, **2,303 declared** | 2,404 in the image, **2,252 declared** | **82,605 in the image, 82,502 declared — the largest on the format** | **255,777 in the image, 255,552 declared — the largest on the format by 3.1x** | **952 in the image, 772 declared — the smallest volume on the format** | 25,663 in the image, **25,436 declared**, overrun 227 | **1,343 in the image, 1,193 declared**, overrun 150 — the second-smallest volume on the format | 1,773 in the image, **1,687 declared**, overrun 86; the volume's files end at 1,454 | **1,357 in the image, 1,270 declared**, overrun 87; the volume's files end at 1,038 | **2,429 declared, 2,509 in the image** (overrun 80, all zero) |
+| Audio | 118.08 s, 8,856 sectors | **2,600.9 s**, 195,068 sectors | 0 s Red Book; **3,820 s of PCM in files** | 0 s Red Book; **3,922 s of PCM in files** | 0 s Red Book; **12 ProTracker modules** | **3,936.1 s**, 295,209 sectors | **2,064.9 s**, 154,864 sectors | **203.0 s**, 15,225 sectors — **and nothing on the disc plays it** | 0 s Red Book; **2 OctaMED `MMD1` modules + 24 raw PCM effects**, and **no `OpenDevice` anywhere** | **1,902.1 s**, 142,659 sectors — **and only tracks 2 and 3 are ever played**; 6 ProTracker modules + 39 raw PCM effects | **1,835.6 s**, 137,672 sectors, **all twelve tracks reachable** — the game filters the disc's own TOC by its CONTROL bits; no module and no PCM file anywhere | **305.7 s**, 22,928 sectors, **both tracks played while the game runs** with `CD_PLAYTRACK` and re-issued by a `CD_INFO` watchdog every 150 frames; + 2 **Player 6.0A** modules by Jarno Paananen, who is named on the credits screen | **3,033.4 s**, 227,506 sectors, **all 22 distinct by SHA-1** — three share a byte length and differ in content. Played with `CD_PLAYTRACK` while the game runs, and the player can switch to the internal replayer instead | **2,437.5 s, 182,814 sectors, all 23 distinct by SHA-1** — 98.65 % of the sectors the disc uses |
+| Share of a 333,000-sector CD | ~3.2 % | **60.7 %** | 18.0 % | 14.6 % | **0.74 %** | **89.4 %** — game 0.72 %, music 88.6 % | **71.3 %** — data 24.8 %, audio 46.5 % | **81.3 %** — data 76.7 %, audio 4.6 %; inside the data track, **video 70.8 %**, game 1.4 %, 15,000 empty sectors 4.5 % | **0.232 %** — a third of the previous smallest | **50.5 %** — data 7.6 %, audio 42.8 %; inside the data track, **95.4 % is zero** | **41.8 %** — game **0.40 %**, audio 41.3 % | **7.4 %** — game **0.44 %**, audio 6.9 % | **68.7 %** — game **0.41 %**, audio **68.3 %**; the music outweighs the data track **168 : 1** by sector | **55.7 %** — 0.73 % data, 54.9 % Red Book |
+| Files / directories | 91 / 2 | 212 / 9 | **1,439 / 24** | **1,453 / 20** | **47 / 10** | 111 / 7 | 187 / 10 | **34 / 2** | **131 / 7** | **97 / 7** | **61 / 6** | **45 / 4** — and **two of the files are zero bytes long**, one directory is empty | **29 / 8** — and **two of the directories are empty** (`/Initial`, `/Misc`), created seven seconds apart as the last act of that session | **52 files / 3 directories** (`/`, `/C`, `/s`); no empty directory, **no `.info` file anywhere** |
+| Bytes on disc / unpacked | 2,721,914 / 10,284,352 | 13,251,697 / — | 109,786,031 / — | 99,327,202 / — | 4,514,540 / **8,543,154** | 4,351,859 / **11,836,224** | 168,272,839 / — (**91.2 % of it speech**, 7.1 % wall sprites, 1.7 % game) | 492,497,755 / — (**98.1 % of it one video file**) | 1,315,110 / **3,855,390** | 2,156,143 / **4,285,931** | 2,249,822 / **2,249,822 — nothing is packed** | 2,879,663 / **5,768,936**; **bytes actually used 5,542,774 (96.1 %)** | **2,035,183 / 2,906,735**; **bytes actually used 2,898,523 (99.7 %)** — buffer slack **0.3 %**, the tightest in the set | **4,397,639 / 9,217,125** (used 9,172,928, slack **0.5 %**) |
+| Compression | RNC ProPack 1, 84 of 91 files, 25.7 % | **none at all** | **none at all** | **none at all** | **Imploder `IMP!`, 35 of 47 files, 52.8 %** | **Bytekiller, no magic number**, 79 of 111 files, 35.2 % | **`RNC` with a 12-byte header — not RNC ProPack**, 44 blocks in 5 files, 1.0 MB of the 2.9 MB that is not speech or walls | **none at all** — nothing above entropy 7.2, no magic anywhere in 523 MB | **CrunchMania `CrM2`, 115 of 131 files, 30.0 %** — the fifth cruncher on the format, and the credits name its author | **RNC ProPack 1 with a rotating XOR key over the literals**, 106 blocks in 92 files, 49.1 % — three variants (fixed `0x5ED0` x88, plain x15, stream `0xBE1A` x3) | **none at all**, on any file — but **nine images inside the executable are ByteRun1**, and the same title's A1200 floppy packs the sprite banks it cannot fit | **RNC ProPack 1, 37 of 45 files, 45.7 %** — and Dragonstone's decoder unpacked all 37 first run. Plus **RNC ProPack *method 2* inside `picture.exe`**, 329,184 B in three hunks, which the file census scores as uncompressed | **PowerPacker 2.0 (`PP20`) — the seventh cruncher**, 21 of 29 files, 69.2 %, every one with the same `[9,10,12,13]` table and every one decoding to its declared length. **The format has no checksum at all**, so the length is the only validation there is. Plus **29 further PP20 streams nested inside already-unpacked files**, which a file census misses and for which **no 8 KB entropy window anywhere on the disc exceeds 7.5 b/B** | **RNC ProPack 1, 47 of 52 files — and nested three levels deep: 342 validated streams, every CRC good** |
+| PVD system id | `CDTV` | `CDTV` | `CDTV` | `CDTV` (correctly, this time) | `CDTV` | `CDTV` | `CDTV` | `CDTV` | `CDTV` | `CDTV` | `CDTV` | `CDTV` | `CDTV` | `CDTV` + 28 spaces |
+| PVD application id | `DragonStone` (the title) | `Platformer` (the genre) | `Game` (the medium) | **empty** | **empty** | `Legends` (the title) | `Liberation CD32` (title **and** console) | **empty** | **empty** | `Legacy of Sorasil CD32` (title **and** console) | **empty** | `Banshee CD32` (title **and** console) | **`Fire&Ice CD32`** (title **and** console) — the second disc to answer that box this way | **`Iniverse CD32`** — the title with one adjacent key wrong, on a retail pressing |
+| Cue `CATALOG` | absent | `5012635300344` | `5024913000068` | — (no cue) | **`0000000000000`** — thirteen zeros | `5012323060062` | **`0000000000000`** — thirteen zeros again | **`0000000000000`** — thirteen zeros, the third disc | — (no cue supplied) | absent | **`0000000000000`** — thirteen zeros, the fourth disc | **`5020717200444`** — a real UK EAN-13, Core's own `502071` prefix | **`5018247373455`** — a real UK EAN-13, the second real catalogue number here | `5020717200529`, a real UK EAN-13 |
+| Mastering tool | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) | **not ISOCD — unidentified** | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) | **ISOCD 1.03** (Pantaray) — the first non-1.04 master here | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) | ISOCD 1.04 (Pantaray) | ISOCD 1.04 by Pantaray |
+| Preparer field | `Sajjad Majid - ...` | `Stewart.. - ...` | `Almathera - ...` | **empty** | **empty name**, tool signature only | `Richard Teather (Programmer) - ...` — **and he is in the credits screen** | `D J Pocock - ...` — **and he is nowhere else on the disc** | **empty name**, tool signature only — the second such disc | **empty name**, tool signature only — the third such disc | `Kevin Dudley - ...` — **and he is `Programming` on the credits screen** | **empty name**, tool signature only — the fourth such disc | **`D J Pocock - ...` — character for character Liberation's**, a different studio and publisher; nowhere else on either disc | **`D J Pocock - ...` — the third disc with this name**, character for character; a third studio and a third publisher | **`D J Pocock`** — the **fourth** disc with this name, and the fourth to leave 232 |
+| Duplicate PVD | yes, sectors 16 and 17 | yes, sectors 16 and 17 | yes, sectors 16 and 17 | **yes** — the one habit that crosses tools | yes, sectors 16 and 17 | yes, sectors 16 and 17 | yes, sectors 16 and 17 | yes, sectors 16 and 17 | yes, sectors 16 and 17 | yes, sectors 16 and 17 | yes, sectors 16 and 17 | yes, sectors 16 and 17 | yes, sectors 16 and 17 | yes, 16 and 17, terminator at 18 |
+| Volume starts at LBA | 20 | 20 | **6019 — 6,000 zero sectors first** | 19; **path tables at 48,633, after the files** | 19 | 19 | 19; M path table at 19, L at 20 | 19 — **but the first file is at 15,023, after 15,000 zero sectors** | 19; M path table at 19, L at 20 | 19; M path table at 19, L at 20 — **but the first file is at 24,295, after 24,272 zero sectors** | 19; M path table at 19, L at 20; **first file at 23 — no front gap** | 19; M path table at 19, L at 20; **first file at 24 — no front gap**, on a disc that streams Red Book during play | 19; M path table at 19, L at 20; **first file at 24 — no front gap**, on a disc that is 68 % Red Book and plays it during the game | **19**, first file at **24**, no front gap |
+| `.TM` block at | sector 21, 2,048 B | sector 21, 2,048 B | **6021**, 2,048 B, and again as `/CD32.TM` | **48,621, 22,152 B**, and it *is* `/CDTV.TM` | **21, 22,152 B** — eleven sectors | 21, 2,048 B | 21, 2,048 B | 21, 2,048 B | 21, 2,048 B | 21, 2,048 B | 21, 2,048 B | 21, 2,048 B | 21, 2,048 B | **21**, 2,048 bytes |
+| `.TM` contents | trademark banner + 876 B `exec` object | identical | identical | **`cdtv.device` 35.2, Carl Sassenrath — no banner anywhere** | **`cdtv.device` 35.2 — the CDTV driver, on a CD32 disc** | trademark banner + 876 B `exec` object — **the fourth identical copy** | trademark banner + 876 B `exec` object — **the fifth identical copy** | trademark banner + 876 B `exec` object — **the sixth identical copy**; no `.TM` file in the root | trademark banner + 876 B `exec` object — **the seventh identical copy**; no `.TM` file in the root | trademark banner + 876 B `exec` object — **the eighth identical copy**, and the first written by ISOCD 1.03; no `.TM` file in the root | trademark banner + 876 B `exec` object — **the ninth identical copy**; no `.TM` file in the root | trademark banner + 876 B `exec` object — **the tenth identical copy**; no `.TM` file in the root | trademark banner + 876 B `exec` object — **the eleventh identical copy**; no `.TM` file in the root | the common Commodore banner + `exec` object — **all three SHA-1s match, twelfth disc** |
+| Unclaimed sectors in the volume | — | 32, all zero | **32, all zero** | none | **32, all zero** | **32, all zero** | **232, all zero** — the number that broke the "always 32" fingerprint | **32, all zero** — on a 255,552-sector volume, which kills the 'small volumes' reading | **32, all zero** — on a 772-sector volume, which kills the last size reading | **32, all zero, at the end** — *and* **24,272, all zero, at the front** | **32, all zero, at the end** | **232, all zero** — the second disc to do this, and the second `D J Pocock` disc | **232, all zero** — the third disc to do this and **the third `D J Pocock` disc**; on a 1,270-sector volume, so **18.3 % of the whole volume**, the largest share the anomaly has taken | **232**, all zero, LBA 2,197–2,428 — **9.6 % of the volume**, predicted in writing before the map was built |
+| Timestamps | AmigaDOS 1978 epoch, except 3 files | real 1994 dates; dirs 1992; **2 files at the MS-DOS 1980 epoch** | four epochs: 131 at 1978, **1,213 inherited from the CDTV build**, 84 Commodore stamps, 43 real | one 4½-minute session, all real | **all real**; four sittings, Dec 1995 and Jan 1996 | **all 118 read 1992-03-06**; four sittings, and the PVD is stamped before nine of its files | 184 real (1993-05-19 to 1994-01-23); **12 at 1992-02-05, disproved by the executable's own build stamp**; the root record at the 1978 epoch | **inverted**: all 34 files real and self-consistent; **the PVD itself at the 1978 epoch**. Three sittings; the whole game copied in **66 seconds** | **all real and all one hour**: 128 files copied in 17 s, the executable 48 min later, the master 35 s after that | **all real**; 92 files in a six-minute copy on 1994-06-02, three files on three later days, the executable 11m34s before the master | **60 of 61 files and all 6 directories in one seven-second copy** (1994-08-03 11:36:39–46); `/game` alone at **1980-01-09 23:17:58 — the MS-DOS epoch, day 9** | **41 of 45 at 1992-12-21 15:11:46–15:27:34, a wrong clock**, disproved by the executable's own build banner; 3 `C:` commands 1993; boot script 1994-06-22; directories and PVD 1994-07-08. The two zero-length files carry an all-zero stamp | **two clocks and no AmigaDOS epoch anywhere.** 19 files with real 1994 dates that read as a work log — six `Graphic` files in one second, seven `Set` files one a minute, `SetPatch` and `core4.bin` **18 s apart**, the two executables **2m08s apart** — and **10 files at the MS-DOS 1980 epoch**, the largest such group in the set. Inheritance from the 1992 floppy release was a priori plausible here and is **disproved by the disc**: 1980 predates the Amiga, and `AskBoot`, a CD32-only tool, is in the 1980 group. **No `1992-12-21` anywhere** | **all real, no wrong clock, no 1978 or 1980 group**: three inherited 1993 utilities, 44 files in one 9 m 36 s pass on 1994-08-26, four rebuilt in 26 s on 09-02, the two programs 5 s apart on the morning of the master |
+| SetPatch | 40.14 (7.10.93) | 39.6 (8.9.92) | 40.12 (16.9.93) | none — `bookit` + `rmtm` instead | **40.16 (14.2.94) — ships, never run** | **39.6 (8.9.92) — byte-identical to Marvin’s** | 40.12 (16.9.93) | **none — no `c/` directory at all** | **40.3 (10.5.93)** — a fifth version | **40.12 (16.9.93) — byte-identical to Liberation’s and Prey CD32’s**; `c/Assign` 37.4 byte-identical to four other discs | **40.3 (10.5.93) — byte-identical to Gloom's and to this title's own A1200 floppy**; no `c/` at all, it sits in the root | **40.14 (7.10.93) — byte-identical to Dragonstone's**, and the only same-label pair among six binaries | **40.14 (7.10.93) — byte-identical to Dragonstone's *and* Banshee's.** Third disc, second studio, second label: **the 'only same-label pair' reading of this hash is retired.** No `c/Assign` on the disc | **40.14 (7.10.93)**, 13,200 B, SHA-1 `00d74a35…` — predicted before opening the disc |
+| First stage | 1 hunk, 3 relocations, **0 library calls**, Akiko direct | 6 hunks all chip, 4,278 relocations, **169 library calls**, no Akiko | 1 hunk any-mem, 245 relocations, 64 library calls, **0 hardware registers** | **324 bytes**: open dos, load the game | none — a **7-line** script, 4 of them `assign` | none — a **9-line** script; `ShutDown`, `SetPatch`, 6 `assign` | none — a **22-line** script that mounts a **recoverable RAM disk** and makes it bootable | none — a **five-byte** boot script: `cosm` | none — a **three-line** script; `freeanim`, `setpatch`, `gloom`, all in the **root** (no `c/`) | none — a **seven-line** script; `setpatch`, `/loaderblackpal` (in the root), `Stack 8192`, **three `Assign`s of floppy volume names**, `QuestII 2` | none — a **three-line** script; `setpatch`, `freeanim`, `game m1 f`, both commands in the **root**; and `s/startup-sequence.bak` beside it runs **`sw`** | none — a **twelve-line** script with a **live `DebugDisk:` developer branch** and four `assign bansheeN: CD0:` | none — a **nine-line** script: `SetPatch QUIET`, `AskBoot`, then `FireNTSC` or `FirePAL` on `If WARN`. No assign, no RAM disk, no debug branch. **`AskBoot`** is a 3,144-byte SAS/C program whose payload is **14 instructions** reading `GfxBase->DisplayFlags` bit 0 | **`loader`, 40,820 bytes of which 757 are code**; opens `dos.library`, reads `cd0:intro.prg`, `SuperState()`, `INTENA`/`DMACON` cleared, decrunches to `$70000` and jumps. The other 40,003 bytes are a read buffer left in `HUNK_CODE` |
+| Game executable | (same file) | (same file) | 1 hunk, **5,323 relocations**, 120 library calls, **448 register writes** | 71,316 B, and a **324-byte** first stage | 1 hunk, **1,647,128 B in chip**, 3,404 relocations, 72 library calls | 1 hunk, 37,848 B **in chip**, 1,020 relocations, 60 library calls | 4 hunks, 225 KB code + 14 KB data + 32 KB bss + **40 bytes chip**, 1,356 relocations, 181 library calls | 2 hunks, 106 KB code + 117 KB **chip** data, **22 relocations**, ~50 library calls, **68020-only addressing**, and **78 `HUNK_DEBUG` blocks naming 77 source files** | 1 hunk, 174,128 B `MEMF_ANY`, 1,277 relocations, **no symbols and no debug hunks**, 56 library calls, **29.9 % of the hunk is zero** | 6 hunks, 1,153,536 B allocated (**762,988 chip**), **0 relocations, 0 symbols, 0 debug in the file** — it decrunches and relocates itself in 584 bytes, with 5,524 relocations compressed inside the hunks; 78 library calls, 33 LVOs | **3 hunks** — 152,164 CODE (any) + 232,188 DATA (any) + **245,656 DATA (chip)**; 5,113 relocations, 4,893 of them hunk 0 into itself; no symbols, no debug, **no `$VER:` anywhere**; 62 library calls, 32 LVOs | **6 hunks** — 97,500 CODE + 26,932 DATA + 342,356 BSS + 288 CODE (chip) + 16,752 DATA (chip) + **1,285,052 BSS (chip)**; 1,948 relocations; 71 library calls, 33 LVOs; **1.30 MB of chip RAM claimed before it allocates anything**. A second executable, `picture.exe`, is **named by nothing on the disc** | **two whole executables, one per video standard.** `FirePAL`: 2 hunks — 92,236 CODE (any) + **309,252 DATA (chip)**; 2,155 relocations, 2,106 of them hunk 0 into itself; no symbols, no debug, **no `$VER:` anywhere** — the version is a bare banner, `AGA 1.04`, inside XOR-`0x1b` text. `FireNTSC` is the same program 364 bytes shorter, built **2m08s** later; the two differ in 23 scanlines of copper list and one string | **`code.prg`, a private relocatable format**: `u32` offset to a trailer of `u32 0 + u16 900 + 900 x u16` **word** offsets, byte position = `entry x 2 + 4`; base 0; head is a **123-entry `jmp abs.l` export table**. Second `LoadSeg` re-implementation in the set |
+| Libraries opened | none | 10, via `OldOpenLibrary` | 6, via `OldOpenLibrary` | `cdtv.device`, `bookmark.device` | 5: graphics, dos, intuition, lowlevel, nonvolatile | 3: dos, intuition, graphics (+ `cd.device`, `ciaa`/`ciab.resource`) | **9**, all via `OpenLibrary` (−552): dos, intuition, graphics, lowlevel, nonvolatile, **and three in-house — `vector`, `tridee`, `math`** | 5: graphics, nonvolatile, dos, lowlevel, **freeanim** (+ `cd.device`, opened twice) | 3, via `OldOpenLibrary`: dos, graphics, nonvolatile (+ `ciaa`/`ciab.resource`). **`lowlevel.library` never opened** | 4, all via `OpenLibrary` (−552): dos, graphics, nonvolatile, lowlevel (+ `cd.device` twice, `input.device` once). **`graphics.library` is never called** | **3**, all via `OldOpenLibrary` (−408): nonvolatile, dos, graphics — in that order (+ `cd.device` once). **`lowlevel.library` never opened and not on the disc**; `freeanim` opened by a 72-byte root command | **5**, all via `OpenLibrary` (−552): lowlevel, freeanim, graphics, dos, intuition (+ `cd.device`, `input.device`, `audio.device`). Files are loaded with `dos.library` `Open`/`Read`/`Seek`/`Close` | **5**, all via `OpenLibrary` (−552): **freeanim**, lowlevel, nonvolatile, dos, graphics — in that order (+ `cd.device` **twice**, `input.device` once). Files are loaded with `dos.library` `Open`/`Read`/`Close`. An `audio.device` name string ships and is reached by nothing | **`dos.library` only, in the loader. Zero library and device calls in either game program** |
+| `freeanim.library` | opened by `c/FreeAnim` | opened **first** by the game, never called | opened by the first stage; `c/freeanim` ships unused | **not present — `c/rmtm` instead, and it is run** | opened by `c/FreeAnim`; **not on the disc** — it is in CD32 ROM | **opened by `c/ShutDown` in order to `RemLibrary` it** | opened by `c/FreeAnim` (SAS/C, template `/auto/close/wait`); **`c/CloseAnim` ships too and is run by nothing** | opened and closed **four instructions apart, with nothing in between** — the documented pair, with a zero-length gap | opened by `/freeanim` in the root — **byte-identical to Liberation’s `c/FreeAnim`** | opened **first** by `/loaderblackpal` in the root, closed after three further opens; that file keeps its **13 symbols** | opened by **`/freeanim`, 72 bytes, 18 of them code** — the smallest wrapper on the format, and the gap is zero | opened by the game; **not on the disc and no wrapper command** — CD32 ROM only, so this executable cannot run from this disc on an A1200 | opened **first** by the game; **not on the disc and no wrapper command** — CD32 ROM only. And the Workbench script tries `Assign Libs: Fire:Libs Add` when **`/Libs` does not exist**, so the A1200 path is broken twice over | opened by `C/FreeAnim` — **byte-identical to Liberation's, timestamp included** |
+| Akiko | driven directly | untouched | untouched | n/a (CDTV) | untouched | untouched | untouched — 0 pointer loads, 0 C2P-port references, 0 `$C0DE0000` | untouched — **0 references to `$00B80038` in 9.5 MB of code**, and the decoder writes planar directly, so there is no chunky data to convert | untouched — **0 `$00B80038` in the image, in all 131 files and in all 115 decrunched files**, and the 3D view has **no planar destination** to convert to | untouched — 0 `$00B80038`, 0 pointer loads, 0 `$C0DE0000` in the image, in all 97 files and in all 111 decrunched blocks; the 6 bare `00 B8 00` hits include **ProTracker’s period table**, the same one Gloom shows | untouched — 0 `$00B80038`, 0 pointer loads, 0 `$C0DE0000` in the image and in all 61 files. **Eleven of eleven**, and on the best candidate yet: the rasteriser writes planar with the Blitter, so there is nothing to convert | untouched — **0 pointer loads, 0 `$00B80038`, 0 `$C0DE0000`** in both executables and all 37 unpacked files. **Twelve of twelve on the C2P port**, and the best remaining candidate for the drive-controller use came back zero | untouched — **0 pointer loads, 0 `$00B80038`, 0 `$C0DE0000`** in both executables and all 21 unpacked files. **Thirteen of thirteen on the C2P port.** The two raw `00 B8 00 38` hits are at **odd offsets inside the chip data hunk**, inside a run of `F8`/`FC`/`E0` bytes — planar sprite mask, not an address | **DRIVEN — 3 x `lea $B80000,a5` (CD-ROM) and 2 x `lea $B80030,a2` (I²C EEPROM).** C2P port **0 of 14**, `$C0DE0000` **0 of 14**. The inherited scan missed all five: it matched 2 of 8 address registers |
+| Colour | `FMODE = 0`, ECS path on AGA silicon | **all palettes 12-bit** | **6 of 14 screens exceed 12-bit** | all 12-bit, as ECS requires | **24-bit palettes in all 16 levels**, 6 planes | **front end 8 planes / 256 colours / 24-bit; levels 4-5 planes / 32 colours / 12-bit** | **`LoadRGB4` only, `LoadRGB32` never**; the one stored palette is 32 entries, all ≤ `0x0FFF` | **genuine 24-bit AGA, loaded entirely from the copper**: 8 `BPLCON3` banks x 32 registers x 2 (`LOCT`), 8 bitplanes, `FMODE 0x400F`. **`LoadRGB4` and `LoadRGB32` both never called** | **128 colours at 24 bits**, built into a 1,072-byte copper list at run time (4 banks x 32 registers x 2 `LOCT`). `LoadRGB4` and `LoadRGB32` both never called | **32 colours, 5 bitplanes**, 6 in EHB below raster line 204 (`KILLEHB` clear). **No `BPLCON3`, `BPLCON4`, `FMODE` or `DIWHIGH` anywhere on the disc**; `LoadRGB4` and `LoadRGB32` both never called; the start-up blank writes exactly 32 registers | **64 entries at 8 bits per gun** in AGA registers **128–191**, reached through `BPLCON4`'s `BPLAM = $80`; `BPLCON3` banks 4 and 5, each twice with `LOCT`. `FMODE $000F`. `LoadRGB4` and `LoadRGB32` **both never called** — the third zero-zero disc | **256 colours at 8 bits per gun**, from **16 `BPLCON3` blocks** (banks 0–7, plain and `LOCT`) × 32 registers in the copper; `FMODE $0007`; `KILLEHB` set. And the unreferenced `picture.exe` runs **HAM8** with a 64-entry 24-bit palette. `LoadRGB4` and `LoadRGB32` both never called | **32 colours at 8 bits per gun**, from `BPLCON3` banks **0 and 1**, each written plain and with `LOCT`, entirely in the copper; `PF2OF = 5` puts playfield 2 at colour 32. **`LoadRGB4` and `LoadRGB32` both never called** — the fourth zero-zero disc. Bank 1 is reloaded **193 times down the screen**, once per scanline of the play area; bank 0 gets its low nibbles exactly once. The only palette baked into the file is the status panel's, and it is **12-bit — high nibbles only** | **32 colours, 12-bit, six bitplanes in Extra-Half-Brite** (`BPLCON0 $6200`, `BPLCON2 $001B`, `KILLEHB` clear). **No `BPLCON3`, `BPLCON4` or `DIWHIGH`; `FMODE` written once with zero.** `LoadRGB4`/`LoadRGB32` both never called — the fifth zero-zero disc, and the first where the reason is that the OS is gone |
+| Graphics | interleaved planar, 3 and 4 planes | interleaved planar, 6 planes (one file separated) | **separated planar**, 4 planes; ILBM at **8 planes** | same frames, 4 planes; ILBM at **5 planes** | interleaved planar, 6 planes; 16×16 tiles + **3 property planes** each | **separated planar**, 8 planes; 16x16 font glyphs also separated | **separated planar**, 4–6 planes; `ImgA` skips all-zero planes; **10,792 pre-rendered wall sprites instead of a texture mapper** | planar, **5 / 6 / 7 / 8 planes** selected per frame; video 320 x 144, decoded plane by plane with unrolled `move.l` | **7 bitplanes**, interleaved, 320 px, double-buffered; screens are ByteRun1 inside CrunchMania; **everything else is 8-bit chunky** and the 3D view is a **copper list, one `MOVE` per pixel** | **separated planar**, 320 x 200 at 4 and 5 planes; sprites 32 px x 6 planes (5 + mask), **24 bytes per row on all 36 sheets**; dungeons are 64 x 64 grids of 8-byte cells | **two stacked screens**: a 320 x 38 **six**-plane HUD panel over a 320 x 200 **four**-plane 3D view, both interleaved, `BPL1MOD = 200`; per-scanline 24-bit sky from a 7,144-byte copper list fed by 16,384-byte `LOCT` tables | **two eight-plane screens** — 320 × 256 lores for the game and **640 × 256 hires** for the pictures; picture files are 1,024 B of hardware-format palette + 163,840 B of interleaved bitmap. Objects are masked bob blits (minterm `$CA` with **`USEA` set**, six planes, 24,576 B plane stride); the only `BLTCON1` write carries a B-shift and **no fill bits**. `picture.exe` displays **640 × 512 interlaced HAM8** | **one eight-plane dual-playfield screen.** `BPLCON0 $0611`, whose plane count is **`BPU3` at bit 4** — a scan of bits 14-12 reads it as zero. 320 px foreground over a **960-px-wide** parallax layer, four interleaved planes each, derived from `BPL1MOD 120` and `BPL2MOD 440`; a four-plane status panel takes over 193 lines down. **One stored copper list on the whole disc**, a 5,496-byte template in the *code* hunk with every colour and every bitplane pointer zero-filled. Tiles are **16 x 16, four interleaved planes, 128 bytes**, 576-660 per world. Blitter: minterm `$CA` x7 with **`USEA` set** (ordinary masked bob), `$F0` x4, `$C0` x2; `BLTCON1` written twice, `$0000` both times — **no fill, no descending blit, no line mode** | **separated planar**, 320 x 200 x 6 in a 352-px-wide buffer (44 B/row, `BPL1MOD 2`, `DDF $30/$D0`); pictures are `6 x 8,000 + 64` and `8 x 8,000 + 64`, the extra two planes being **1-bit walk-behind stencils**. `copper.prg` is a stored list that is **96.5 % reserved space** — two regions of exactly 3,200 empty slots, 16 per scanline for 200 lines, double buffered. Blitter: no `FILL`, no `LINE`, one immediate `BLTSIZE`, `$CA` with `USEA` set |
+| Text encoding | CP437, with two files in a third encoding | ISO 8859-1, all four languages | 7-bit ASCII, and there is almost none | 7-bit ASCII, and even less of it | 7-bit ASCII, 30-char fixed lines, **no apostrophe in the font** | 7-bit ASCII; **accents and eszett dropped**, not transliterated | 7-bit ASCII; a caret-introduced generator language, `0xD7` records, `0xB1` speech markers | 7-bit ASCII, upper case, five typos in the shipped mission text | 7-bit ASCII, lower case, and the mission script ships as **editable plain text** | 7-bit ASCII; **accents remapped onto punctuation** — `)` = Ä, `*` = Ö, `+` = Ü, `(` = Ç, `<`/`>` = quotes and apostrophe | 7-bit ASCII, upper case, **one language and about forty lines of it**; a 32-character alphabet string is the font's only index | **CP437 for German and French *and* a private substitution for Danish in the same table** — `"` Æ, `$` Å, `+` æ, `=` å, `~` ø, `0x9C` Ø, confirmed by the ordering of the hall-of-fame alphabet | 7-bit ASCII **XORed with the constant `0x1b`** — every user-visible string on the disc, including the strings inside the PowerPacker streams. The key is recoverable by scoring all 256 candidates; the giveaway is `;` where a space belongs | **7-bit ASCII + CP437**, 23 distinct high bytes and every one a character these four languages need — the cleanest encoding case in the set. Plus an accent-folding table beside a **UK Amiga keyboard map** |
+| Languages | 3 (EN/FR/DE) | 4 (EN/DE/FR/IT) | 1 (EN), with Danish filenames | 1 (EN), same Danish filenames | 1 (EN) | 3 (EN/DE/FR) | 1 (EN) — **and a 384-word note to translators, plus 23 accented glyphs nothing prints** | 1 (EN) | 1 (EN) | 3 (EN/DE/FR) — **and 19 strings were never translated, 18 of them the whole ending** | 1 (EN) | **4 (EN/DE/FR/DA)** — and the Danish is not a translation: it renames the hero `Svend` and adds a joke the other three do not have | 1 (EN) | **4 (EN/FR/DE/IT), complete** — 602,344 bytes of prose, 6.53 % of the resident image, and **zero strings byte-identical across all four** on the 87 records that align |
+| Music | 1 CD track + 1 ProTracker module | 11 CD tracks + 12 in-house `.pc` modules | **1,225 raw PCM files at 19,705 Hz** | **1,258 of the same files**, 178 scenes | **12 ProTracker modules** — 8 files, 4 embedded | **28 CD tracks** + 1 ProTracker module + 8 IFF 8SVX in the level code | **10 CD tracks** + 46 IFF 8SVX effects; **no ProTracker module, and the executable still names `mod.ingame`** | **13 ProTracker modules**, one per overlay, + 4 whole IFF 8SVX effects with their `ANNO` chunks; 1 Red Book track **never played**; 864 KB of raw PCM **interleaved between video frames** | **2 OctaMED `MMD1` modules**; 24 effects each carrying its own Paula period; no CD audio and no `cd.device` | **5 CD tracks, 2 of them reachable** + 6 ProTracker modules + 39 raw PCM effects; the replay is `Imagitec ProTracker Replay Routine (C) 1991 Imagitec Design Ltd` | **12 CD tracks, every one reachable** — played out of the disc's own TOC with `CD_PLAYTRACK`/`SendIO`; **no module, no 8SVX, no PCM file**; effects compiled into the chip data hunk and driven on channel pairs | **2 CD tracks, both played** + **2 Player 6.0A modules**; effects in two sample banks with a 16-byte record header each; Paula programmed both absolutely and through `d16(a6)` | **22 CD tracks** + an **in-house Paula replayer** written straight to `AUDnLCH/LEN/PER/VOL` with the channel index shifted in at run time; **no module and no PCM file anywhere**. The options panel offers `Off` / `On Chip` / `On CD`, so the player chooses which. **The disc never reads its own TOC** — `CD_PLAYTRACK` with `io_Offset = index + 2`, a constant in the executable. Second negative case, and the one with the most tracks to get wrong | **23 CD tracks, 40:37, and nothing else at all** — no module, no 8SVX, no PCM file, and Paula reached only by two `AUD1DAT` writes. `OpenDevice` is **zero**; the drive is driven through Akiko. A **third answer** to the TOC question, and the reachable track count is open |
+| Save system | password, 64-char alphabet, bit field | password table + CD32 `nonvolatile.library` | **none** | **none** | CD32 `nonvolatile.library` **and** floppy save-disk code | password, 8 characters; **no `nonvolatile.library`** | CD32 `nonvolatile.library` (4 vectors, one call each) **and** `RAM:Game.DAT` **and** a reset-surviving `RAD:` disk | CD32 `nonvolatile.library` alone, unguarded — app `MCOSM`, item `core`, ten bytes, **first word incremented every launch** | CD32 `nonvolatile.library` alone — app `Gloom`, item `Games`, **stores 2 bytes and reads 20 back** | CD32 `nonvolatile.library` alone — app `Hero Quest II `, item ` Save`; **stores 24 bytes and reads 238 back** (`divu.w #10` on the length) | CD32 `nonvolatile.library` alone — app `Guardian`, item `Heroes`; **stores 8 bytes and reads 80 back**; base null-checked at every call site | **none at all** — no `nonvolatile.library` anywhere, no password, no save file. The hall of fame lives in RAM and its default table is the development team | CD32 `nonvolatile.library` alone — app **`FireAndIce`**, item **`HiScores`**; the record is the 20-row high-score table. Both directions go through **generic wrappers taking the length in `d0`**, so there is no literal size at the library call and the store/read mismatch four other discs show cannot be checked here | **the CD32 EEPROM, over hand-written I²C at `$B80030`** — the first disc here that does not use `nonvolatile.library`, because there is no Exec left to call it. **And a complete second, unreachable save system**: `Please insert a save game disk.`, a format prompt and a filename entry prompt, on a console with no floppy drive |
+| Cut content | level 4, `0xFFFF` row in the loader table | 3 unlisted working levels, 1 unused music file | 7 sprite banks, 1 door animation, 2 files the code still names, **scene 0 dropped** | the same 7 sprite banks and door are already missing here | template level name in all 16; a **corrupt `BGFX` tag that shipped**; a crunched level in a stale buffer | `Legends_Disk4:` named by nothing, 18 `SIGN MESSAGE n` placeholders, 15 `XXXX` records, `EMPTY PAL` slots | `MainSP16.Img`, `Wall.Log` and `mod.ingame` named and absent; three test objects (`FatAnt.x3d`) and three pre-split geometry files present and unnamed; `[Sorry, this is only a 1 disk demo.]` in the retail binary | **`briefing` and `eolb4` named in the loader table with a presence flag of 0** and their `LEVELS/*4.S` modules still linked in; `filelist.i`/`filelist.s` generator stubs; the whole debug console and 195 copies of `internal hardware error` | the floppy release’s **hard-disk installer**, its boot script, its save file and two disk prompts; a demo build’s refusal; **ten debug colour flashes**, one of them the whole out-of-memory handler; 224 `FFFF` palette slots per texture bank; and **no zone 2 anywhere** | `Level.Map` named by the loader and absent; **a title screen that still reads `MASTERS`**; the publisher logo shipped twice, the unreferenced copy **with the copyright line removed**; `Please insert Legacy of Sorasil Patch` naming a fourth floppy volume; a complete disk-swap wait loop with **no callers**; three Red Book tracks nothing plays; nine placeholders x 3 languages; an empty container slot and four more pointing at end-of-file; map cell byte 7 zero in all nine dungeons; `BLUEBITS`/`GREENBITS` symbols with no code | a **twelfth zone's assets nothing can load** (`split12`, `spr12` — the largest sprite bank on the disc — `sprhead12`, `map12`), plus `map00`, `map99`, `dither00`, `dither98` and `dither99.iff`: **179,796 bytes, 8.0 % of the disc**, against an eleven-record zone table; `dither99.iff` is the **artist's Deluxe Paint working file** with its `GRAB` and six `CRNG` chunks intact; `PIRATES FUCK OFF` beside the copyright string at the top of the code hunk; **`hElP` written at the end of seven buffers and checked at run time**; `WAS ` and `GON `, four bytes each, in front of the two strings the save code does address | **`picture.exe`, 9.5 % of the data track, named by nothing** and holding a 640 × 512 HAM8 picture; the installer chain as **two zero-byte files** (`/scrpt2`, `/C/Installer`); an **empty `/icons`** on a disc with no `.info` anywhere; a thirty-eighth loader filename **with no record header**, `bans1:flev`, naming a volume nothing assigns; a **flashing-border halt loop with an `ILLEGAL` behind it**; a **live `DebugDisk:` branch** in the pressed boot script; and eight English-only lines, outside the four-language table, asking how anyone could seriously want to kill animals and civilians | a **floppy disk-swap prompt** (`Please put volume <n> in any drive and press FIRE or SPACE.`) and a **manual-lookup copy-protection prompt** (`Please match the key at location: F*7`) in a 1994 CD32 executable; `Assign Libs: Fire:Libs` naming a directory that is not there; a **developer diagnostic panel** reporting free chip RAM, free fast RAM and **disk cache size**, which is also the only place the build version is written down; **two empty directories**; `AskBoot` shipping its **`HUNK_SYMBOL` table** (`_OpenLibrary`, `_CloseLibrary`) and the whole SAS/C runtime error path it never reaches; **nine resource slots zero in all seven worlds**; an `audio.device` string nothing uses; and a default top high score of **68000 points to `AEB`** — the CPU part number and the programmer's initials | **18 files the shipped executable names and the disc does not have** — `block1_1.np` … `block5_4.np` and `capt.np`, 32 % of a 56-name loader table, with `block5` listed before `block4`; the whole floppy save-disk system and the **UK keyboard map** that serves it; `1meg.pak` and `fmem.pak` named for memory configurations a CD32 does not have; the intro script naming a **PC version of the game**; **40,003 zero bytes** in the loader's code hunk; `Iniverse CD32`; 23 empty string-table slots; and a backtick for an apostrophe in one of 39 inventory descriptions|
 
 ---
 
@@ -4456,6 +4732,48 @@ band and been wrong.
     the render then confirmed the world tags — `SN01` is snow, `FO01` is
     foliage. `tools/geomguess.py` and `tools/tilesheet.py` in
     cd32-fireandice-doc. (Section 7.)
+
+31. **Scan for a base-address load in all eight address-register forms, not
+    one or two.** [Universe] loads Akiko's base into `a5` (`4bf9`) and `a2`
+    (`45f9`); the scan this document had been carrying since Guardian matched
+    only `41f9` (`a0`) and `2c7c` (`a6`) and returned **zero on a disc with
+    five sites**. There are eight encodings of `lea $x.l,An` (`41f9 43f9 45f9
+    47f9 49f9 4bf9 4df9 4ff9`) and eight of `movea.l #$x,An` (`207c` …
+    `2e7c`). The same applies to `$dff000`, to `$bfe001` and to any other base
+    a title might park somewhere unexpected. `tools/akiko2.py` in
+    cd32-universe-doc. **A negative result from a two-encoding scan is not a
+    negative result.** (Section 4.)
+
+32. **Look for a dispatch table before assuming the game is hard-coded.** The
+    shape is short and recognisable: `lea $disp(pc),An`, a few instructions
+    turning a byte into an index, `asl #2` and `jsr (An,Dn.w)`, followed
+    immediately by a run of `bra.w`. The **opcode count is not stored
+    anywhere** — it is the length of that run, and it ends at the first word
+    that is not `0x6000`. [Universe] has 16 opcodes in one table and 41
+    entries in another; scanning for the `bra.w` run *without* reference to
+    the code that jumps into it finds both, and finds them faster.
+
+    Two details that decide whether you have read it right. The index may be
+    the **complement** of the opcode (`neg.b` + `subq #1`), which is what
+    makes Universe's commands `$F0`–`$FF` and every lower byte inline data.
+    And a handler that adds a constant to a **variable** rather than to a
+    register is advancing a program counter: that variable is the VM's PC, and
+    the constant is the instruction length. (Sections 4 and 6.)
+
+33. **On a text-heavy disc, fix the string-table model before believing the
+    text total.** Assume nothing about a length field, about offsets being
+    monotonic, or about there being one record shape. On [Universe] the naive
+    model found 26 tables and 61 KB; correcting all three assumptions found 49
+    tables and 180 KB, and the raw scan over the fully unpacked leaves found
+    **602 KB**. Then state the denominator — on disc or resident, they differ
+    by a factor of two. (Section 9.)
+
+34. **Render a planar image one plane at a time before deciding the geometry
+    is wrong.** Six coherent monochrome images and two solid stencils is a
+    different diagnosis from six streams of noise, and it takes one loop. On
+    [Universe] a colour render of a six-plane picture came out as structured
+    noise and the geometry was correct all along — the palette had 32 entries
+    and the display was Extra-Half-Brite. (Section 7.)
 
 ## Contributing from a pipeline
 
@@ -5189,6 +5507,33 @@ the disc that gave it.
     the first time any layout anomaly here has lined up with a named individual.
     (Sections 1, 4, 7, 9 and 10.)
 
+    **AND THE THIRD POINT HOLDS IT.** [Universe] is Core Design, 1994, the
+    first time this question has had three discs from one label instead of two.
+    The prediction, written first, was that the matches would again be exactly
+    the things attributable to something wider than the label. They are:
+
+    | | Dragonstone | Banshee | Universe | |
+    |---|---|---|---|---|
+    | Preparer | `Sajjad Majid` | `D J Pocock` | `D J Pocock` | 2 of 3, and the pair crosses labels |
+    | `c/SetPatch` | 40.14, 13,200 B | identical | **identical** | matches, and Fire & Ice on another label has it too |
+    | `.TM` block | the common 2,048 B | identical | **identical** | matches, twelve discs have it |
+    | Cruncher | RNC ProPack 1 | RNC ProPack 1 | **RNC ProPack 1** | matches, three for three |
+    | Akiko `$B80000` | **drives the drive** | zero | **drives the drive** | 2 of 3 |
+    | Akiko C2P | zero | zero | zero | matches, every disc |
+    | Colour depth | 12-bit | **8 bits per gun, AGA** | **12-bit, EHB, `FMODE = 0`** | differs |
+    | Text encoding | CP437 | CP437 + a private Danish set | **CP437, clean** | matches, three for three |
+    | Save system | password | **none at all** | **EEPROM over hand-written I2C** | differs |
+    | Executable format | AmigaDOS hunk + `DNLD` overlays | AmigaDOS hunk | **a private relocatable format** | differs |
+    | Library calls after boot | 0 | 71 | **0** | 2 of 3 |
+
+    So the answer from this item **survives its third point**: every match is
+    the `.TM` block, the Kickstart on the build machine, the commercial tool
+    market or the code page, and every mismatch is a component somebody wrote.
+    The one match not yet explained away as wider than the label is the
+    **cruncher** — three for three inside Core Design, against five different
+    crunchers across the other studios. That is the only same-label regularity
+    left standing and it is worth one more Core disc.
+
     A footnote on the premise, because it changes how much the result is worth:
     Banshee's disc says its two makers worked in **Danish** — a fourth language,
     a `8/7-94` build banner, the hero renamed `Svend` — and its credits thank
@@ -5348,6 +5693,32 @@ the disc that gave it.
     less than it looks — what would move this is anything else the three share
     and the ten do not.** (Sections 1 and 10.)
 
+    **FOUR FOR FOUR, AND THE FOURTH WAS MEASURED FOR THE MECHANISM RATHER THAN
+    FOR THE NUMBER.** [Universe], Core Design 1994, declares 2,429 sectors and
+    leaves **232, all zero, at LBA 2,197-2,428** - 9.6 % of its volume, again
+    predicted in writing first. Ten discs at 32, four at 232, and the four are
+    the four `D J Pocock` masters.
+
+    Newly ruled out on that disc, and all of them cheap: **image overrun**
+    (80 sectors, so the group reads 103/86/87/80 - but Dragonstone's 106 falls
+    inside that range, so there is no clean separation); **directory record
+    order** (strict ISO 9660 ASCII); **`;1` version suffixes** (present,
+    ordinary); **root directory extent** (4,096 bytes); **audio track count**
+    (23, and the group now spans 2 to 23 while the non-Pocock discs span 0 to
+    28).
+
+    **And one positive lead, which is a file rather than a field.** Universe's
+    `C/FreeAnim` and `C/noopenwb` are **byte-identical to Liberation's,
+    timestamps to the second included** - and those two are the only Pocock
+    masters with a `c/` directory at all. Two unrelated studios, one operator,
+    the same two utility binaries out of the same directory. It does not cover
+    Banshee or Fire & Ice, which ship neither file, so it does not explain the
+    232; but it is the first artefact of any kind that links two Pocock discs
+    and no other disc in the set, and it moves the question from "what does the
+    tool do differently" towards "what was in the directory the tool was
+    pointed at". **On the fifth `Pocock` master, hash `c/` before parsing
+    anything.**
+
 21. **New — how often is a whole program pressed and never reached?** [Banshee]
     presses `picture.exe`, 274,764 bytes and **9.5 % of its data track**, which
     the boot script does not run, the game does not name, the loader's 37-entry
@@ -5411,3 +5782,82 @@ the disc that gave it.
     CD32-only tool sits inside the 1980 group. **Count the 1980 files separately,
     record their spread, and check whether anything in the group could not
     predate the CD32.** (Section 3.)
+
+25. **New - how common is a script interpreter, and what does its opcode space
+    look like?** [Universe] is the first disc here with a genuine bytecode VM:
+    16 opcodes reached through `lea $12(pc),a6 / neg.b d0 / subq #1 / andi #$ff
+    / asl #2 / jsr (a6,d0.w)`, so the index is the **complement** of the opcode
+    and the commands are `$F0`-`$FF` with every lower byte inline data. Each
+    handler advances an explicit program counter in `$62e(a5)` by its own
+    instruction length. Two further dispatch forms sit beside it: a 41-entry
+    table (40 distinct handlers) indexed by a signed word read out of a data
+    record, and a list of longwords in which a **positive value is a code
+    address to call and a negative one is an index** into the engine's
+    123-entry export table.
+
+    Thirteen earlier discs had jump tables and none had a VM; Liberation had a
+    text generator with a small language of its own and Microcosm a container
+    with a directory. **The cheap test is step 32 of the order of work:** find
+    runs of `bra.w` without reference to the code that jumps into them. What is
+    open is how common this is - one disc is not a rate - and whether the
+    genre predicts it. A point-and-click is the obvious place to look next.
+    (Sections 4 and 6.)
+
+26. **New - does a disc that switches the OS off have to reimplement the CD32's
+    own services, and how far does that go?** [Universe] calls `SuperState()`
+    and clears `INTENA`/`DMACON` in a 757-byte loader, and after that point it
+    has **zero library and zero device calls**. Everything the ROM would have
+    provided comes back as something hand-written: the CD-ROM driver (Akiko
+    `$B80004`-`$B80024` plus a CIA-B interrupt handler), the save system
+    (bit-banged I2C to the serial EEPROM at `$B80030`, where eight other discs
+    call `nonvolatile.library`), and the executable loader (a private
+    relocatable format with 16-bit word offsets, replacing `LoadSeg`).
+
+    Dragonstone is the other disc here that kills the OS and drives Akiko, and
+    it uses a password save rather than the EEPROM. So the sample is two, the
+    behaviours differ, and the question is whether "no OS" predicts "EEPROM by
+    hand" or whether Universe is on its own. **Count `OpenDevice` first, and if
+    it is zero, look at `$B80000` before concluding the title has no CD audio
+    and no save.** (Sections 4 and 8.)
+
+27. **New - how much text is a point-and-click, and is 602 KB typical?** Section
+    9 had no denominator for thirteen discs because the text was always a
+    garnish. [Universe] gives one: **602,344 bytes of prose, 6.53 % of the
+    resident image and 13.70 % of the bytes on disc**, in four complete
+    languages with the shares 21.7 / 25.2 / 24.7 / 22.4 % and **nothing
+    untranslated** on the records that align four ways.
+
+    One disc is one point. What would make it a baseline is a second
+    text-driven title, and what would make it interesting is a text-driven
+    title where the shares are *not* balanced - which is what a localisation
+    that ran out of time looks like. (Section 9.)
+
+28. **New - eighteen files named by a shipped executable and absent from the
+    disc: cut, or another SKU?** [Universe]'s `code.prg` names `block1_1.np`
+    through `block5_4.np` and `capt.np` - 18 of the 56 game-file names in its
+    table, 32 % - and none is in the volume. The rest of the table is exact,
+    including the seven non-contiguous `scene*.dat` names, so it is not a table
+    that lists optimistically; and **`block5` is listed before `block4`**,
+    which is what a hand-edited table looks like.
+
+    This document has several discs with a handful of named-and-absent files
+    (Liberation 3, Legends 1, Microcosm 2) and one with a whole zone's assets
+    present-but-unreachable (Fire & Ice). A third of a loader table pointing at
+    nothing is a different scale. The disc cannot settle whether they were cut
+    from this release, belong to the A1200 floppy release, or belong to the PC
+    release the game's own intro script mentions - **only a second SKU can**,
+    and step 28 of the order of work says how to compare it. (Sections 4 and 6.)
+
+29. **New - is a fixed-length zero run a reliable structural separator?**
+    [Universe] separates the four language blocks inside one blob with a run of
+    **exactly 160 zero bytes**, every time, with no header, count or index
+    anywhere. The constant length is the whole signal: variable padding would
+    be unrecognisable, and 160 is short enough to be missed by a scan looking
+    for large free runs. On the same disc, `copper.prg` uses zero runs the
+    other way round - two regions of exactly 12,800 bytes that are **reserved
+    instruction slots** rather than separators, 3,200 of them each, 16 per
+    scanline for 200 lines.
+
+    So a long zero run inside an unpacked blob is worth measuring rather than
+    skipping, and the two readings are told apart by whether the length is a
+    round multiple of something the display needs. (Sections 7 and 9.)
