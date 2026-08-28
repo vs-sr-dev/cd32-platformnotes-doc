@@ -702,12 +702,12 @@ are Commodore's Exec assembler macros expanded by line number. This is a
 fragment of the Amiga operating system's own source, compiled, pressed onto a
 game disc in 1994, in a sector nothing reads.
 
-### On CD32-era discs: ten discs, the same bytes
+### On CD32-era discs: fourteen discs, the same bytes
 
-**All three SHA-1s match, byte for byte, on twelve of the thirteen CD32-era
+**All three SHA-1s match, byte for byte, on fourteen of the fifteen CD32-era
 discs** — Dragonstone, Marvin, Prey CD32, [Legends], [Liberation], [Microcosm],
-[Gloom], [HeroQuest II], [Guardian], [Banshee], [Fire & Ice] and
-**[Universe]**:
+[Gloom], [HeroQuest II], [Guardian], [Banshee], [Fire & Ice], [Universe],
+**[Gunship 2000]** and **[Superfrog]**:
 
 ```
 SHA-1  c5ffcef2a5e33d2df606185823cd95d1c174d65f   the whole sector, 2048 bytes
@@ -5837,7 +5837,7 @@ the disc that gave it.
     | artefact | owner | evidence |
     |---|---|---|
     | cruncher | **the label** | two Team 17 discs, two studios, two years, one packer; five other studios, five other crunchers |
-    | `.TM` block | **the mastering tool** | twelve discs, ten labels, identical bytes |
+    | `.TM` block | **the mastering tool** | fourteen discs, eleven labels, identical bytes |
     | preparer field, trailing run | **the operator** | `Pocock` 232 on 5 of 5; everyone else 32 on 11 of 11 |
     | colour depth, save system, music format | **the studio** | Speris and Superfrog disagree on all three |
 
@@ -5847,7 +5847,7 @@ the disc that gave it.
     look for a disc that names the operator *and* the authors, because that is
     what turns the assignment from an inference into a measurement.
     | `c/SetPatch` | 40.14, 13,200 B | identical | **identical** | matches, and Fire & Ice on another label has it too |
-    | `.TM` block | the common 2,048 B | identical | **identical** | matches, twelve discs have it |
+    | `.TM` block | the common 2,048 B | identical | **identical** | matches, fourteen discs have it |
     | Cruncher | RNC ProPack 1 | RNC ProPack 1 | **RNC ProPack 1** | matches, three for three |
     | Akiko `$B80000` | **drives the drive** | zero | **drives the drive** | 2 of 3 |
     | Akiko C2P | zero | zero | zero | matches, every disc |
