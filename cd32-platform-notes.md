@@ -2968,7 +2968,23 @@ the disc that gave it.
     question is whether that is because streaming was rare or because the
     third-party players hid it. **Histogram the `io_Command` immediates on every
     disc** (`3?7c 00nn 001c`); it is one grep and it settles what a title asks
-    the drive to do. (Sections 4 and 8.)
+    the drive to do.
+
+    **And there is an arithmetic reason CDXL turns up only for logos and
+    intros, worth doing before concluding anything about a studio's taste:
+    CDXL is uncompressed.** A frame costs `width/8 * height * planes` whatever
+    is in it, so the format's ceiling is fixed by geometry alone —
+    320 x 144 at 8 planes is 46,080 bytes, which is **6.67 fps** at the 307,200
+    bytes/s a 2x drive delivers, and 30,707 frames of it would be **1,349 MB**.
+    That is why the two CDXL streams in this set are short and small
+    (Prey CD32: 619 frames at 240 x 96 x 7; Marvin: one publisher logo) and why
+    [Microcosm] wrote its own container instead: at 15,699 bytes/frame measured
+    it fits 30,707 frames of the same geometry in 460 MB.
+
+    **Compute the CDXL cost of a title's footage before asking why it did not
+    use CDXL.** Two multiplications, and on a feature-length stream the answer
+    is usually that it would not have fitted on the disc at all. (Sections 4,
+    7 and 8.)
 
 13. **New — what does a title's own container look like when it is not a file
     system?** [Microcosm] puts 261 movies and 30,707 frames in one file with no
