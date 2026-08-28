@@ -25,11 +25,11 @@ measured versus what is inferred.
 | 4 | The boot chain, the `$VER:` strings, `freeanim.library`, and the two greps and one histogram that decide how you read the executable |
 | 5 | Compression — starting with whether there is any, then **RNC, the Imploder, Bytekiller and a fourth that wears RNC's magic over a different stream**, why **a magic scan that finds nothing proves nothing**, and getting the decruncher out of the loader |
 | 6 | Hunk files, toolchain fingerprints, symbol tables that survived, and data wrapped in hunk format |
-| 7 | Planar geometry without a copper list, interleaved versus separated, autocorrelation, HAM6 in a CDXL, the **corrected** palette test, the one-line `LoadRGB4`-versus-`LoadRGB32` test, sparse plane tables that compress without a codec, and a "3D" game whose surfaces are 10,792 **pre-rendered** sprites |
-| 8 | Red Book, raw Paula samples, tracker modules, in-house players, and getting a headerless stream's sample rate out of the executable |
+| 7 | Planar geometry without a copper list, **the palette test's third outcome** (a program that calls neither `LoadRGB4` nor `LoadRGB32` because it writes 256 registers from the copper), interleaved versus separated, autocorrelation, HAM6 in a CDXL, the **corrected** palette test, the one-line `LoadRGB4`-versus-`LoadRGB32` test, sparse plane tables that compress without a codec, and a "3D" game whose surfaces are 10,792 **pre-rendered** sprites |
+| 8 | Red Book **and whether anything plays it**, raw Paula samples, tracker modules, in-house players, and getting a headerless stream's sample rate out of the executable |
 | 9 | Text encodings, password systems, placeholders, reading the file *names*, and a disc that stores a text **generator** and shipped its source with a note to translators in it |
 | 10 | Baselines, disc by disc, side by side |
-| 11 | The order of work that worked — ending with **diff the other release of the same game** |
+| 11 | The order of work that worked — **diff the other release of the same game**, and parse the one file that is most of the disc with a resynchroniser |
 
 Findings confirmed on every disc so far are marked **[all]** or **[N of N]**;
 those confirmed on fewer are marked **[N of M]**. Everything else is named
@@ -46,11 +46,12 @@ assume.
 | [Dragonstone](https://github.com/vs-sr-dev/cd32-dragonstone-doc) | 1994/1995 | Core Design, UK — an Amiga floppy game ported to CD32: two tracks, 91 files, 84 RNC-crunched, 3 % of the disc used, no OS involvement after the first stage |
 | [Marvin's Marvellous Adventure](https://github.com/vs-sr-dev/cd32-marvinsmarvellousadventure-doc) | 1994/1995 | Infernal Byte Systems / 21st Century, DE+UK — twelve tracks, 212 files, **nothing compressed**, 61 % of the disc used, ten libraries opened and AmigaDOS alive throughout |
 | [Legends](https://github.com/vs-sr-dev/cd32-legends-doc) | **1996** | Krisalis Software / Guildhall, UK — one data track and **twenty-eight audio tracks**, 111 files, **89.4 % of the disc used and only 0.72 % of it by the game**, a six-floppy A1200 release copied onto a CD with its hard-disk installer still on it, and 79 files packed by a cruncher with **no magic number at all** |
-| [Liberation: Captive II](https://github.com/vs-sr-dev/cd32-liberation-doc) | **1994** | Byte Engineers / Mindscape, UK — **the largest data track on the format**, 82,502 sectors, **91.2 % of it digitised speech**; a 3D engine shipped as three in-house shared libraries, three procedural generators the game runs as separate programs, a boot script that mounts a **reset-surviving RAM disk**, and a codec wearing RNC ProPack's magic over a twelve-byte header and a different stream |
+| [Microcosm](https://github.com/vs-sr-dev/cd32-microcosm-doc) | **1994** | Psygnosis, UK — **the first CD32-exclusive title here**, and the largest data track on the format: 255,552 sectors, of which **92.3 % is one 483 MB file** holding 30,707 frames of video in 261 movies, streamed with `CD_READXL` and decoded straight into eight AGA bitplanes. 34 files, a **five-byte** boot script, a retail volume identifier of `CDTV_TEST`, a Red Book track nothing plays, and an executable carrying the names of all **77 of its source files** |
+| [Liberation: Captive II](https://github.com/vs-sr-dev/cd32-liberation-doc) | **1994** | Byte Engineers / Mindscape, UK — the largest data track on the format until Microcosm, 82,502 sectors, **91.2 % of it digitised speech**; a 3D engine shipped as three in-house shared libraries, three procedural generators the game runs as separate programs, a boot script that mounts a **reset-surviving RAM disk**, and a codec wearing RNC ProPack's magic over a twelve-byte header and a different stream |
 
 These are about as unlike each other as Amiga CD titles can be — 1992 to 1996,
-0.74 % of a disc to 89.4 % of one, 47 files to 1,453, a 4.9 MB data track to a
-169 MB one — which makes the handful of things they agree on worth more than
+0.74 % of a disc to 89.4 % of one, 34 files to 1,453, a 4.9 MB data track to a
+**499 MB** one — which makes the handful of things they agree on worth more than
 the count suggests. And the two 1996
 discs are the sharpest pair: Speris and Legends have games of almost exactly
 the same size, and one of them fills the rest of the CD with music while the
@@ -68,6 +69,17 @@ a byte scored every ECS palette on it as 24-bit colour.
 scan for every compression magic this document knew returned nothing on a disc
 where 79 of 111 files are packed, because the container has no magic number at
 all.
+
+**And Microcosm settled two of the long-standing open questions and undid one
+correction.** It is the CD32-exclusive title with no A1200 fallback that this
+document predicted would decide the Akiko question — and it does not touch Akiko
+either, with a mechanism attached: its video is *stored* planar and its decoder
+writes bitplanes directly, so there is no chunky data in the pipeline to
+convert. It is also the first disc here that spends the disc on the game rather
+than on audio poured over it — and its *game* is 9.1 MB, still inside the
+2.7–13.3 MB band all eight discs occupy. And its 255,552-sector volume leaves
+**32** unclaimed sectors, which kills the reading that 32 was a coincidence of
+small volumes and leaves Liberation's 232 as the one unexplained outlier.
 
 **And Liberation corrected two more.** This document had "exactly 32 unclaimed
 zero sectors at the end of the volume" as an ISOCD 1.04 fingerprint on four
@@ -91,9 +103,9 @@ compilation unit `exec`, 268 bytes of 68000 code defining `AddPort`, `GetMsg`,
 local labels (`REMHEAD.033`, `ENABLE.031/032/034`) that are Commodore's own
 Exec assembler macros expanded by line number.
 
-**Five of the six CD32-era discs have the identical 2,048 bytes** — whole
-sector, banner and object file, all three SHA-1s — across five studios, five
-publishers, five engines and thirty-eight months.
+**Six of the seven CD32-era discs have the identical 2,048 bytes** — whole
+sector, banner and object file, all three SHA-1s — across six studios, six
+publishers, six engines and thirty-eight months.
 
 And the third of them says where they came from. **Prey's CD32 master ships
 `/CD32.TM`**: an ordinary file in the root directory, 2,048 bytes, dated
