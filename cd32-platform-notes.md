@@ -1142,6 +1142,53 @@ that. **The method is the finding: when a date is one or two years early,
 look for an earlier release of the same title before concluding the clock was
 wrong. A byte-level diff against that release settles it in one pass.**
 
+---
+
+### EXTERNAL NOTE — three DOS samples, three different mechanisms
+
+*From outside this platform entirely. The sister collection has now measured
+the timestamp question on three MS-DOS archives, and the useful thing about
+them is that **no two share a mechanism**. This section has spent a long time
+asking "what year is it really", which presumes the answer is a number. These
+three say the prior question is **what shape is this anomaly**, and that each
+shape has a different next measurement.*
+
+| shape | how you recognise it | what to measure next | sample |
+|---|---|---|---|
+| **a file** | the anomaly does not correlate with anything the other files share; the obvious agent has an alibi | that file's provenance — what wrote it, and when relative to its siblings | one file of eighty-four at 1980, the other eighty-three correct; all three executables identically packed and only one stamped, which **exonerated the packer** — [pc-heroquest-doc docs/03](https://github.com/vs-sr-dev/pc-heroquest-doc/blob/main/docs/03-the-1980-stamp.md) |
+| **a uniform transformation** | every file moves by the same amount | whether any single file's field makes `+N` and `\| N` disagree — that is the whole test, and it needs exactly one file with the right bit pattern | twelve of thirteen files exactly **48 years** fast; 12 and 13 share no bits with 48 so the two arithmetics are indistinguishable on them, but the lone outlier's field is 22, and `22 \| 48 = 54` against an observed **70**, which requires a carry: an **addition**, not a stuck bit — [pc-baronbaldric-doc docs/03](https://github.com/vs-sr-dev/pc-baronbaldric-doc/blob/main/docs/03-the-forty-eight-year-shift.md) |
+| **a container constant** | *every* entry has it — files, directory records, and objects far too large to have been written in the same second | local vs central header copies, extra-field presence, entry ordering, and any checksum the container carries | all seven ZIP entries at one value including a 42 MB ISO; the comment read `TORRENTZIPPED-3E1FE61E` and **`CRC32` of the archive's own 448-byte central directory is `3E1FE61E`** — a canonicalising repacker, named, with the constant reproduced rather than argued — [pc-mystictowers-doc docs/02](https://github.com/vs-sr-dev/pc-mystictowers-doc/blob/main/docs/02-one-timestamp-seven-times.md) |
+
+**Try the third row first whenever a container is involved.** It is four header
+reads, it costs nothing, and it either eliminates the container in one pass or
+explains everything at once. On the third sample it explained everything at
+once; on the second it was **unavailable**, because that archive arrived as
+loose files with no second copy of any timestamp to compare against, and that
+absence is why its cause is still unidentified.
+
+**And the fourth thing, which matters here more than there: an ISO image is a
+date sanctuary.** ISO 9660 volume-descriptor and directory-record timestamps
+are file *content*, so no amount of repacking above them can touch them. On the
+third sample every file date had been destroyed at the ZIP layer and the disc
+inside it still gave up `1994-07-26 11:03:34`, a publisher, and a mastering
+tool that named itself with a serial number. Every title in this set *is* an
+ISO, so this is not a curiosity — it is the one clock the outer layers cannot
+reach, and it is worth remembering when a dump arrives wrapped in something.
+
+Read with the matching caution, though: on that disc the mastering tool had
+done **its own flattening underneath**, stamping all 307 file records at one
+identical second and leaving only the fourteen directory records and the PVD
+carrying the real instant. This section already knows that the PVD and the
+directory records can disagree with the files; that sample is the case where
+the files carry no information at all and only the directories do.
+
+*Nothing above is an Amiga finding and none of it changes a reading on any disc
+in this set. It is a classification habit, brought over because the sixth-epoch
+question here has been stuck on "which year" for a while and these three
+samples suggest the question underneath it.*
+
+---
+
 Amiga build machines frequently had no set clock, and **1 January 1978 is day
 zero of the AmigaDOS `DateStamp`**. A record reading:
 
