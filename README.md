@@ -38,6 +38,10 @@ assume.
 
 ## Discs it is drawn from
 
+Every disc below has its own repository, and the full write-up for each one lives in
+the family index: **[cd32-gamelist-doc](https://github.com/vs-sr-dev/cd32-gamelist-doc)**. The table here stays
+the short form; the index is where the prose is.
+
 | Disc | Master | What it is |
 |---|---|---|
 | [Alfred Chicken](https://github.com/vs-sr-dev/cd32-alfredchicken-doc) | **1993** | Twilight for Mindscape — the **first disc here read from the plastic rather than from an image file**, and it settled three things no image could. The `0000000000000` `CATALOG` that four discs carry is **on the disc**, read from subchannel Q with MCVAL set, so it is the mastering and not a dumper losing a real EAN. The **32..232-sector overrun** past the declared volume is **cut into the glass master**: the volume declares 691 sectors, the disc holds **918** of valid MODE1 — every one verified on sync, header address and EDC — and the extra 227 stop exactly where the next track's pregap begins, so the run is padded up to the following track. And **`MODE1/2048` is verified** by descrambling raw sectors, which no disc in this set had ever been checked for. Ten tracks, **99.02 % of the pressed disc audio**, and a 1.26 MB game that **breaks Guardian's floor by 43.9 %** after it had stood for seventeen discs. Preparer **`Abersoft`, the second company** in that field — and since Mindscape's other disc is `D J Pocock`, the field **follows the work, not the label**. Its `intro`, built from source checked out **fourteen months before** the game, ships a **working Amiga hardware debugger** |
